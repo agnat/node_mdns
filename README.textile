@@ -2,16 +2,14 @@ h1. node_mDNS
 
 h2. Synopsis
 
-node_mDNS is a node.js add-on. It adds support for mDNS service discovery, also
-known as zeroconf or bonjour to node.js.
+node_mDNS is a node.js add-on. It adds support for mDNS service discovery, also known as zeroconf or bonjour to node.js.
 
 h2. Build
 
-Currently tested on Mac OS X only. Other platforms will require some tweaking
-of wscript.
+Currently tested on Mac OS X only. Other platforms will require some tweaking of wscript.
 
-   node-waf configure build
-   sudo node-waf install
+bc. node-waf configure build
+sudo node-waf install
 
 
 h2. Examples
