@@ -1,7 +1,7 @@
 mDNS service discovery/zeoconf/bounjour add-on for node.js
 
-Build
-=====
+=== Build
+
 Currently tested on Mac OS X only. Other platforms will require some tweaking
 of wscript.
 
@@ -9,3 +9,9 @@ of wscript.
    sudo node-waf install
 
 
+=== Examples
+
+   var service = mDNS.createService('eggs_n_bacon', 4321, mDNS.TCP);
+
+   service.announce();
+   setTimeout(function() { service.shutdown(); }, 10000);
