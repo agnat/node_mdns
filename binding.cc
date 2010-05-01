@@ -30,7 +30,7 @@ class Service : public EventEmitter {
             shutdown_symbol = NODE_PSYMBOL("shutdown");
 
             NODE_SET_PROTOTYPE_METHOD(t, "announce", Announce);
-            NODE_SET_PROTOTYPE_METHOD(t, "shutdown",    Shutdown);
+            NODE_SET_PROTOTYPE_METHOD(t, "shutdown", Shutdown);
 
             /*
             t->PrototypeTemplate()->SetAccessor(READY_STATE_SYMBOL,
