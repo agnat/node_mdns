@@ -14,7 +14,10 @@ sudo node-waf install
 
 h2. Examples
 
-bc.. var service = mDNS.createService('eggs_n_bacon', 4321, mDNS.TCP);
+p. Announce a tcp server on port 4321 with service type 'bacon'
+
+bc.. var service = mDNS.createService('bacon', 4321, mDNS.TCP);
 
 service.announce();
 setTimeout(function() { service.shutdown(); }, 10000);
+
