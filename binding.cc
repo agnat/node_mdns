@@ -12,7 +12,7 @@ using namespace node;
 namespace {
 
 static Persistent<String> ready_symbol;
-static Persistent<String> close_symbol;
+static Persistent<String> shutdown_symbol;
 #define READY_STATE_SYMBOL String::NewSymbol("readyState")
 
 class Service : public EventEmitter {
@@ -27,10 +27,10 @@ class Service : public EventEmitter {
             t->InstanceTemplate()->SetInternalFieldCount(1);
 
             ready_symbol = NODE_PSYMBOL("ready");
-            close_symbol = NODE_PSYMBOL("close");
+            shutdown_symbol = NODE_PSYMBOL("shutdown");
 
             NODE_SET_PROTOTYPE_METHOD(t, "announce", Announce);
-            NODE_SET_PROTOTYPE_METHOD(t, "close",    Close);
+            NODE_SET_PROTOTYPE_METHOD(t, "shutdown",    Shutdown);
 
             /*
             t->PrototypeTemplate()->SetAccessor(READY_STATE_SYMBOL,
@@ -81,15 +81,15 @@ class Service : public EventEmitter {
         }
 
         bool
-        Close(Local<Value> exception = Local<Value>()) {
+        Shutdown(Local<Value> exception = Local<Value>()) {
             HandleScope scope;
             ev_io_stop(EV_DEFAULT_ &read_watcher_);
             DNSServiceRefDeallocate(ref_);
             ref_ = NULL;
             if (exception.IsEmpty()) {
-                Emit(close_symbol, 0, NULL);
+                Emit(shutdown_symbol, 0, NULL);
             } else {
-                Emit(close_symbol, 1, &exception);
+                Emit(shutdown_symbol, 1, &exception);
             }
         }
 
@@ -144,11 +144,11 @@ class Service : public EventEmitter {
         }
         static
         Handle<Value>
-        Close(const Arguments & args) {
+        Shutdown(const Arguments & args) {
             HandleScope scope;
             Service * service = ObjectWrap::Unwrap<Service>(args.This());
 
-            bool r = service->Close();
+            bool r = service->Shutdown();
 
             if ( ! r) {
                 // XXX

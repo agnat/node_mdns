@@ -3,15 +3,15 @@ var mDNS = require('./mDNS'),
     puts = sys.puts;
 
 s =  mDNS.createService( function() {
-  puts('=== ready ===');
+  puts('=== service announced');
 });
 
 puts(s);
 
 
 s.announce();
+s.addListener('shutdown', function() { puts('=== announcement is down') });
 
-setTimeout(function() { puts('timeout'); s.close();}, 20000);
+setTimeout(function() { puts('shutdown'); s.shutdown();}, 5000);
 
-
-puts('done');
+puts('setup done');
