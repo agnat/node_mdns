@@ -29,7 +29,7 @@ class Service : public EventEmitter {
             ready_symbol = NODE_PSYMBOL("ready");
             shutdown_symbol = NODE_PSYMBOL("shutdown");
 
-            NODE_SET_PROTOTYPE_METHOD(t, "announce", Announce);
+            NODE_SET_PROTOTYPE_METHOD(t, "doAnnounce", DoAnnounce);
             NODE_SET_PROTOTYPE_METHOD(t, "shutdown", Shutdown);
 
             /*
@@ -41,18 +41,12 @@ class Service : public EventEmitter {
         }
 
         bool
-        Announce() {
+        DoAnnounce(int flags, int interface_index, const char * name,
+                const char * regtype, const char * domain, const char * host,
+                uint16_t port, uint16_t txt_record_length,
+                const void * txt_record)
+        {
             if (ref_) return false;
-
-            int interface_index = 0;
-            int flags = 0;
-            char * name = NULL;
-            char * regtype = "_ttt._tcp";
-            char * domain = NULL;
-            char * host = NULL;
-            uint16_t port = 4321;
-            uint16_t txt_record_length = 0;
-            char * txt_record = NULL;
 
             int status = DNSServiceRegister( &ref_, flags, interface_index, name,
                     regtype, domain, host, port, txt_record_length, txt_record,
@@ -129,11 +123,37 @@ class Service : public EventEmitter {
 
         static
         Handle<Value>
-        Announce(const Arguments & args) {
+        DoAnnounce(const Arguments & args) {
             HandleScope scope;
             Service * service = ObjectWrap::Unwrap<Service>(args.This());
 
-            bool r = service->Announce();
+            if ( 2 < args.Length() ||
+                ! args[0]->IsString() || ! args[1]->IsInt32())
+            {
+                return ThrowException(Exception::Error(
+                        String::New("argument mismatch.")));
+            }
+
+            String::Utf8Value regtype(args[0]->ToString());
+
+            int raw_port = args[1]->ToInteger()->Int32Value();
+            if (std::numeric_limits<uint16_t>::max() < raw_port) {
+                return ThrowException(Exception::Error(
+                        String::New("port number to large.")));
+            }
+            
+            uint16_t port = static_cast<uint16_t>(raw_port);
+
+            int flags = 0;
+            int interface_index = 0;
+            char * name = NULL;
+            char * domain = NULL;
+            char * host = NULL;
+            uint16_t txt_record_length = 0;
+            void * txt_record = NULL;
+            
+            bool r = service->DoAnnounce(flags, interface_index, name, *regtype,
+                    domain, host, port, txt_record_length, txt_record);
 
             if (!r) {
                 // XXX
