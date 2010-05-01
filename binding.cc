@@ -91,6 +91,8 @@ class Service : public EventEmitter {
             } else {
                 Emit(shutdown_symbol, 1, &exception);
             }
+
+            Unref();
         }
 
         void
