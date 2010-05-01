@@ -1,1 +1,11 @@
 mDNS service discovery/zeoconf/bounjour add-on for node.js
+
+Build
+=====
+Currently tested on Mac OS X only. Other platforms will require some tweaking
+of wscript.
+
+   node-waf configure build
+   sudo node-waf install
+
+
