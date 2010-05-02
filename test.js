@@ -1,17 +1,9 @@
-var mDNS = require('./mDNS'),
-    sys  = require('sys'),
-    puts = sys.puts;
+var mDNS   = require('./mDNS'),
+    sys    = require('sys'),
+    assert = require('assert');
 
-s =  mDNS.createService( "node_js_mdns_test", 4321, mDNS.TCP, function() {
-  puts('=== service announced');
-});
+var puts = sys.puts;
 
-puts(s);
-
-
+s =  mDNS.createService("node_js_mdns_test", 4321, mDNS.TCP);
 s.announce();
-s.addListener('shutdown', function() { puts('=== announcement is down') });
-
-setTimeout(function() { puts('shutdown'); s.shutdown();}, 10000);
-
-puts('setup done');
+setTimeout(function() { s.discontinue(); }, 10000);
