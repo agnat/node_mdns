@@ -6,7 +6,7 @@ node_mDNS is a "node.js":/ry/node add-on. It adds support for multicast DNS serv
 
 It provides an object-oriented interface to announce and browse services.
 
-It uses the mDNSResponder API which is available on all major platforms.
+Internally, it uses the mDNSResponder API which is available on all major platforms.
 
 h2. Build
 
@@ -17,18 +17,30 @@ sudo node-waf install
 
 h2. Quickstart
 
+p. To import the add-on use something like this:
+
+bc. var mDNS = require('mDNS');
+
 p. Announce a TCP server on port 4321 with service type 'http':
 
-bc.. var service = mDNS.createService('http', 4321, mDNS.TCP);
+bc.. var ad = mDNS.createAdvertisement('http', 4321, mDNS.TCP);
 
-service.announce();
-setTimeout(function() { service.discontinue(); }, 10000);
+ad.start();
+setTimeout(function() { ad.stop(); }, 10000);
 
 h2. Documentation
 
-h3. Service
+h3. Advertisement
 
-h3. ServiceBrowser
+h4. Events
+
+h4. Methods
+
+h3. Browser
+
+h4. Events
+
+h4. Methods
 
 h2. License (MIT)
 
