@@ -16,7 +16,7 @@ def configure(conf):
 def build(bld):
   obj = bld.new_task_gen('cxx', 'shlib', 'node_addon')
   obj.target = 'binding'
-  obj.source = 'binding.cc'
+  obj.source = 'src/binding.cc'
 
 def shutdown():
   # HACK to get binding.node out of build directory.
