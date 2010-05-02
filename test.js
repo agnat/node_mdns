@@ -4,6 +4,10 @@ var mDNS   = require('./mDNS'),
 
 var puts = sys.puts;
 
-s =  mDNS.createService("node_js_mdns_test", 4321, mDNS.TCP);
-s.announce();
-setTimeout(function() { s.discontinue(); }, 10000);
+ad =  mDNS.createAdvertisement("node_js_mdns_test", 4321, mDNS.TCP);
+ad.start();
+
+browser = mDNS.createBrowser("node_js_mdns_test", mDNS.TCP);
+browser.start();
+
+setTimeout(function() { ad.stop(); }, 10000);

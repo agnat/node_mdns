@@ -124,8 +124,8 @@ prepareSocket(DNSServiceRef ref, ev_io * read_watcher) {
 }
 
 
-//=== Service ==================================================================
-class Service : public EventEmitter {
+//=== Advertisement ============================================================
+class Advertisement : public EventEmitter {
     public:
         static
         void
@@ -137,16 +137,16 @@ class Service : public EventEmitter {
             t->InstanceTemplate()->SetInternalFieldCount(1);
 
             ready_symbol = NODE_PSYMBOL("ready");
-            discontinue_symbol = NODE_PSYMBOL("discontinue");
+            stop_symbol = NODE_PSYMBOL("stop");
 
-            NODE_SET_PROTOTYPE_METHOD(t, "doAnnounce", DoAnnounce);
-            NODE_SET_PROTOTYPE_METHOD(t, "discontinue", Discontinue);
+            NODE_SET_PROTOTYPE_METHOD(t, "doStart", DoStart);
+            NODE_SET_PROTOTYPE_METHOD(t, "stop", Stop);
 
-            target->Set(String::NewSymbol("Service"), t->GetFunction());
+            target->Set(String::NewSymbol("Advertisement"), t->GetFunction());
         }
 
         bool
-        DoAnnounce(int flags, int interface_index, const char * name,
+        DoStart(DNSServiceFlags flags, uint32_t interface_index, const char * name,
                 const char * regtype, const char * domain, const char * host,
                 uint16_t port, uint16_t txt_record_length,
                 const void * txt_record)
@@ -169,15 +169,15 @@ class Service : public EventEmitter {
         }
 
         bool
-        Discontinue(Local<Value> exception = Local<Value>()) {
+        Stop(Local<Value> exception = Local<Value>()) {
             HandleScope scope;
             ev_io_stop(EV_DEFAULT_ &read_watcher_);
             DNSServiceRefDeallocate(ref_);
             ref_ = NULL;
             if (exception.IsEmpty()) {
-                Emit(discontinue_symbol, 0, NULL);
+                Emit(stop_symbol, 0, NULL);
             } else {
-                Emit(discontinue_symbol, 1, &exception);
+                Emit(stop_symbol, 1, &exception);
             }
 
             Unref();
@@ -197,24 +197,24 @@ class Service : public EventEmitter {
         New(const Arguments & args) {
             HandleScope scope;
 
-            Service * service = new Service();
-            service->Wrap(args.This());
+            Advertisement * ad = new Advertisement();
+            ad->Wrap(args.This());
             return args.This();
         }
 
-        Service() : EventEmitter() {
+        Advertisement() : EventEmitter() {
             ref_ = NULL;
 
-            ev_init(&read_watcher_, io_event<Service>);
+            ev_init(&read_watcher_, io_event<Advertisement>);
             read_watcher_.data = this;
         }
 
-        ~Service() {
+        ~Advertisement() {
             assert(NULL == ref_);
         }
 
         void
-        on_service_registered(int flags, DNSServiceErrorType errorCode, 
+        on_service_registered(DNSServiceFlags flags, DNSServiceErrorType errorCode, 
                     const char * name, const char * regtype, const char * domain)
         {
             const size_t argc = 5;
@@ -234,9 +234,9 @@ class Service : public EventEmitter {
 
         static
         Handle<Value>
-        DoAnnounce(const Arguments & args) {
+        DoStart(const Arguments & args) {
             HandleScope scope;
-            Service * service = ObjectWrap::Unwrap<Service>(args.This());
+            Advertisement * ad = ObjectWrap::Unwrap<Advertisement>(args.This());
 
             if ( 2 < args.Length() ||
                 ! args[0]->IsString() || ! args[1]->IsInt32())
@@ -255,39 +255,39 @@ class Service : public EventEmitter {
             
             uint16_t port = static_cast<uint16_t>(raw_port);
 
-            int flags = 0;
-            int interface_index = 0;
+            DNSServiceFlags flags = 0;
+            uint32_t interface_index = 0;
             char * name = NULL;
             char * domain = NULL;
             char * host = NULL;
             uint16_t txt_record_length = 0;
             void * txt_record = NULL;
             
-            bool r = service->DoAnnounce(flags, interface_index, name, *regtype,
+            bool r = ad->DoStart(flags, interface_index, name, *regtype,
                     domain, host, port, txt_record_length, txt_record);
 
             if (!r) {
                 // XXX
                 /*
                 return ThrowException(Exception::Error(
-                    String::New(service->ErrorMessage())));
+                    String::New(ad->ErrorMessage())));
                 */
             }
             return Undefined();
         }
         static
         Handle<Value>
-        Discontinue(const Arguments & args) {
+        Stop(const Arguments & args) {
             HandleScope scope;
-            Service * service = ObjectWrap::Unwrap<Service>(args.This());
+            Advertisement * ad = ObjectWrap::Unwrap<Advertisement>(args.This());
 
-            bool r = service->Discontinue();
+            bool r = ad->Stop();
 
             if ( ! r) {
                 // XXX
                 /*
                 return ThrowException(Exception::Error(
-                    String::New(service->ErrorMessage())));
+                    String::New(ad->ErrorMessage())));
                 */
             }
             return Undefined();
@@ -296,27 +296,27 @@ class Service : public EventEmitter {
     private:
         static
         void
-        on_service_registered(DNSServiceRef sdRef, DNSServiceFlags flags, 
+        on_service_registered(DNSServiceRef /*sdRef*/, DNSServiceFlags flags, 
                 DNSServiceErrorType errorCode, const char *name,
                 const char *regtype, const char *domain, void *context )
         {
-            Service * service = static_cast<Service*>( context );
-            service->on_service_registered(flags, errorCode, name, regtype, domain);
+            Advertisement * ad = static_cast<Advertisement*>( context );
+            ad->on_service_registered(flags, errorCode, name, regtype, domain);
         }
 
         ev_io read_watcher_;
         DNSServiceRef ref_;
 
         static Persistent<String> ready_symbol;
-        static Persistent<String> discontinue_symbol;
+        static Persistent<String> stop_symbol;
 };
 
-Persistent<String> Service::ready_symbol;
-Persistent<String> Service::discontinue_symbol;
+Persistent<String> Advertisement::ready_symbol;
+Persistent<String> Advertisement::stop_symbol;
 
 //=== Service Browser ==========================================================
 
-class ServiceBrowser : public EventEmitter {
+class Browser : public EventEmitter {
     public:
         static
         void
@@ -327,34 +327,110 @@ class ServiceBrowser : public EventEmitter {
             t->Inherit(EventEmitter::constructor_template);
             t->InstanceTemplate()->SetInternalFieldCount(1);
 
-            target->Set(String::NewSymbol("ServiceBrowser"), t->GetFunction());
+            NODE_SET_PROTOTYPE_METHOD(t, "doStart", DoStart);
+
+            target->Set(String::NewSymbol("Browser"), t->GetFunction());
         }
 
+        bool
+        DoStart(DNSServiceFlags flags, uint32_t interface_index, const char * regtype,
+                const char * domain)
+        {
+            std::cout << "=== DoStart" << std::endl;
+            if (ref_) return false;
+
+            int status = DNSServiceBrowse( &ref_, flags, interface_index,
+                    regtype, domain,
+                    & on_service_changed, this);
+            if (kDNSServiceErr_NoError != status) {
+                // XXX deal with error
+                return false;
+            }
+
+            prepareSocket(ref_, &read_watcher_);
+
+            Ref();
+
+            return true;
+        }
         void
         Event(int revents) {
             if (EV_READ & revents) {
+                if (kDNSServiceErr_NoError != DNSServiceProcessResult(ref_)) {
+                    // XXX handle error
+                }
             }
         }
     protected:
 
-        static Handle<Value>
+        static
+        Handle<Value>
         New(const Arguments & args) {
             HandleScope scope;
 
-            ServiceBrowser * browser = new ServiceBrowser();
+            Browser * browser = new Browser();
             browser->Wrap(args.This());
+
             return args.This();
         }
 
-        ServiceBrowser() : EventEmitter() {
+        Browser() : EventEmitter() {
             ref_ = NULL;
 
-            ev_init(&read_watcher_, io_event<ServiceBrowser>);
+            ev_init(&read_watcher_, io_event<Browser>);
             read_watcher_.data = this;
         }
 
-        ~ServiceBrowser() {
+        ~Browser() {
             assert(NULL == ref_);
+        }
+
+        static
+        Handle<Value>
+        DoStart(const Arguments & args) {
+            HandleScope scope;
+            Browser * browser = ObjectWrap::Unwrap<Browser>(args.This());
+
+            if ( 1 > args.Length() || ! args[0]->IsString()) {
+                return ThrowException(Exception::Error(
+                        String::New("argument mismatch.")));
+            }
+
+            String::Utf8Value regtype(args[0]->ToString());
+
+            DNSServiceFlags flags = 0;
+            uint32_t interface_index = 0;
+            char * domain = NULL;
+            
+            bool r = browser->DoStart(flags, interface_index, *regtype, domain);
+
+            if (!r) {
+                // XXX
+                /*
+                return ThrowException(Exception::Error(
+                    String::New(ad->ErrorMessage())));
+                */
+            }
+            return Undefined();
+        }
+
+        static
+        void
+        on_service_changed(DNSServiceRef /*sdRef*/, DNSServiceFlags flags,
+                uint32_t interface_index, DNSServiceErrorType errorCode,
+                const char * serviceName, const char * regtype,
+                const char * replyDomain, void * context)
+        {
+            Browser * browser = static_cast<Browser*>(context);
+            browser->on_service_changed(flags, interface_index, errorCode, serviceName,
+                    regtype, replyDomain);
+        }
+        void
+        on_service_changed(DNSServiceFlags flags, uint32_t interface_index,
+                DNSServiceErrorType errorCode, const char * name,
+                const char * regtype, const char * domain)
+        {
+            std::cout << "=== service changed" << std::endl;
         }
     private:
         DNSServiceRef ref_;
@@ -366,6 +442,6 @@ extern "C"
 void
 init (Handle<Object> target) {
     HandleScope scope;
-    Service::Initialize( target );
-    ServiceBrowser::Initialize( target );
+    Advertisement::Initialize( target );
+    Browser::Initialize( target );
 }

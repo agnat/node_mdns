@@ -1,26 +1,33 @@
 binding = require('./binding');
 
-//=== Service ==================================================================
-var Service = binding.Service;
-Service.prototype.announce = function() {
-  return this.doAnnounce("_" + this.name + "._" + this.protocol, this.port);
+//=== Advertisement ============================================================
+var Advertisement = binding.Advertisement;
+Advertisement.prototype.start = function() {
+  return this.doStart("_" + this.type + "._" + this.protocol, this.port);
 };
 
-exports.createService = function(name, port, protocol, ready_callback) {
-  var service = new Service();
-  service.name = name;
-  service.port = port;
-  service.protocol = protocol;
+exports.createAdvertisement = function(type, port, protocol, ready_callback) {
+  var ad = new Advertisement();
+  ad.type = type;
+  ad.port = port;
+  ad.protocol = protocol;
   if (ready_callback) {
-    service.addListener('ready', ready_callback);
+    ad.addListener('ready', ready_callback);
   }
-  return service;
+  return ad;
 };
 
 //=== Service Browser ==========================================================
 
-exports.createServiceBrowser = function() {
-  var browser = new ServiceBrowser();
+var Browser = binding.Browser;
+Browser.prototype.start = function() {
+  return this.doStart('_' + this.type + '._' + this.protocol);
+}
+
+exports.createBrowser = function(type, protocol) {
+  var browser = new Browser();
+  browser.type = type;
+  browser.protocol = protocol;
   return browser;
 };
 
