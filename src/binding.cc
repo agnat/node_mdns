@@ -1,14 +1,16 @@
+#include <v8.h>
 #include <iostream>
 
-#include "mdns_utils.hpp"
 #include "advertisement.hpp"
 #include "browser.hpp"
 
 extern "C" 
 void
-init (Handle<Object> target) {
+init (v8::Handle<v8::Object> target) {
     using namespace node_mdns;
-    HandleScope scope;
+    v8::HandleScope scope;
     Advertisement::Initialize( target );
     Browser::Initialize( target );
+
+    NODE_DEFINE_CONSTANT(target, kDNSServiceFlagsAdd);
 }

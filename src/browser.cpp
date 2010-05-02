@@ -6,10 +6,14 @@ namespace node_mdns {
 
 using namespace v8;
 
+v8::Persistent<v8::String> Browser::changed_symbol;
+
 void
 Browser::Initialize(Handle<Object> target) {
     HandleScope scope;
     Local<FunctionTemplate> t = mDNSBase::Initialize(target,New);
+
+    changed_symbol = NODE_PSYMBOL("changed");
 
     NODE_SET_PROTOTYPE_METHOD(t, "doStart", DoStart);
     NODE_SET_PROTOTYPE_METHOD(t, "stop", Stop);
@@ -93,7 +97,21 @@ Browser::on_service_changed(DNSServiceFlags flags, uint32_t interface_index,
         DNSServiceErrorType errorCode, const char * name,
         const char * regtype, const char * domain)
 {
-    std::cout << "=== service changed" << std::endl;
+    //std::cout << "=== service changed" << std::endl;
+    const int argc = 6;
+    Local<Value> args[argc];
+    if (kDNSServiceErr_NoError == errorCode) {
+        args[0] = Local<Value>::New(Null());
+        args[1] = Integer::New(flags);
+        args[2] = Integer::New(interface_index);
+        args[3] = String::New(name);
+        args[4] = String::New(regtype);
+        args[5] = String::New(domain);
+        Emit(changed_symbol, argc, args);
+    } else {
+        args[0] = buildException(errorCode);
+        Emit(changed_symbol, 1, args);
+    }
 }
 
 } // end of namespace node_mdns

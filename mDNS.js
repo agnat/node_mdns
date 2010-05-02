@@ -35,3 +35,5 @@ exports.createBrowser = function(type, protocol) {
 
 exports.TCP = "tcp";
 exports.UDP = "udp";
+
+exports.ServiceAdd = binding.kDNSServiceFlagsAdd;

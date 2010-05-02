@@ -25,6 +25,8 @@ class Browser : public mDNSBase {
         void on_service_changed(DNSServiceFlags flags, uint32_t interface_index,
                 DNSServiceErrorType errorCode, const char * name,
                 const char * regtype, const char * domain);
+
+        static v8::Persistent<v8::String> changed_symbol;
 };
 
 } // end of namespace node_mdns
