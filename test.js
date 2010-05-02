@@ -10,4 +10,5 @@ ad.start();
 browser = mDNS.createBrowser("node_js_mdns_test", mDNS.TCP);
 browser.start();
 
-setTimeout(function() { ad.stop(); }, 10000);
+setTimeout(function() { ad.stop(); }, 4000);
+setTimeout(function() { browser.stop(); }, 6000);
