@@ -146,16 +146,16 @@ class Advertisement : public EventEmitter {
         }
 
         bool
-        DoStart(DNSServiceFlags flags, uint32_t interface_index, const char * name,
-                const char * regtype, const char * domain, const char * host,
-                uint16_t port, uint16_t txt_record_length,
+        DoStart(DNSServiceFlags flags, uint32_t interface_index,
+                const char * name, const char * regtype, const char * domain,
+                const char * host, uint16_t port, uint16_t txt_record_length,
                 const void * txt_record)
         {
             if (ref_) return false;
 
-            int status = DNSServiceRegister( &ref_, flags, interface_index, name,
-                    regtype, domain, host, port, txt_record_length, txt_record,
-                    & on_service_registered, this);
+            int status = DNSServiceRegister( &ref_, flags, interface_index,
+                    name, regtype, domain, host, port, txt_record_length,
+                    txt_record, & on_service_registered, this);
             if (kDNSServiceErr_NoError != status) {
                 // XXX deal with error
                 return false;
@@ -214,8 +214,9 @@ class Advertisement : public EventEmitter {
         }
 
         void
-        on_service_registered(DNSServiceFlags flags, DNSServiceErrorType errorCode, 
-                    const char * name, const char * regtype, const char * domain)
+        on_service_registered(DNSServiceFlags flags,
+                DNSServiceErrorType errorCode, const char * name,
+                const char * regtype, const char * domain)
         {
             const size_t argc = 5;
             Local<Value> args[argc];
@@ -333,8 +334,8 @@ class Browser : public EventEmitter {
         }
 
         bool
-        DoStart(DNSServiceFlags flags, uint32_t interface_index, const char * regtype,
-                const char * domain)
+        DoStart(DNSServiceFlags flags, uint32_t interface_index,
+                const char * regtype, const char * domain)
         {
             std::cout << "=== DoStart" << std::endl;
             if (ref_) return false;
@@ -422,20 +423,21 @@ class Browser : public EventEmitter {
                 const char * replyDomain, void * context)
         {
             Browser * browser = static_cast<Browser*>(context);
-            browser->on_service_changed(flags, interface_index, errorCode, serviceName,
-                    regtype, replyDomain);
+            browser->on_service_changed(flags, interface_index, errorCode,
+                    serviceName, regtype, replyDomain);
         }
         void
         on_service_changed(DNSServiceFlags flags, uint32_t interface_index,
                 DNSServiceErrorType errorCode, const char * name,
                 const char * regtype, const char * domain)
         {
-            std::cout << "=== service changed" << std::endl;
         }
     private:
         DNSServiceRef ref_;
         ev_io read_watcher_;
 };
+
+//=== Service ==================================================================
 } // end of anonymous namespace
 
 extern "C" 
