@@ -9,15 +9,15 @@ ad =  mDNS.createAdvertisement("node_js_mdns_test", 4321, mDNS.TCP);
 ad.start();
 
 browser = mDNS.createBrowser("node_js_mdns_test", mDNS.TCP);
-browser.addListener('changed', function(err, flags, interface_index, name, regtype, domain) {
+browser.addListener('changed', function(err, flags, info) {
   var verb = 'gone';
   if (flags & mDNS.ServiceAdd) {
     verb = 'found';
-    var resolver = mDNS.createResolver();
-    resolver.addListener('resolved', function() { puts('=== resolved'); resolver.stop(); });
-    resolver.start(flags, interface_index, name, regtype, domain);
+    mDNS.resolve(info, function(resolver_info) {
+      p("=== resolved", resolver_info);
+    });
   }
-  puts('=== service ' + verb + ': ' + name + ' ' + regtype + ' ' + domain);
+  puts('=== service ' + verb + ': ' + info.name + ' ' + info.regtype + ' ' + info.domain);
 });
 browser.start();
 

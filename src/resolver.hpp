@@ -17,6 +17,7 @@ class Resolver : public mDNSBase {
         Resolver();
 
         static v8::Handle<v8::Value> DoStart(v8::Arguments const& args);
+
         static void on_resolve(DNSServiceRef /*sdRef*/, DNSServiceFlags,
                 uint32_t interface_index, DNSServiceErrorType error_code,
                 const char * fullname, const char * hosttarget, uint16_t port,
@@ -28,6 +29,10 @@ class Resolver : public mDNSBase {
                 uint16_t txt_record_length, const unsigned char * txt_record);
 
         static v8::Persistent<v8::String> resolved_symbol;
+        static v8::Persistent<v8::String> interface_symbol;
+        static v8::Persistent<v8::String> fullname_symbol;
+        static v8::Persistent<v8::String> hosttarget_symbol;
+        static v8::Persistent<v8::String> port_symbol;
 };
 
 } // end of namespace node_mdns

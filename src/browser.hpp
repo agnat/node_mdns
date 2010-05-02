@@ -27,6 +27,10 @@ class Browser : public mDNSBase {
                 const char * regtype, const char * domain);
 
         static v8::Persistent<v8::String> changed_symbol;
+        static v8::Persistent<v8::String> name_symbol;
+        static v8::Persistent<v8::String> interface_symbol;
+        static v8::Persistent<v8::String> regtype_symbol;
+        static v8::Persistent<v8::String> domain_symbol;
 };
 
 } // end of namespace node_mdns

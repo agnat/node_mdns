@@ -7,13 +7,22 @@ namespace node_mdns {
 using namespace v8;
 
 Persistent<String> Browser::changed_symbol;
+Persistent<String> Browser::name_symbol;
+Persistent<String> Browser::interface_symbol;
+Persistent<String> Browser::regtype_symbol;
+Persistent<String> Browser::domain_symbol;
+
 
 void
 Browser::Initialize(Handle<Object> target) {
     HandleScope scope;
     Local<FunctionTemplate> t = mDNSBase::Initialize(target,New);
 
-    changed_symbol = NODE_PSYMBOL("changed");
+    changed_symbol   = NODE_PSYMBOL("changed");
+    name_symbol      = NODE_PSYMBOL("name");
+    interface_symbol = NODE_PSYMBOL("interface_index");
+    regtype_symbol   = NODE_PSYMBOL("regtype");
+    domain_symbol    = NODE_PSYMBOL("domain");
 
     NODE_SET_PROTOTYPE_METHOD(t, "doStart", DoStart);
 
@@ -97,15 +106,18 @@ Browser::on_service_changed(DNSServiceFlags flags, uint32_t interface_index,
         const char * regtype, const char * domain)
 {
     //std::cout << "=== service changed" << std::endl;
-    const int argc = 6;
+    const int argc = 3;
     Local<Value> args[argc];
     if (kDNSServiceErr_NoError == errorCode) {
+        Local<Object> info = Object::New();
+        info->Set(name_symbol, String::New(name));
+        info->Set(interface_symbol, Integer::NewFromUnsigned(interface_index));
+        info->Set(regtype_symbol, String::New(regtype));
+        info->Set(domain_symbol, String::New(domain));
+
         args[0] = Local<Value>::New(Null());
         args[1] = Integer::New(flags);
-        args[2] = Integer::New(interface_index);
-        args[3] = String::New(name);
-        args[4] = String::New(regtype);
-        args[5] = String::New(domain);
+        args[2] = info;
         Emit(changed_symbol, argc, args);
     } else {
         args[0] = buildException(errorCode);

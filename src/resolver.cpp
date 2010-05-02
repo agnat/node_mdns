@@ -7,6 +7,10 @@ namespace node_mdns {
 using namespace v8;
 
 Persistent<String> Resolver::resolved_symbol;
+Persistent<String> Resolver::interface_symbol;
+Persistent<String> Resolver::fullname_symbol;
+Persistent<String> Resolver::hosttarget_symbol;
+Persistent<String> Resolver::port_symbol;
 
 void
 Resolver::Initialize(Handle<Object> target) {
@@ -14,6 +18,10 @@ Resolver::Initialize(Handle<Object> target) {
     Local<FunctionTemplate> t = mDNSBase::Initialize(target, New);
 
     resolved_symbol = NODE_PSYMBOL("resolved");
+    interface_symbol = NODE_PSYMBOL("interface_index");
+    fullname_symbol = NODE_PSYMBOL("fullname");
+    hosttarget_symbol = NODE_PSYMBOL("hosttarget");
+    port_symbol = NODE_PSYMBOL("port");
 
     NODE_SET_PROTOTYPE_METHOD(t, "doStart", DoStart);
 
@@ -121,7 +129,21 @@ Resolver::on_resolve(DNSServiceFlags flags, uint32_t interface_index,
         const char * hosttarget, uint16_t port,
         uint16_t txt_record_length, const unsigned char * txt_record)
 {
-    Emit(resolved_symbol, 0, NULL);
+    Local<Value> args[2];
+    if (kDNSServiceErr_NoError == error_code) {
+        args[0] = Local<Value>::New(Null());
+        Local<Object> info = Object::New();
+        info->Set(interface_symbol, Integer::NewFromUnsigned(interface_index));
+        info->Set(fullname_symbol, String::New(fullname));
+        info->Set(hosttarget_symbol, String::New(hosttarget));
+        info->Set(port_symbol, Integer::NewFromUnsigned(port));
+        // TODO txt record
+        args[1] = info;
+        Emit(resolved_symbol, 2, args);
+    } else {
+        args[0] = buildException(error_code);
+        Emit(resolved_symbol, 1, args);
+    }
 }
 
 } // end of namespace node_mdns

@@ -35,12 +35,22 @@ exports.createBrowser = function(type, protocol) {
 
 var Resolver = binding.Resolver;
 
-Resolver.prototype.start = function(flags, interface_index, name, regtype, domain) {
-  this.doStart(name, regtype, domain, interface_index, flags);
+Resolver.prototype.start = function(service_info) {
+  this.doStart(service_info.name, service_info.regtype, service_info.domain,
+      service_info.interface_index, 0);
 }
 
 exports.createResolver = function() {
   return new Resolver();
+}
+
+exports.resolve = function(service_info, handler) {
+  var resolver = new Resolver();
+  resolver.addListener('resolved', function(error, resolver_info) {
+    handler(resolver_info);
+    resolver.stop();
+  });
+  resolver.start(service_info)
 }
 
 //=== Constants ================================================================
