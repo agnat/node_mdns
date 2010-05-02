@@ -55,7 +55,6 @@ Advertisement::New(const Arguments & args) {
 
 Advertisement::Advertisement() : mDNSBase() {}
 
-Advertisement::~Advertisement() {}
 
 void
 Advertisement::on_service_registered(DNSServiceFlags flags,

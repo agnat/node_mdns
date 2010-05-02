@@ -13,6 +13,9 @@ browser.addListener('changed', function(err, flags, interface_index, name, regty
   var verb = 'gone';
   if (flags & mDNS.ServiceAdd) {
     verb = 'found';
+    var resolver = mDNS.createResolver();
+    resolver.addListener('resolved', function() { puts('=== resolved'); resolver.stop(); });
+    resolver.start(flags, interface_index, name, regtype, domain);
   }
   puts('=== service ' + verb + ': ' + name + ' ' + regtype + ' ' + domain);
 });

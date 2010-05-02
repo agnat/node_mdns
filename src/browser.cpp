@@ -6,7 +6,7 @@ namespace node_mdns {
 
 using namespace v8;
 
-v8::Persistent<v8::String> Browser::changed_symbol;
+Persistent<String> Browser::changed_symbol;
 
 void
 Browser::Initialize(Handle<Object> target) {
@@ -16,7 +16,6 @@ Browser::Initialize(Handle<Object> target) {
     changed_symbol = NODE_PSYMBOL("changed");
 
     NODE_SET_PROTOTYPE_METHOD(t, "doStart", DoStart);
-    NODE_SET_PROTOTYPE_METHOD(t, "stop", Stop);
 
     target->Set(String::NewSymbol("Browser"), t->GetFunction());
 }

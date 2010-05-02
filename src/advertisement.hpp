@@ -20,7 +20,6 @@ class Advertisement : public mDNSBase {
 
 
         Advertisement();
-        ~Advertisement();
         void on_service_registered(DNSServiceFlags flags,
                 DNSServiceErrorType errorCode, const char * name,
                 const char * regtype, const char * domain);

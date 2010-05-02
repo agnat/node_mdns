@@ -17,7 +17,7 @@ def build(bld):
   obj = bld.new_task_gen('cxx', 'shlib', 'node_addon')
   obj.target = 'binding'
   obj.source = 'src/binding.cc', 'src/mdns_utils.cpp', 'src/mdns_base.cpp', \
-    'src/advertisement.cpp', 'src/browser.cpp'
+    'src/advertisement.cpp', 'src/browser.cpp', 'src/resolver.cpp'
                 
 
 def shutdown():

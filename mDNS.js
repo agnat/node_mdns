@@ -31,6 +31,18 @@ exports.createBrowser = function(type, protocol) {
   return browser;
 };
 
+//=== Resolver =================================================================
+
+var Resolver = binding.Resolver;
+
+Resolver.prototype.start = function(flags, interface_index, name, regtype, domain) {
+  this.doStart(name, regtype, domain, interface_index, flags);
+}
+
+exports.createResolver = function() {
+  return new Resolver();
+}
+
 //=== Constants ================================================================
 
 exports.TCP = "tcp";
