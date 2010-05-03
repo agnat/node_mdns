@@ -10,20 +10,23 @@ Internally, it uses the mDNSResponder API which is available on all major platfo
 
 h2. Build
 
+Tested on Mac OS X and Linux. On Linux the avahi dns_sd compat library is required.
+
 bc. node-waf configure build
-sudo node-waf install
+
+TODO: install?
 
 h2. Quickstart
 
 p. To import the add-on use something like this:
 
-bc. var mDNS = require('mDNS');
+bc. var mDNS = require('./mDNS');
 
 p. Announce a TCP server on port 4321 with service type 'http':
 
 bc.. var ad = mDNS.createAdvertisement('http', 4321, mDNS.TCP);
-
 ad.start();
+
 setTimeout(function() { ad.stop(); }, 10000);
 
 p. Browse HTTP servers:
