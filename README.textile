@@ -10,8 +10,6 @@ Internally, it uses the mDNSResponder API which is available on all major platfo
 
 h2. Build
 
-Currently only tested on Mac OS X. Other platforms will require some tweaking of wscript.
-
 bc. node-waf configure build
 sudo node-waf install
 
@@ -28,19 +26,12 @@ bc.. var ad = mDNS.createAdvertisement('http', 4321, mDNS.TCP);
 ad.start();
 setTimeout(function() { ad.stop(); }, 10000);
 
-h2. Documentation
+p. Browse HTTP servers:
 
-h3. Advertisement
-
-h4. Events
-
-h4. Methods
-
-h3. Browser
-
-h4. Events
-
-h4. Methods
+bc.. var browser = mDNS.createBrowser('http', mDNS.TCP);
+browser.addListener('serviceUp', function(info) { puts('found', info); });
+browser.addListener('serviceDown', function(info) { puts('gone', info); });
+browser.start();
 
 h2. License (MIT)
 
