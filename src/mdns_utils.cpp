@@ -54,6 +54,7 @@ errorString(DNSServiceErrorType error) {
             return "DoubleNAT";
         case kDNSServiceErr_BadTime:
             return "BadTime";
+#if 0 // missing on linux ...
         case kDNSServiceErr_BadSig:
             return "BadSig";
         case kDNSServiceErr_BadKey:
@@ -66,13 +67,12 @@ errorString(DNSServiceErrorType error) {
             return "NATPortMappingUnsupported";
         case kDNSServiceErr_NATPortMappingDisabled:
             return "NATPortMappingDisabled";
-#ifdef kDNSServiceErr_NoRouter
+#if 0 // missing on leopard
         case kDNSServiceErr_NoRouter:
             return "NoRouter";
-#endif
-#ifdef kDNSServiceErr_PollingMode
         case kDNSServiceErr_PollingMode:
             return "PollingMode";
+#endif
 #endif
     };
     return "Unknown DNSServiceError";
