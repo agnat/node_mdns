@@ -2,6 +2,7 @@
 
 #include <limits>
 #include <iostream>
+#include <netinet/in.h>
 
 namespace node_mdns {
 
@@ -96,7 +97,7 @@ Advertisement::DoStart(const Arguments & args) {
                 String::New("port number to large.")));
     }
     
-    uint16_t port = static_cast<uint16_t>(raw_port);
+    uint16_t port = static_cast<uint16_t>(htons(raw_port));
 
     DNSServiceFlags flags = 0;
     uint32_t interface_index = 0;

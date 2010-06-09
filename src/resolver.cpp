@@ -1,6 +1,7 @@
 #include "resolver.hpp"
 
 #include <iostream>
+#include <netinet/in.h>
 
 namespace node_mdns {
 
@@ -120,7 +121,7 @@ Resolver::on_resolve(DNSServiceRef /*sdRef*/, DNSServiceFlags flags,
 {
     Resolver * resolver = static_cast<Resolver*>(context);
     resolver->on_resolve(flags, interface_index, error_code, fullname, hosttarget,
-            port, txt_record_length, txt_record);
+            ntohs(port), txt_record_length, txt_record);
 }
 
 void
