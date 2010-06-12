@@ -96,19 +96,65 @@ Advertisement::DoStart(const Arguments & args) {
         return ThrowException(Exception::Error(
                 String::New("port number to large.")));
     }
-    
     uint16_t port = static_cast<uint16_t>(htons(raw_port));
 
     DNSServiceFlags flags = 0;
+    if ( 3 < args.Length()) {
+        if ( ! args[2]->IsInt32()) {
+            return ThrowException(Exception::Error(
+                        String::New("argument mismatch.")));
+        }
+        flags = args[2]->ToInteger()->Int32Value();
+    }
+
     uint32_t interface_index = 0;
+    if ( 4 < args.Length()) {
+        if ( ! args[3]->IsInt32()) {
+            return ThrowException(Exception::Error(
+                        String::New("argument mismatch.")));
+        }
+        interface_index = args[3]->ToInteger()->Int32Value();
+    }
+
     char * name = NULL;
+    if ( 5 < args.Length()) {
+        if ( ! args[4]->IsString()) {
+            return ThrowException(Exception::Error(
+                        String::New("argument mismatch.")));
+        }
+        // XXX is there a better way to do this?
+        name = strdup(*String::Utf8Value(args[4]->ToString()));
+    }
+
     char * domain = NULL;
+    if ( 6 < args.Length()) {
+        if ( ! args[5]->IsString()) {
+            return ThrowException(Exception::Error(
+                        String::New("argument mismatch.")));
+        }
+        // XXX is there a better way to do this?
+        domain = strdup(*String::Utf8Value(args[5]->ToString()));
+    }
+
     char * host = NULL;
+    if ( 7 < args.Length()) {
+        if ( ! args[6]->IsString()) {
+            return ThrowException(Exception::Error(
+                        String::New("argument mismatch.")));
+        }
+        // XXX is there a better way to do this?
+        host = strdup(*String::Utf8Value(args[6]->ToString()));
+    }
+
     uint16_t txt_record_length = 0;
     void * txt_record = NULL;
     
     bool r = ad->DoStart(flags, interface_index, name, *regtype,
             domain, host, port, txt_record_length, txt_record);
+    // XXX is there a better way to do this?
+    free(name);
+    free(domain);
+    free(host);
 
     if (!r) {
         std::cout << "kaputt" << std::endl;
