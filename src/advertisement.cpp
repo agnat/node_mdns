@@ -146,6 +146,7 @@ Advertisement::DoStart(const Arguments & args) {
         host = strdup(*String::Utf8Value(args[6]->ToString()));
     }
 
+    // TODO: handle more arguments
     uint16_t txt_record_length = 0;
     void * txt_record = NULL;
     

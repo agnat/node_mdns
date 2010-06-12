@@ -67,4 +67,3 @@ exports.resolve = resolve;
 exports.TCP = "tcp";
 exports.UDP = "udp";
 
-exports.ServiceAdd = binding.kDNSServiceFlagsAdd;
