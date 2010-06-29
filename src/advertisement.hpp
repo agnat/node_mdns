@@ -31,6 +31,9 @@ class Advertisement : public mDNSBase {
                 void *context );
 
         static v8::Persistent<v8::String> ready_symbol;
+        static v8::Persistent<v8::String> name_symbol;
+        static v8::Persistent<v8::String> regtype_symbol;
+        static v8::Persistent<v8::String> domain_symbol;
 };
 
 } // end of namespace node_mdns

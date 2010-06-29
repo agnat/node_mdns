@@ -5,8 +5,15 @@ var mdns   = require('./lib/mdns'),
 var puts    = sys.puts,
     inspect = sys.inspect;
 
-var ad =  mdns.createAdvertisement("node_mdns_test", 4321, 'tcp');
-var browser = mdns.createBrowser("node_mdns_test", 'tcp');
+var ad =  mdns.createAdvertisement(["node_mdns_test", 'a', 'b'], 4321, function(err, info, flags) {
+  if (err) {
+    assert.fail(err)
+  } else {
+    assert.equal(info['regtype'], '_node_mdns_test._tcp.');
+    puts('Advertising', inspect(info));
+  }
+});
+var browser = mdns.createBrowser(["node_mdns_test", 'b'], 'tcp');
 
 timeout_id = setTimeout(function() { assert.fail('time out'); }, 10000);
 

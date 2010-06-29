@@ -116,8 +116,8 @@ Browser::on_service_changed(DNSServiceFlags flags, uint32_t interface_index,
         info->Set(domain_symbol, String::New(domain));
 
         args[0] = Local<Value>::New(Null());
-        args[1] = Integer::New(flags);
-        args[2] = info;
+        args[1] = info;
+        args[2] = Integer::New(flags);
         Emit(changed_symbol, argc, args);
     } else {
         args[0] = buildException(errorCode);

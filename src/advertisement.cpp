@@ -10,6 +10,9 @@ namespace node_mdns {
 using namespace v8;
 
 Persistent<String> Advertisement::ready_symbol;
+Persistent<String> Advertisement::name_symbol;
+Persistent<String> Advertisement::regtype_symbol;
+Persistent<String> Advertisement::domain_symbol;
 
 void
 Advertisement::Initialize(Handle<Object> target) {
@@ -17,6 +20,9 @@ Advertisement::Initialize(Handle<Object> target) {
     Local<FunctionTemplate> t = mDNSBase::Initialize(target, New);
 
     ready_symbol = NODE_PSYMBOL("ready");
+    name_symbol = NODE_PSYMBOL("name");
+    regtype_symbol = NODE_PSYMBOL("regtype");
+    domain_symbol = NODE_PSYMBOL("domain");
 
     NODE_SET_PROTOTYPE_METHOD(t, "doStart", DoStart);
 
@@ -68,14 +74,17 @@ Advertisement::on_service_registered(DNSServiceFlags flags,
         DNSServiceErrorType errorCode, const char * name,
         const char * regtype, const char * domain)
 {
-    const size_t argc = 5;
+    const size_t argc = 3;
     Local<Value> args[argc];
     if (kDNSServiceErr_NoError == errorCode) {
+        Local<Object> info = Object::New();
+        info->Set(name_symbol, String::New(name));
+        info->Set(regtype_symbol, String::New(regtype));
+        info->Set(domain_symbol, String::New(domain));
+
         args[0] = Local<Value>::New(Null());
-        args[1] = Integer::New(flags);
-        args[2] = String::New(name);
-        args[3] = String::New(regtype);
-        args[4] = String::New(domain);
+        args[1] = info;
+        args[2] = Integer::New(flags);
         Emit(ready_symbol, argc, args);
     } else {
         args[0] = buildException(errorCode);
