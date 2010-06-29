@@ -29,8 +29,8 @@ def shutdown():
   # HACK to get binding.node out of build directory.
   # better way to do this?
   if Options.commands['clean']:
-    if exists('binding.node'): unlink('binding.node')
+    if exists('lib/mdns/binding.node'): unlink('lib/mdns/binding.node')
   else:
-    if exists('build/default/binding.node') and not exists('binding.node'):
-      symlink('build/default/binding.node', 'binding.node')
+    if exists('build/default/binding.node') and not exists('lib/mdns/binding.node'):
+      symlink('../../build/default/binding.node', 'lib/mdns/binding.node')
 

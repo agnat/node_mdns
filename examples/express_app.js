@@ -1,5 +1,5 @@
 var express = require('express'),
-    mdns    = require('mdns'),
+    mdns    = require('../lib/mdns'),
     sys     = require('sys');
 
 get('/', function() {
