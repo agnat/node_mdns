@@ -9,23 +9,47 @@ function regtype(service_type, protocol /*, subtypes ... */) {
 //=== Advertisement ============================================================
 var Advertisement = binding.Advertisement;
 Advertisement.prototype.start = function() {
-  return this.doStart(regtype(this.type, this.protocol), this.port);
+  return this.doStart(
+    this.options.flags,
+    this.options.interface_index,
+    this.options.name,
+    regtype(this.service_type, this.protocol),
+    this.options.domain,
+    this.options.host,
+    this.port,
+    this.options.txt_record,
+    this.options.ready_callback);
 };
 
-exports.createAdvertisement = function(type, port, protocol, ready_callback) {
-  if ( undefined == type ) {
-    throw TypeError("required argument 'type' is missing");
+exports.createAdvertisement = function(service_type, port, protocol,
+    flags, interface_index, name, domain, host, txt_record, ready_callback)
+{
+  if ( undefined == service_type ) {
+    throw TypeError("required argument 'service_type' is missing");
   }
   if ( undefined == port || typeof(port) == 'function') {
     throw TypeError("required argument 'port' is missing");
   }
-  var ad = new Advertisement();
-  ad.type = type;
-  ad.port = port;
-  ad.protocol = protocol || 'tcp';
-  if (ready_callback) {
-    ad.addListener('ready', ready_callback);
+  if (typeof(arguments[arguments.length - 1]) == 'function') {
+    ready_callback = arguments[arguments.length - 1];
   }
+  var ad = new Advertisement();
+  ad.service_type = service_type;
+  ad.port = port;
+  if (protocol && typeof(protocol) != 'function') {
+    ad.protocol = protocol;
+  } else {
+    ad.protocol = 'tcp';
+  }
+  ad.options = {
+    flags: flags,
+    interface_index: interface_index,
+    name: name,
+    domain: domain,
+    host: host,
+    txt_record: txt_record,
+    ready_callback: ready_callback
+  };
   return ad;
 };
 
