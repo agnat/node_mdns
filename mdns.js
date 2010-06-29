@@ -13,10 +13,16 @@ Advertisement.prototype.start = function() {
 };
 
 exports.createAdvertisement = function(type, port, protocol, ready_callback) {
+  if ( undefined == type ) {
+    throw TypeError("required argument 'type' is missing");
+  }
+  if ( undefined == port || typeof(port) == 'function') {
+    throw TypeError("required argument 'port' is missing");
+  }
   var ad = new Advertisement();
   ad.type = type;
   ad.port = port;
-  ad.protocol = protocol;
+  ad.protocol = protocol || 'tcp';
   if (ready_callback) {
     ad.addListener('ready', ready_callback);
   }

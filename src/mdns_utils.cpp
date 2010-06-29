@@ -1,5 +1,7 @@
 #include "mdns_utils.hpp"
 
+#include <string>
+
 namespace node_mdns {
 
 using namespace v8;
@@ -78,13 +80,13 @@ errorString(DNSServiceErrorType error) {
     return "Unknown DNSServiceError";
 }
 
-inline
 Local<Value>
 buildException(DNSServiceErrorType error_code) {
     HandleScope scope;
 
-    const char * error_str = errorString(error_code);
-    Local<String> error_msg = String::New(error_str);
+    std::string error_str("DNSServiceError: ");
+    error_str += errorString(error_code);
+    Local<String> error_msg = String::New(error_str.c_str());
     Local<Value> error_v = Exception::Error(error_msg);
     Local<Object> error = Local<Object>::Cast(error_v);
     return scope.Close(error);

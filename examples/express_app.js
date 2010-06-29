@@ -8,5 +8,5 @@ get('/', function() {
 
 var server = run();
 server.addListener('listening', function() {
-  mdns.createAdvertisement('http', Express.server.port, mdns.TCP).start();
+  mdns.createAdvertisement('http', Express.server.port, 'tcp').start();
 });

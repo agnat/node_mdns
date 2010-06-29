@@ -97,9 +97,11 @@ Advertisement::DoStart(const Arguments & args) {
     String::Utf8Value regtype(args[0]->ToString());
 
     int raw_port = args[1]->ToInteger()->Int32Value();
-    if (std::numeric_limits<uint16_t>::max() < raw_port) {
+    if (std::numeric_limits<uint16_t>::max() < raw_port ||
+        0 > raw_port)
+    {
         return ThrowException(Exception::Error(
-                String::New("port number to large.")));
+                String::New("illegal port number.")));
     }
     uint16_t port = static_cast<uint16_t>(htons(raw_port));
 
@@ -145,7 +147,6 @@ Advertisement::DoStart(const Arguments & args) {
             return ThrowException(Exception::Error(
                         String::New("argument mismatch.")));
         }
-        // XXX is there a better way to do this?
         host = *String::Utf8Value(args[6]->ToString());
     }
 
@@ -161,12 +162,7 @@ Advertisement::DoStart(const Arguments & args) {
             port, txt_record_length, txt_record);
 
     if (! result->IsUndefined()) {
-        std::cout << "kaputt" << std::endl;
-        // XXX
-        /*
-        return ThrowException(Exception::Error(
-            String::New(ad->ErrorMessage())));
-        */
+        return ThrowException(result);
     }
     return Undefined();
 }
