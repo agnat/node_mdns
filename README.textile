@@ -20,7 +20,7 @@ h2. Quickstart
 
 p. To import the add-on use something like this:
 
-bc. var mDNS = require('./mDNS');
+bc. var mDNS = require('./lib/mDNS');
 
 p. Announce a TCP server on port 4321 with service type 'http':
 
