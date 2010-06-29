@@ -5,6 +5,8 @@
 #include "browser.hpp"
 #include "resolver.hpp"
 
+#include "mdns_service_ref.hpp"
+
 extern "C" 
 void
 init (v8::Handle<v8::Object> target) {
@@ -14,6 +16,8 @@ init (v8::Handle<v8::Object> target) {
     Advertisement::Initialize( target );
     Browser::Initialize( target );
     Resolver::Initialize( target );
+
+    ServiceRef::Initialize( target );
 
     // DNS Classes
     NODE_DEFINE_CONSTANT(target, kDNSServiceClass_IN);

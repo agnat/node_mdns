@@ -74,8 +74,7 @@ Resolver.prototype.start = function(service_info) {
 }
 
 exports.resolve = resolve;
+
+//=== raw bindings ============================================================
+exports.DNSServiceRef = binding.DNSServiceRef;
 //=== Constants ================================================================
-
-exports.TCP = "tcp";
-exports.UDP = "udp";
-

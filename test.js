@@ -39,4 +39,6 @@ test_ad.start();
 assert.throws(function() { test_ad.start()});
 test_ad.stop();
 
+var sr = new mdns.DNSServiceRef();
+sys.puts(sys.inspect(sr));
 
