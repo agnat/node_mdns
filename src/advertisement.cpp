@@ -22,27 +22,32 @@ Advertisement::Initialize(Handle<Object> target) {
     target->Set(String::NewSymbol("Advertisement"), t->GetFunction());
 }
 
-bool
+Handle<Value>
 Advertisement::DoStart(DNSServiceFlags flags, uint32_t interface_index,
         const char * name, const char * regtype, const char * domain,
         const char * host, uint16_t port, uint16_t txt_record_length,
         const void * txt_record)
 {
-    if (ServiceRef()) return false;
+    if (ServiceRef()) {
+        return ThrowException(Exception::Error(
+                   String::New("Advertisement already started."))); 
+    }
 
     int status = DNSServiceRegister( & ServiceRef(), flags, interface_index,
             name, regtype, domain, host, port, txt_record_length,
             txt_record, & on_service_registered, this);
     if (kDNSServiceErr_NoError != status) {
-        // XXX deal with error
-        return false;
+        return ThrowException(buildException(status));
     }
 
-    prepareSocket();
+    Handle<Value> result = prepareSocket();
+    if ( ! result->IsUndefined()) {
+        return ThrowException(result);
+    }
 
     Ref();
 
-    return true;
+    return Undefined();
 }
 
 Handle<Value>
@@ -116,48 +121,46 @@ Advertisement::DoStart(const Arguments & args) {
         interface_index = args[3]->ToInteger()->Int32Value();
     }
 
-    char * name = NULL;
+    std::string name;
     if ( 5 < args.Length()) {
         if ( ! args[4]->IsString()) {
             return ThrowException(Exception::Error(
                         String::New("argument mismatch.")));
         }
-        // XXX is there a better way to do this?
-        name = strdup(*String::Utf8Value(args[4]->ToString()));
+        name = *String::Utf8Value(args[4]->ToString());
     }
 
-    char * domain = NULL;
+    std::string domain;
     if ( 6 < args.Length()) {
         if ( ! args[5]->IsString()) {
             return ThrowException(Exception::Error(
                         String::New("argument mismatch.")));
         }
-        // XXX is there a better way to do this?
-        domain = strdup(*String::Utf8Value(args[5]->ToString()));
+        domain = *String::Utf8Value(args[5]->ToString());
     }
 
-    char * host = NULL;
+    std::string host;
     if ( 7 < args.Length()) {
         if ( ! args[6]->IsString()) {
             return ThrowException(Exception::Error(
                         String::New("argument mismatch.")));
         }
         // XXX is there a better way to do this?
-        host = strdup(*String::Utf8Value(args[6]->ToString()));
+        host = *String::Utf8Value(args[6]->ToString());
     }
 
     // TODO: handle more arguments
     uint16_t txt_record_length = 0;
     void * txt_record = NULL;
     
-    bool r = ad->DoStart(flags, interface_index, name, *regtype,
-            domain, host, port, txt_record_length, txt_record);
-    // XXX is there a better way to do this?
-    free(name);
-    free(domain);
-    free(host);
+    Handle<Value> result = ad->DoStart(flags, interface_index,
+            name.empty() ? NULL : name.c_str(),
+            *regtype,
+            domain.empty() ? NULL : domain.c_str(),
+            host.c_str() ? NULL : host.c_str(),
+            port, txt_record_length, txt_record);
 
-    if (!r) {
+    if (! result->IsUndefined()) {
         std::cout << "kaputt" << std::endl;
         // XXX
         /*

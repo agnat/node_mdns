@@ -19,7 +19,7 @@ class mDNSBase : public node::EventEmitter {
 
     protected:
         DNSServiceRef & ServiceRef() { return ref_; }
-        void prepareSocket();
+        v8::Handle<v8::Value> prepareSocket();
         void Event(int revents);
 
         bool Stop(v8::Local<v8::Value> exception = v8::Local<v8::Value>());

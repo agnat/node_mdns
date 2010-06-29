@@ -11,7 +11,7 @@ class Advertisement : public mDNSBase {
         static void Initialize(v8::Handle<v8::Object> target);
         static v8::Handle<v8::Value> New(const v8::Arguments & args);
 
-        bool DoStart(DNSServiceFlags flags, uint32_t interface_index,
+        v8::Handle<v8::Value> DoStart(DNSServiceFlags flags, uint32_t interface_index,
                 const char * name, const char * regtype, const char * domain,
                 const char * host, uint16_t port, uint16_t txt_record_length,
                 const void * txt_record);

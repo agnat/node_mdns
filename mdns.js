@@ -1,9 +1,15 @@
 binding = require('./binding');
 
+function regtype(service_type, protocol /*, subtypes ... */) {
+  var subtypes = Array.prototype.slice.call(arguments, 2);
+  subtypes.unshift('_' + service_type + '._' + protocol);
+  return subtypes.join(',');
+}
+
 //=== Advertisement ============================================================
 var Advertisement = binding.Advertisement;
 Advertisement.prototype.start = function() {
-  return this.doStart("_" + this.type + "._" + this.protocol, this.port);
+  return this.doStart(regtype(this.type, this.protocol), this.port);
 };
 
 exports.createAdvertisement = function(type, port, protocol, ready_callback) {

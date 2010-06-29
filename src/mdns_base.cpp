@@ -1,4 +1,5 @@
 #include "mdns_base.hpp"
+#include <node.h>
 
 namespace node_mdns {
 
@@ -28,23 +29,22 @@ mDNSBase::~mDNSBase() {
     assert(NULL == ref_);
 }
 
-void
+Handle<Value>
 mDNSBase::prepareSocket() {
     int fd = DNSServiceRefSockFD(ref_);
     if (-1 == fd) {
-        // XXX deal with error
-        return;
+        return Exception::Error(String::New("Failed to get socket fd"));
     }
 
     if (-1 == fcntl(fd, F_SETFL, O_NONBLOCK) ||
         -1 == fcntl(fd, F_SETFD, FD_CLOEXEC))
     {
-        // XXX deal with error
-        return;
+        return node::ErrnoException(errno, "fcntl");
     }
 
     ev_io_set(&read_watcher_, fd, EV_READ);
     ev_io_start(EV_DEFAULT_ &read_watcher_);
+    return Undefined();
 }
 
 bool

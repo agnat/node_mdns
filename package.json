@@ -1,6 +1,6 @@
 { "name" : "node_mDNS"
 , "version" : "0.0.1"
-, "description" : "Add-on for mDNS/Zeroconf/Bonjour service discovery."
+, "description" : "mDNS/Zeroconf/Bonjour service discovery add-on"
 , "author": "David Siegel"
 }
 
