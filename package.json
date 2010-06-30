@@ -7,9 +7,13 @@
 , "scripts": { "install": "node-waf configure build"}
 , "licenses": [
     { "type": "MIT"
-    , "url": "http://github.com/agnat/node_mDNS/raw/master/LICENSE"]
+    , "url": "http://github.com/agnat/node_mDNS/raw/master/LICENSE"
     }
   ]
 , "bugs": { "web": "http://github.com/agnat/node_mDNS/issues" }
+, "repository":
+  { "type": "git"
+  , "url":  "http://github.com/agnat/node_mDNS.git"
+  }
 }
 
