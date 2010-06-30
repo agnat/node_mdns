@@ -1,13 +1,16 @@
 import sys
-import json
 import Options
 from os import unlink, link
 from os.path import exists 
 
 # nice, but requires python 2.6 ... 
-package = json.load( open('package.json'))
+import json
+package = json.load(open('package.json'))
 APPNAME = 'node_' + package['name'] # used by 'node-waf dist'
 VERSION = package['version']        # dito
+
+#APPNAME = 'node_mdns'
+#VERSION = '0.0.2'
 
 def set_options(opt):
   opt.tool_options('compiler_cxx')
@@ -18,12 +21,10 @@ def configure(conf):
   if sys.platform != 'darwin':
     conf.env.LIB_DNSSD = 'dns_sd'
 
-
 def build(bld):
   obj = bld.new_task_gen('cxx', 'shlib', 'node_addon')
   obj.target = 'binding'
-  obj.source = 'src/binding.cc', 'src/mdns_utils.cpp', 'src/mdns_base.cpp', \
-    'src/advertisement.cpp', 'src/browser.cpp', 'src/resolver.cpp'
+  obj.source = bld.path.ant_glob('src/*.cpp')
   obj.uselib = "DNSSD"
                 
 
