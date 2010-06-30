@@ -1,6 +1,7 @@
-{ "name" : "node_mDNS"
+{ "name" : "mdns"
 , "version" : "0.0.1"
-, "description" : "mDNS/Zeroconf/Bonjour service discovery add-on"
-, "author": "David Siegel"
+, "description" : "mdns/zeroconf/bonjour service discovery add-on"
+, "author": ["David Siegel", "Orlando Vazquez"]
+, "scripts": { "install": "node-waf configure build"}
 }
 

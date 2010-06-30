@@ -32,5 +32,5 @@ def shutdown():
     if exists('lib/mdns/binding.node'): unlink('lib/mdns/binding.node')
   else:
     if exists('build/default/binding.node') and not exists('lib/mdns/binding.node'):
-      symlink('../../build/default/binding.node', 'lib/mdns/binding.node')
+      symlink('../build/default/binding.node', 'lib/binding.node')
 
