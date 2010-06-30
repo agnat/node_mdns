@@ -1,6 +1,6 @@
 import sys
 import Options
-from os import unlink, symlink, popen
+from os import unlink, link, popen
 from os.path import exists 
 
 srcdir = '.'
@@ -31,6 +31,6 @@ def shutdown():
   if Options.commands['clean']:
     if exists('lib/mdns/binding.node'): unlink('lib/mdns/binding.node')
   else:
-    if exists('build/default/binding.node') and not exists('lib/mdns/binding.node'):
-      symlink('../build/default/binding.node', 'lib/binding.node')
+    if exists('build/default/binding.node') and not exists('lib/binding.node'):
+      link('build/default/binding.node', 'lib/binding.node')
 
