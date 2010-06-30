@@ -5,9 +5,9 @@ from os import unlink, link
 from os.path import exists 
 
 # nice, but requires python 2.6 ... 
-package_desc = json.load( open('package.json') )
-APPNAME = 'node_' + package_desc['name']  # used by 'node-waf dist'
-VERSION = package_desc['version']         # dito
+package = json.load( open('package.json'))
+APPNAME = 'node_' + package['name'] # used by 'node-waf dist'
+VERSION = package['version']        # dito
 
 def set_options(opt):
   opt.tool_options('compiler_cxx')
