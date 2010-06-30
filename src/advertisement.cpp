@@ -9,7 +9,6 @@ namespace node_mdns {
 
 using namespace v8;
 
-Persistent<String> Advertisement::ready_symbol;
 Persistent<String> Advertisement::name_symbol;
 Persistent<String> Advertisement::regtype_symbol;
 Persistent<String> Advertisement::domain_symbol;
@@ -30,7 +29,6 @@ Advertisement::Initialize(Handle<Object> target) {
     HandleScope scope;
     Local<FunctionTemplate> t = mDNSBase::Initialize(target, New);
 
-    ready_symbol = NODE_PSYMBOL("ready");
     name_symbol = NODE_PSYMBOL("name");
     regtype_symbol = NODE_PSYMBOL("regtype");
     domain_symbol = NODE_PSYMBOL("domain");

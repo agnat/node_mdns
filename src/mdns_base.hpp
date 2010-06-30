@@ -22,7 +22,7 @@ class mDNSBase : public node::EventEmitter {
         v8::Handle<v8::Value> prepareSocket();
         void Event(int revents);
 
-        bool Stop(v8::Local<v8::Value> exception = v8::Local<v8::Value>());
+        bool Stop();
         static v8::Handle<v8::Value> Stop(const v8::Arguments & args);
     private:
         static void io_event(EV_P_ ev_io *w, int revents);
@@ -30,7 +30,6 @@ class mDNSBase : public node::EventEmitter {
         DNSServiceRef ref_;
         ev_io         read_watcher_;
 
-        static v8::Persistent<v8::String> stop_symbol;
 };
 
 }

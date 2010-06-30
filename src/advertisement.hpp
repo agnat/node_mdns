@@ -32,7 +32,6 @@ class Advertisement : public mDNSBase {
                 const char *name, const char *regtype, const char *domain,
                 void *context );
 
-        static v8::Persistent<v8::String> ready_symbol;
         static v8::Persistent<v8::String> name_symbol;
         static v8::Persistent<v8::String> regtype_symbol;
         static v8::Persistent<v8::String> domain_symbol;

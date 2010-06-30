@@ -5,8 +5,6 @@ namespace node_mdns {
 
 using namespace v8;
 
-Persistent<String> mDNSBase::stop_symbol;
-
 v8::Local<v8::FunctionTemplate>
 mDNSBase::Initialize(v8::Handle<v8::Object> target, NewFunc f) {
     v8::Local<v8::FunctionTemplate> t = v8::FunctionTemplate::New(f);
@@ -14,7 +12,6 @@ mDNSBase::Initialize(v8::Handle<v8::Object> target, NewFunc f) {
     t->Inherit(EventEmitter::constructor_template);
     t->InstanceTemplate()->SetInternalFieldCount(1);
 
-    stop_symbol = NODE_PSYMBOL("stop");
     NODE_SET_PROTOTYPE_METHOD(t, "stop", Stop);
 
     return t;
@@ -48,17 +45,11 @@ mDNSBase::prepareSocket() {
 }
 
 bool
-mDNSBase::Stop(Local<Value> exception) {
+mDNSBase::Stop() {
     HandleScope scope;
     ev_io_stop(EV_DEFAULT_ &read_watcher_);
     DNSServiceRefDeallocate(ref_);
     ref_ = NULL;
-    if (exception.IsEmpty()) {
-        Emit(stop_symbol, 0, NULL);
-    } else {
-        Emit(stop_symbol, 1, &exception);
-    }
-
     Unref();
 }
 
