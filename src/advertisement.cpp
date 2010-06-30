@@ -14,6 +14,17 @@ Persistent<String> Advertisement::name_symbol;
 Persistent<String> Advertisement::regtype_symbol;
 Persistent<String> Advertisement::domain_symbol;
 
+struct AdContext {
+    AdContext(Local<Object> const& this_, Local<Value> const& callback) :
+        this_(Persistent<Object>::New(this_)),
+        callback(Persistent<Function>::New(Local<Function>::Cast(callback)))
+        {}
+    ~AdContext() { callback.Dispose(); this_.Dispose(); }
+
+    Persistent<Object>   this_;
+    Persistent<Function> callback;
+};
+
 void
 Advertisement::Initialize(Handle<Object> target) {
     HandleScope scope;
@@ -33,7 +44,7 @@ Handle<Value>
 Advertisement::DoStart(DNSServiceFlags flags, uint32_t interface_index,
         const char * name, const char * regtype, const char * domain,
         const char * host, uint16_t port, uint16_t txt_record_length,
-        const void * txt_record)
+        const void * txt_record, AdContext * context)
 {
     if (ServiceRef()) {
         return ThrowException(Exception::Error(
@@ -42,7 +53,7 @@ Advertisement::DoStart(DNSServiceFlags flags, uint32_t interface_index,
 
     int status = DNSServiceRegister( & ServiceRef(), flags, interface_index,
             name, regtype, domain, host, port, txt_record_length,
-            txt_record, & on_service_registered, this);
+            txt_record, & on_service_registered, context);
     if (kDNSServiceErr_NoError != status) {
         return ThrowException(buildException(status));
     }
@@ -72,10 +83,10 @@ Advertisement::Advertisement() : mDNSBase() {}
 void
 Advertisement::on_service_registered(DNSServiceFlags flags,
         DNSServiceErrorType errorCode, const char * name,
-        const char * regtype, const char * domain)
+        const char * regtype, const char * domain, AdContext * context)
 {
-    const size_t argc = 3;
-    Local<Value> args[argc];
+    size_t argc = 3;
+    Local<Value> args[3];
     if (kDNSServiceErr_NoError == errorCode) {
         Local<Object> info = Object::New();
         info->Set(name_symbol, String::New(name));
@@ -85,11 +96,13 @@ Advertisement::on_service_registered(DNSServiceFlags flags,
         args[0] = Local<Value>::New(Null());
         args[1] = info;
         args[2] = Integer::New(flags);
-        Emit(ready_symbol, argc, args);
+        argc = 3;
     } else {
         args[0] = buildException(errorCode);
-        Emit(ready_symbol, 1, args);
+        argc = 1;
     }
+    context->callback->Call(context->this_, argc, args);
+    delete context;
 }
 
 Handle<Value>
@@ -173,16 +186,22 @@ Advertisement::DoStart(const Arguments & args) {
     }
     uint16_t port = static_cast<uint16_t>(htons(raw_port));
 
-    // TODO: handle more arguments
+    // TODO: handle txt records
     uint16_t txt_record_length = 0;
     void * txt_record = NULL;
     
+    if ( ! args[8]->IsFunction()) {
+        return ThrowException(Exception::TypeError(
+                String::New("argument 8 must be a function")));
+    }
+    AdContext * ctx = new AdContext(args.This(), args[8]);
+
     Handle<Value> result = ad->DoStart(flags, interface_index,
             name.empty() ? NULL : name.c_str(),
             *regtype,
             domain.empty() ? NULL : domain.c_str(),
             host.empty() ? NULL : host.c_str(),
-            port, txt_record_length, txt_record);
+            port, txt_record_length, txt_record, ctx);
 
     if (! result->IsUndefined()) {
         return ThrowException(result);
@@ -195,8 +214,9 @@ Advertisement::on_service_registered(DNSServiceRef /*sdRef*/, DNSServiceFlags fl
         DNSServiceErrorType errorCode, const char *name,
         const char *regtype, const char *domain, void *context )
 {
-    Advertisement * ad = static_cast<Advertisement*>( context );
-    ad->on_service_registered(flags, errorCode, name, regtype, domain);
+    AdContext * ctx = static_cast<AdContext*>(context);
+    Advertisement * ad = ObjectWrap::Unwrap<Advertisement>(ctx->this_);
+    ad->on_service_registered(flags, errorCode, name, regtype, domain, ctx);
 }
 
 } // end of namespace node_mdns

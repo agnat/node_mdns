@@ -6,6 +6,8 @@
 
 namespace node_mdns {
 
+class AdContext;
+
 class Advertisement : public mDNSBase {
     public:
         static void Initialize(v8::Handle<v8::Object> target);
@@ -14,7 +16,7 @@ class Advertisement : public mDNSBase {
         v8::Handle<v8::Value> DoStart(DNSServiceFlags flags, uint32_t interface_index,
                 const char * name, const char * regtype, const char * domain,
                 const char * host, uint16_t port, uint16_t txt_record_length,
-                const void * txt_record);
+                const void * txt_record, AdContext * context);
 
     protected:
 
@@ -22,7 +24,7 @@ class Advertisement : public mDNSBase {
         Advertisement();
         void on_service_registered(DNSServiceFlags flags,
                 DNSServiceErrorType errorCode, const char * name,
-                const char * regtype, const char * domain);
+                const char * regtype, const char * domain, AdContext * context);
         static v8::Handle<v8::Value> DoStart(const v8::Arguments & args);
     private:
         static void on_service_registered(DNSServiceRef /*sdRef*/,

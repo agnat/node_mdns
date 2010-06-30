@@ -31,10 +31,8 @@ def build(bld):
 def shutdown():
   # HACK to get binding.node out of build directory.
   # better way to do this?
-  if Options.commands['clean']:
-    if exists('lib/mdns/binding.node'): unlink('lib/mdns/binding.node')
-  else:
-    if exists('build/default/binding.node') and not exists('lib/binding.node'):
-      link('build/default/binding.node', 'lib/binding.node')
+  if exists('lib/binding.node'): unlink('lib/binding.node')
+  if Options.commands['build']:
+    link('build/default/binding.node', 'lib/binding.node')
 
 # vim: set filetype=python :
