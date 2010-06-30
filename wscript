@@ -1,11 +1,13 @@
 import sys
+import json
 import Options
-from os import unlink, link, popen
+from os import unlink, link
 from os.path import exists 
 
-srcdir = '.'
-blddir = 'build'
-VERSION = '0.0.1'
+# nice, but requires python 2.6 ... 
+package_desc = json.load( open('package.json') )
+APPNAME = 'node_' + package_desc['name']  # used by 'node-waf dist'
+VERSION = package_desc['version']         # dito
 
 def set_options(opt):
   opt.tool_options('compiler_cxx')
@@ -34,3 +36,4 @@ def shutdown():
     if exists('build/default/binding.node') and not exists('lib/binding.node'):
       link('build/default/binding.node', 'lib/binding.node')
 
+# vim: set filetype=python :
