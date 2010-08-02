@@ -55,15 +55,10 @@ Advertisement::DoStart(DNSServiceFlags flags, uint32_t interface_index,
         Local<Array> props = txt_record_object->ToObject()->GetPropertyNames();
         for (size_t i = 0; i < props->Length(); ++i) {
             String::Utf8Value key( props->Get(i)->ToString() );
-            std::cout << "===" << *key << std::endl;
             Handle<Value> value = txt_record_object->ToObject()->Get(props->Get(i));
             if (value->IsString()) {
-                std::cout << "string" << std::endl;
                 String::Utf8Value string_value( value->ToString());
-                std::cout << "string a" << std::endl;
-                //TXTRecordSetValue( & txt_record_, *key, 0, NULL);
                 TXTRecordSetValue( &txt_record_, *key, value->ToString()->Utf8Length(), *string_value);
-                std::cout << "string b" << std::endl;
             }/* TODO: else if (node::Buffer::HasInstance(value)) {
                 std::cout << "buffer" << std::endl;
             }*/ 
