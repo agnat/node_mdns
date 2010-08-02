@@ -15,8 +15,10 @@ class Advertisement : public mDNSBase {
 
         v8::Handle<v8::Value> DoStart(DNSServiceFlags flags, uint32_t interface_index,
                 const char * name, const char * regtype, const char * domain,
-                const char * host, uint16_t port, uint16_t txt_record_length,
-                const void * txt_record, AdContext * context);
+                const char * host, uint16_t port, v8::Handle<v8::Value> const& txt_record_object,
+                AdContext * context);
+
+        ~Advertisement();
 
     protected:
 
@@ -27,6 +29,10 @@ class Advertisement : public mDNSBase {
                 const char * regtype, const char * domain, AdContext * context);
         static v8::Handle<v8::Value> DoStart(const v8::Arguments & args);
     private:
+        enum { TXT_RECORD_BUFFER_SIZE = 256 };
+        TXTRecordRef txt_record_;
+        char         txt_record_buffer_[TXT_RECORD_BUFFER_SIZE];
+
         static void on_service_registered(DNSServiceRef /*sdRef*/,
                 DNSServiceFlags flags, DNSServiceErrorType errorCode,
                 const char *name, const char *regtype, const char *domain,

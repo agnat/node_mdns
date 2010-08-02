@@ -5,6 +5,8 @@
 #include <sstream>
 #include <netinet/in.h>
 
+#include <node.h>
+
 namespace node_mdns {
 
 using namespace v8;
@@ -41,17 +43,38 @@ Advertisement::Initialize(Handle<Object> target) {
 Handle<Value>
 Advertisement::DoStart(DNSServiceFlags flags, uint32_t interface_index,
         const char * name, const char * regtype, const char * domain,
-        const char * host, uint16_t port, uint16_t txt_record_length,
-        const void * txt_record, AdContext * context)
+        const char * host, uint16_t port, Handle<Value> const& txt_record_object,
+        AdContext * context)
 {
     if (ServiceRef()) {
         return ThrowException(Exception::Error(
                    String::New("Advertisement already started."))); 
     }
 
+    if ( ! txt_record_object->IsUndefined()) {
+        Local<Array> props = txt_record_object->ToObject()->GetPropertyNames();
+        for (size_t i = 0; i < props->Length(); ++i) {
+            String::Utf8Value key( props->Get(i)->ToString() );
+            std::cout << "===" << *key << std::endl;
+            Handle<Value> value = txt_record_object->ToObject()->Get(props->Get(i));
+            if (value->IsString()) {
+                std::cout << "string" << std::endl;
+                String::Utf8Value string_value( value->ToString());
+                std::cout << "string a" << std::endl;
+                //TXTRecordSetValue( & txt_record_, *key, 0, NULL);
+                TXTRecordSetValue( &txt_record_, *key, value->ToString()->Utf8Length(), *string_value);
+                std::cout << "string b" << std::endl;
+            }/* TODO: else if (node::Buffer::HasInstance(value)) {
+                std::cout << "buffer" << std::endl;
+            }*/ 
+        }
+    }
+    uint16_t txt_record_length = TXTRecordGetLength( & txt_record_);
+    const void * txt_record_ptr = txt_record_length ? TXTRecordGetBytesPtr( & txt_record_) : NULL;
+
     int status = DNSServiceRegister( & ServiceRef(), flags, interface_index,
             name, regtype, domain, host, port, txt_record_length,
-            txt_record, & on_service_registered, context);
+            txt_record_ptr, & on_service_registered, context);
     if (kDNSServiceErr_NoError != status) {
         return ThrowException(buildException(status));
     }
@@ -75,8 +98,13 @@ Advertisement::New(const Arguments & args) {
     return args.This();
 }
 
-Advertisement::Advertisement() : mDNSBase() {}
+Advertisement::Advertisement() : mDNSBase() {
+    TXTRecordCreate(& txt_record_, TXT_RECORD_BUFFER_SIZE, txt_record_buffer_);
+}
 
+Advertisement::~Advertisement() {
+    TXTRecordDeallocate( & txt_record_);
+}
 
 void
 Advertisement::on_service_registered(DNSServiceFlags flags,
@@ -184,10 +212,15 @@ Advertisement::DoStart(const Arguments & args) {
     }
     uint16_t port = static_cast<uint16_t>(htons(raw_port));
 
-    // TODO: handle txt records
-    uint16_t txt_record_length = 0;
-    void * txt_record = NULL;
-    
+    Handle<Value> txt_record = Undefined();
+    if ( ! args[7]->IsUndefined()) {
+        if ( ! args[7]->IsObject()) {
+            return ThrowException(Exception::TypeError(
+                        String::New("argument 7 must be an object.")));
+        }
+        txt_record = args[7]->ToObject();
+    }
+
     if ( ! args[8]->IsFunction()) {
         return ThrowException(Exception::TypeError(
                 String::New("argument 8 must be a function")));
@@ -199,7 +232,7 @@ Advertisement::DoStart(const Arguments & args) {
             *regtype,
             domain.empty() ? NULL : domain.c_str(),
             host.empty() ? NULL : host.c_str(),
-            port, txt_record_length, txt_record, ctx);
+            port, txt_record, ctx);
 
     if (! result->IsUndefined()) {
         return ThrowException(result);
