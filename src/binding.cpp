@@ -42,15 +42,31 @@ init (v8::Handle<v8::Object> target) {
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_NATTraversal);
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_DoubleNAT);
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_BadTime);
+#ifdef kDNSServiceErr_BadSig
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_BadSig);
+#endif
+#ifdef kDNSServiceErr_BadKey
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_BadKey);
+#endif
+#ifdef kDNSServiceErr_Transient
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_Transient);
+#endif
+#ifdef kDNSServiceErr_ServiceNotRunning
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_ServiceNotRunning);
+#endif
+#ifdef kDNSServiceErr_NATPortMappingUnsupported
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_NATPortMappingUnsupported);
+#endif
+#ifdef kDNSServiceErr_NATPortMappingDisabled
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_NATPortMappingDisabled);
+#endif
+#ifdef kDNSServiceErr_NoRouter
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_NoRouter);
+#endif
+#ifdef kDNSServiceErr_PollingMode
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_PollingMode);
- 
+#endif
+
     // DNS Service Types
     NODE_DEFINE_CONSTANT(target, kDNSServiceType_A);
     NODE_DEFINE_CONSTANT(target, kDNSServiceType_NS);
@@ -93,22 +109,54 @@ init (v8::Handle<v8::Object> target) {
     NODE_DEFINE_CONSTANT(target, kDNSServiceType_DNAME);
     NODE_DEFINE_CONSTANT(target, kDNSServiceType_SINK);
     NODE_DEFINE_CONSTANT(target, kDNSServiceType_OPT);
+#ifdef kDNSServiceType_APL
     NODE_DEFINE_CONSTANT(target, kDNSServiceType_APL);
+#endif
+#ifdef kDNSServiceType_DS
     NODE_DEFINE_CONSTANT(target, kDNSServiceType_DS);
+#endif
+#ifdef kDNSServiceType_SSHFP
     NODE_DEFINE_CONSTANT(target, kDNSServiceType_SSHFP);
+#endif
+#ifdef kDNSServiceType_IPSECKEY
     NODE_DEFINE_CONSTANT(target, kDNSServiceType_IPSECKEY);
+#endif
+#ifdef kDNSServiceType_RRSIG
     NODE_DEFINE_CONSTANT(target, kDNSServiceType_RRSIG);
+#endif
+#ifdef kDNSServiceType_NSEC
     NODE_DEFINE_CONSTANT(target, kDNSServiceType_NSEC);
+#endif
+#ifdef kDNSServiceType_DNSKEY
     NODE_DEFINE_CONSTANT(target, kDNSServiceType_DNSKEY);
+#endif
+#ifdef kDNSServiceType_DHCID
     NODE_DEFINE_CONSTANT(target, kDNSServiceType_DHCID);
+#endif
+#ifdef kDNSServiceType_NSEC3
     NODE_DEFINE_CONSTANT(target, kDNSServiceType_NSEC3);
+#endif
+#ifdef kDNSServiceType_NSEC3PARAM
     NODE_DEFINE_CONSTANT(target, kDNSServiceType_NSEC3PARAM);
+#endif
+#ifdef kDNSServiceType_HIP
     NODE_DEFINE_CONSTANT(target, kDNSServiceType_HIP);
+#endif
+#ifdef kDNSServiceType_SPF
     NODE_DEFINE_CONSTANT(target, kDNSServiceType_SPF);
+#endif
+#ifdef kDNSServiceType_UINFO
     NODE_DEFINE_CONSTANT(target, kDNSServiceType_UINFO);
+#endif
+#ifdef kDNSServiceType_UID
     NODE_DEFINE_CONSTANT(target, kDNSServiceType_UID);
+#endif
+#ifdef kDNSServiceType_GID
     NODE_DEFINE_CONSTANT(target, kDNSServiceType_GID);
+#endif
+#ifdef kDNSServiceType_UNSPEC
     NODE_DEFINE_CONSTANT(target, kDNSServiceType_UNSPEC);
+#endif
     NODE_DEFINE_CONSTANT(target, kDNSServiceType_TKEY);
     NODE_DEFINE_CONSTANT(target, kDNSServiceType_TSIG);
     NODE_DEFINE_CONSTANT(target, kDNSServiceType_IXFR);
@@ -116,7 +164,7 @@ init (v8::Handle<v8::Object> target) {
     NODE_DEFINE_CONSTANT(target, kDNSServiceType_MAILB);
     NODE_DEFINE_CONSTANT(target, kDNSServiceType_MAILA);
     NODE_DEFINE_CONSTANT(target, kDNSServiceType_ANY);
-    
+
     // General Flags
     NODE_DEFINE_CONSTANT(target, kDNSServiceFlagsMoreComing);
     NODE_DEFINE_CONSTANT(target, kDNSServiceFlagsAdd);
@@ -129,10 +177,20 @@ init (v8::Handle<v8::Object> target) {
     NODE_DEFINE_CONSTANT(target, kDNSServiceFlagsLongLivedQuery);
     NODE_DEFINE_CONSTANT(target, kDNSServiceFlagsAllowRemoteQuery);
     NODE_DEFINE_CONSTANT(target, kDNSServiceFlagsForceMulticast);
+#ifdef kDNSServiceFlagsForce
     NODE_DEFINE_CONSTANT(target, kDNSServiceFlagsForce);
+#endif
+#ifdef kDNSServiceFlagsReturnIntermediates
     NODE_DEFINE_CONSTANT(target, kDNSServiceFlagsReturnIntermediates);
+#endif
+#ifdef kDNSServiceFlagsNonBrowsable
     NODE_DEFINE_CONSTANT(target, kDNSServiceFlagsNonBrowsable);
+#endif
+#ifdef kDNSServiceFlagsShareConnection
     NODE_DEFINE_CONSTANT(target, kDNSServiceFlagsShareConnection);
+#endif
+#ifdef kDNSServiceFlagsSuppressUnusable
     NODE_DEFINE_CONSTANT(target, kDNSServiceFlagsSuppressUnusable);
- 
+#endif
+
 }
