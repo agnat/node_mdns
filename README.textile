@@ -10,7 +10,7 @@ Internally, it uses the mDNSResponder API which is available on all major platfo
 
 h2. Build
 
-Tested on Mac OS X and Linux. On Linux the avahi dns_sd compat library is required.
+Tested on Mac OS X and Linux. I keep getting reports that it works on (Open-) Solaris, too. On Linux the avahi dns_sd compat library is required.
 
 bc. node-waf configure build
 
