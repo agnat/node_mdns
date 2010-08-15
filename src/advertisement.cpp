@@ -29,7 +29,7 @@ struct AdContext {
 void
 Advertisement::Initialize(Handle<Object> target) {
     HandleScope scope;
-    Local<FunctionTemplate> t = mDNSBase::Initialize(target, New);
+    Local<FunctionTemplate> t = mDNSBase::Initialize(New);
 
     name_symbol = NODE_PSYMBOL("name");
     regtype_symbol = NODE_PSYMBOL("regtype");

@@ -6,7 +6,7 @@ namespace node_mdns {
 using namespace v8;
 
 v8::Local<v8::FunctionTemplate>
-mDNSBase::Initialize(v8::Handle<v8::Object> target, NewFunc f) {
+mDNSBase::Initialize(NewFunc f) {
     v8::Local<v8::FunctionTemplate> t = v8::FunctionTemplate::New(f);
 
     t->Inherit(EventEmitter::constructor_template);

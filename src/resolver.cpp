@@ -16,7 +16,7 @@ Persistent<String> Resolver::port_symbol;
 void
 Resolver::Initialize(Handle<Object> target) {
     HandleScope scope;
-    Local<FunctionTemplate> t = mDNSBase::Initialize(target, New);
+    Local<FunctionTemplate> t = mDNSBase::Initialize(New);
 
     resolved_symbol = NODE_PSYMBOL("resolved");
     interface_symbol = NODE_PSYMBOL("interface_index");

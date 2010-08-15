@@ -16,7 +16,7 @@ Persistent<String> Browser::domain_symbol;
 void
 Browser::Initialize(Handle<Object> target) {
     HandleScope scope;
-    Local<FunctionTemplate> t = mDNSBase::Initialize(target,New);
+    Local<FunctionTemplate> t = mDNSBase::Initialize(New);
 
     changed_symbol   = NODE_PSYMBOL("changed");
     name_symbol      = NODE_PSYMBOL("name");

@@ -15,7 +15,7 @@ class mDNSBase : public node::EventEmitter {
 
         static
         v8::Local<v8::FunctionTemplate>
-        Initialize(v8::Handle<v8::Object> target, NewFunc f);
+        Initialize(NewFunc f);
 
     protected:
         DNSServiceRef & ServiceRef() { return ref_; }
