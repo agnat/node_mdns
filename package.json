@@ -1,8 +1,8 @@
 { "name" : "mdns"
-, "version" : "0.0.2"
+, "version" : "0.0.3"
 , "description" : "mdns/zeroconf/bonjour service discovery add-on"
 , "author": "David Siegel <david@artcom.de>"
-, "contributors": ["Orlando Vazquez"]
+, "contributors": ["Orlando Vazquez", "Ryan Dahl"]
 , "main": "./lib/mdns"
 , "scripts": { "install": "node-waf configure build"}
 , "licenses": [
