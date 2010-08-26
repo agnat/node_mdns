@@ -1,8 +1,8 @@
-h1. node_mDNS
+h1. node_mdns
 
 h2. Synopsis
 
-node_mDNS is a "node.js":/ry/node add-on. It adds support for multicast DNS service discovery, also known as zeroconf or bonjour.
+node_mdns is a "node.js":/ry/node add-on. It adds support for multicast DNS service discovery, also known as zeroconf or bonjour.
 
 It provides an object-oriented interface to announce and browse services.
 
@@ -10,7 +10,7 @@ Internally, it uses the mDNSResponder API which is available on all major platfo
 
 h2. Build
 
-Tested on Mac OS X and Linux. On Linux the avahi dns_sd compat library is required.
+Tested on Mac OS X and Linux. I keep getting reports that it works on (Open-) Solaris, too. On Linux the avahi dns_sd compat library is required.
 
 bc. node-waf configure build
 
@@ -20,18 +20,18 @@ h2. Quickstart
 
 p. To import the add-on use something like this:
 
-bc. var mDNS = require('./mDNS');
+bc. var mdns = require('mdns');
 
 p. Announce a TCP server on port 4321 with service type 'http':
 
-bc.. var ad = mDNS.createAdvertisement('http', 4321, mDNS.TCP);
+bc.. var ad = mdns.createAdvertisement('http', 4321, 'tcp');
 ad.start();
 
 setTimeout(function() { ad.stop(); }, 10000);
 
 p. Browse HTTP servers:
 
-bc.. var browser = mDNS.createBrowser('http', mDNS.TCP);
+bc.. var browser = mdns.createBrowser('http', 'tcp');
 browser.addListener('serviceUp', function(info) { puts('found', info); });
 browser.addListener('serviceDown', function(info) { puts('gone', info); });
 browser.start();
