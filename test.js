@@ -18,14 +18,14 @@ var browser = mdns.createBrowser(["node-mdns-test", 'b'], 'tcp');
 
 timeout_id = setTimeout(function() { assert.fail('time out'); }, 10000);
 
-browser.addListener('serviceUp', function(info) {
+browser.on('serviceUp', function(info) {
   puts('Up', inspect(info));
   assert.equal('_node-mdns-test._tcp.', info['regtype']);
   assert.equal(4321, info['port']);
   ad.stop();
 });
 
-browser.addListener('serviceDown', function(info) {
+browser.on('serviceDown', function(info) {
   puts('Down', inspect(info));
   assert.equal('_node-mdns-test._tcp.', info['regtype']);
   browser.stop();
