@@ -49,4 +49,3 @@ test_ad.stop();
 
 var sr = new mdns.DNSServiceRef();
 sys.puts(sys.inspect(sr));
-

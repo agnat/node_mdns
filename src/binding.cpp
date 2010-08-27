@@ -1,11 +1,35 @@
-#include <v8.h>
+#include <sstream>
 #include <iostream>
+
+#include <v8.h>
+#include <node_buffer.h>
 
 #include "advertisement.hpp"
 #include "browser.hpp"
 #include "resolver.hpp"
 
+#include "mdns_utils.hpp"
 #include "mdns_service_ref.hpp"
+
+using namespace v8;
+using namespace node;
+
+namespace node_mdns {
+
+Handle<Value> DNSServiceRegister(Arguments const& args); 
+Handle<Value> DNSServiceRefSockFD(Arguments const& args); 
+Handle<Value> DNSServiceProcessResult(Arguments const& args); 
+
+typedef Handle<Value> (WrapperFunc)(Arguments const&);
+
+inline
+void
+defineFunction(Handle<Object> target, const char * name, WrapperFunc f) {
+    target->Set(String::NewSymbol(name),
+            FunctionTemplate::New(f)->GetFunction());
+}
+
+} // end of namespace node_mdns
 
 extern "C" 
 void
@@ -18,6 +42,10 @@ init (v8::Handle<v8::Object> target) {
     Resolver::Initialize( target );
 
     ServiceRef::Initialize( target );
+
+    defineFunction(target, "DNSServiceRegister", DNSServiceRegister);
+    defineFunction(target, "DNSServiceRefSockFD", DNSServiceRefSockFD);
+    defineFunction(target, "DNSServiceProcessResult", DNSServiceProcessResult);
 
     // DNS Classes
     NODE_DEFINE_CONSTANT(target, kDNSServiceClass_IN);
@@ -196,5 +224,5 @@ init (v8::Handle<v8::Object> target) {
 #ifdef kDNSServiceFlagsSuppressUnusable
     NODE_DEFINE_CONSTANT(target, kDNSServiceFlagsSuppressUnusable);
 #endif
-
 }
+

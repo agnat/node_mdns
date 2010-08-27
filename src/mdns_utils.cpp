@@ -6,80 +6,6 @@ namespace node_mdns {
 
 using namespace v8;
 
-inline
-const char *
-errorString(DNSServiceErrorType error) {
-    switch (error) {
-        case kDNSServiceErr_NoError:
-            return "NoError";
-        case kDNSServiceErr_Unknown:
-            return "Unknown";
-        case kDNSServiceErr_NoSuchName:
-            return "NoSuchName";
-        case kDNSServiceErr_NoMemory:
-            return "NoMemory";
-        case kDNSServiceErr_BadParam:
-            return "BadParam";
-        case kDNSServiceErr_BadReference:
-            return "BadReference";
-        case kDNSServiceErr_BadState:
-            return "BadState";
-        case kDNSServiceErr_BadFlags:
-            return "BadFlags";
-        case kDNSServiceErr_Unsupported:
-            return "Unsupported";
-        case kDNSServiceErr_NotInitialized:
-            return "NotInitialized";
-        case kDNSServiceErr_AlreadyRegistered:
-            return "AlreadyRegistered";
-        case kDNSServiceErr_NameConflict:
-            return "NameConflict";
-        case kDNSServiceErr_Invalid:
-            return "Invalid";
-        case kDNSServiceErr_Firewall:
-            return "Firewall";
-        case kDNSServiceErr_Incompatible:
-            return "Incompatible";
-        case kDNSServiceErr_BadInterfaceIndex:
-            return "BadInterfaceIndex";
-        case kDNSServiceErr_Refused:
-            return "Refused";
-        case kDNSServiceErr_NoSuchRecord:
-            return "NoSuchRecord";
-        case kDNSServiceErr_NoAuth:
-            return "NoAuth";
-        case kDNSServiceErr_NoSuchKey:
-            return "NoSuchKey";
-        case kDNSServiceErr_NATTraversal:
-            return "NATTraversal";
-        case kDNSServiceErr_DoubleNAT:
-            return "DoubleNAT";
-        case kDNSServiceErr_BadTime:
-            return "BadTime";
-#if 0 // missing on linux ...
-        case kDNSServiceErr_BadSig:
-            return "BadSig";
-        case kDNSServiceErr_BadKey:
-            return "BadKey";
-        case kDNSServiceErr_Transient:
-            return "Transient";
-        case kDNSServiceErr_ServiceNotRunning:
-            return "ServiceNotRunning";
-        case kDNSServiceErr_NATPortMappingUnsupported:
-            return "NATPortMappingUnsupported";
-        case kDNSServiceErr_NATPortMappingDisabled:
-            return "NATPortMappingDisabled";
-#if 0 // missing on leopard
-        case kDNSServiceErr_NoRouter:
-            return "NoRouter";
-        case kDNSServiceErr_PollingMode:
-            return "PollingMode";
-#endif
-#endif
-    };
-    return "Unknown DNSServiceError";
-}
-
 Local<Value>
 buildException(DNSServiceErrorType error_code) {
     HandleScope scope;
@@ -90,6 +16,92 @@ buildException(DNSServiceErrorType error_code) {
     Local<Value> error_v = Exception::Error(error_msg);
     Local<Object> error = Local<Object>::Cast(error_v);
     return scope.Close(error);
+}
+
+const char *
+errorString(DNSServiceErrorType error) {
+    switch (error) {
+        case kDNSServiceErr_NoError:
+            return "no error";
+        case kDNSServiceErr_Unknown:
+            return "unknown";
+        case kDNSServiceErr_NoSuchName:
+            return "no such name";
+        case kDNSServiceErr_NoMemory:
+            return "no memory";
+        case kDNSServiceErr_BadParam:
+            return "bad param";
+        case kDNSServiceErr_BadReference:
+            return "bad reference";
+        case kDNSServiceErr_BadState:
+            return "bad state";
+        case kDNSServiceErr_BadFlags:
+            return "bad flags";
+        case kDNSServiceErr_Unsupported:
+            return "unsupported";
+        case kDNSServiceErr_NotInitialized:
+            return "not initialized";
+        case kDNSServiceErr_AlreadyRegistered:
+            return "already registered";
+        case kDNSServiceErr_NameConflict:
+            return "name conflict";
+        case kDNSServiceErr_Invalid:
+            return "invalid";
+        case kDNSServiceErr_Firewall:
+            return "firewall";
+        case kDNSServiceErr_Incompatible:
+            return "incompatible";
+        case kDNSServiceErr_BadInterfaceIndex:
+            return "bad interface index";
+        case kDNSServiceErr_Refused:
+            return "refused";
+        case kDNSServiceErr_NoSuchRecord:
+            return "no such record";
+        case kDNSServiceErr_NoAuth:
+            return "no auth";
+        case kDNSServiceErr_NoSuchKey:
+            return "no such key";
+        case kDNSServiceErr_NATTraversal:
+            return "NAT traversal";
+        case kDNSServiceErr_DoubleNAT:
+            return "double NAT";
+        case kDNSServiceErr_BadTime:
+            return "bad time";
+#ifdef kDNSServiceErr_BadSig
+        case kDNSServiceErr_BadSig:
+            return "bad sig";
+#endif
+#ifdef kDNSServiceErr_BadKey
+        case kDNSServiceErr_BadKey:
+            return "bad key";
+#endif
+#ifdef kDNSServiceErr_Transient
+        case kDNSServiceErr_Transient:
+            return "transient";
+#endif
+#ifdef kDNSServiceErr_ServiceNotRunning
+        case kDNSServiceErr_ServiceNotRunning:
+            return "service not running";
+#endif
+#ifdef kDNSServiceErr_NATPortMappingUnsupported
+        case kDNSServiceErr_NATPortMappingUnsupported:
+            return "NAT port mapping unsupported";
+#endif
+#ifdef kDNSServiceErr_NATPortMappingDisabled
+        case kDNSServiceErr_NATPortMappingDisabled:
+            return "NAT port mapping disabled";
+#endif
+#ifdef kDNSServiceErr_NoRouter
+        case kDNSServiceErr_NoRouter:
+            return "no router";
+#endif
+#ifdef kDNSServiceErr_PollingMode
+        case kDNSServiceErr_PollingMode:
+            return "polling mode";
+#endif
+        default:
+            return "unknown error code";
+    }
 }
 
 }
