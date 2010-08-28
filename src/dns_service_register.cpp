@@ -1,5 +1,3 @@
-#include <sstream>
-
 #include <dns_sd.h>
 
 #include <v8.h>
@@ -20,32 +18,36 @@ OnServiceRegistered(DNSServiceRef sdRef, DNSServiceFlags flags,
         DNSServiceErrorType errorCode, const char * name, const char * regtype,
         const char * domain, void * context)
 {
-    HandleScope scope;
-    Local<Value> args[8];
-    size_t argc = 8;
-    if (errorCode == kDNSServiceErr_NoError) {
-        argc = 1;
-        args[0] = Local<Value>::New(Null());
-    } else {
-        args[0] = mdnsError("mdns operation failed", errorCode);
-        argc = 1;
-    }
+    if ( ! context) return;
 
-    ServiceRef * serviceRef = reinterpret_cast<ServiceRef*>(context);
+    HandleScope scope;
+    ServiceRef * serviceRef = static_cast<ServiceRef*>(context);
     Handle<Function> callback = serviceRef->GetCallback();
     Handle<Object> this_ = serviceRef->GetThis();
 
     if ( ! callback.IsEmpty() && ! this_.IsEmpty()) {
+        const size_t argc(7);
+        Local<Value> args[argc];
+        args[0] = Local<Object>::New(serviceRef->handle_);
+        args[1] = Integer::New(flags);
+        args[2] = Integer::New(errorCode);
+        args[3] = String::New(name);
+        args[4] = String::New(regtype);
+        args[5] = String::New(domain);
+        if (serviceRef->GetContext().IsEmpty()) {
+            args[6] = Local<Value>::New(Null());
+        } else {
+            args[6] = Local<Value>::New(serviceRef->GetContext());
+        }
         callback->Call(this_, argc, args);
     }
 }
 
 Handle<Value>
 DNSServiceRegister(Arguments const& args) {
-    if (args.Length() != 10) {
-        std::ostringstream msg;
-        msg << "expected 12 but got " << args.Length() << " arguments";
-        return throwError(msg.str().c_str());
+    HandleScope scope;
+    if (argumentCountMismatch(args, 11)) {
+        return throwArgumentCountMismatchException(args, 11);
     }
     
     if ( ! ServiceRef::HasInstance(args[0])) {
@@ -119,6 +121,10 @@ DNSServiceRegister(Arguments const& args) {
             return throwTypeError("argument 10 must be a function (callBack)");
         }
         serviceRef->SetCallback(Local<Function>::Cast(args[9]));
+    }
+
+    if ( ! args[10]->IsNull() && ! args[10]->IsUndefined()) {
+        serviceRef->SetContext(args[10]);
     }
 
     DNSServiceErrorType error = DNSServiceRegister( & serviceRef->GetServiceRef(),
