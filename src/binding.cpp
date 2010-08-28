@@ -1,4 +1,3 @@
-#include <sstream>
 #include <iostream>
 
 #include <v8.h>
@@ -20,6 +19,7 @@ Handle<Value> DNSServiceRegister(Arguments const& args);
 Handle<Value> DNSServiceRefSockFD(Arguments const& args); 
 Handle<Value> DNSServiceProcessResult(Arguments const& args); 
 
+
 typedef Handle<Value> (WrapperFunc)(Arguments const&);
 
 inline
@@ -27,6 +27,19 @@ void
 defineFunction(Handle<Object> target, const char * name, WrapperFunc f) {
     target->Set(String::NewSymbol(name),
             FunctionTemplate::New(f)->GetFunction());
+}
+
+Handle<Value> buildException(Arguments const& args) {
+    HandleScope scope;
+    if (argumentCountMismatch(args, 1)) {
+        return throwArgumentCountMismatchException(args, 1);
+    }
+    if ( ! args[0]->IsInt32()) {
+        return throwTypeError("argument 1 must be an integer (DNSServiceErrorType)");
+    }
+
+    DNSServiceErrorType error = args[0]->Int32Value();
+    return scope.Close(buildException(error));
 }
 
 } // end of namespace node_mdns
@@ -46,6 +59,8 @@ init (v8::Handle<v8::Object> target) {
     defineFunction(target, "DNSServiceRegister", DNSServiceRegister);
     defineFunction(target, "DNSServiceRefSockFD", DNSServiceRefSockFD);
     defineFunction(target, "DNSServiceProcessResult", DNSServiceProcessResult);
+
+    defineFunction(target, "buildException", buildException);
 
     // DNS Classes
     NODE_DEFINE_CONSTANT(target, kDNSServiceClass_IN);

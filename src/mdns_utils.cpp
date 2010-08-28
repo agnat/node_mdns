@@ -6,15 +6,22 @@ namespace node_mdns {
 
 using namespace v8;
 
+static Persistent<String> error_code_symbol;
+
 Local<Value>
 buildException(DNSServiceErrorType error_code) {
     HandleScope scope;
 
-    std::string error_str("DNSServiceError: ");
+    if (error_code == kDNSServiceErr_NoError) {
+        return scope.Close(Null());
+    }
+
+    std::string error_str("dns service error: ");
     error_str += errorString(error_code);
     Local<String> error_msg = String::New(error_str.c_str());
     Local<Value> error_v = Exception::Error(error_msg);
     Local<Object> error = Local<Object>::Cast(error_v);
+    error->Set(error_code_symbol, Integer::New(error_code));
     return scope.Close(error);
 }
 

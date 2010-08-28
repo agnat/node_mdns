@@ -38,12 +38,12 @@ class ServiceRef : public node::ObjectWrap {
 
         DNSServiceRef & GetServiceRef() { return ref_; }
 
-        inline v8::Handle<v8::Object> GetContext() { return context_; }
-        inline void SetContext(v8::Handle<v8::Object> context) {
+        inline v8::Handle<v8::Value> GetContext() { return context_; }
+        inline void SetContext(v8::Handle<v8::Value> context) {
             if ( ! context_.IsEmpty()) {
                 context_.Dispose();
             }
-            context_ = v8::Persistent<v8::Object>::New(context);
+            context_ = v8::Persistent<v8::Value>::New(context);
         }
 
         inline v8::Handle<v8::Object> GetThis() { return this_; }
@@ -62,11 +62,13 @@ class ServiceRef : public node::ObjectWrap {
     private:
         static v8::Handle<v8::Value> fd_getter(v8::Local<v8::String> property,
                 v8::AccessorInfo const& info);
+        static v8::Handle<v8::Value> initialized_getter(v8::Local<v8::String> property,
+                v8::AccessorInfo const& info);
 
         DNSServiceRef ref_;
         v8::Persistent<v8::Function> callback_;
         v8::Local<v8::Object>        this_;
-        v8::Persistent<v8::Object>   context_;
+        v8::Persistent<v8::Value>    context_;
 
         static v8::Persistent<v8::FunctionTemplate> constructor_template;
 };

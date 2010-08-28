@@ -2,7 +2,6 @@
 
 #include <limits>
 #include <iostream>
-#include <sstream>
 #include <netinet/in.h>
 
 #include <node.h>
@@ -129,14 +128,12 @@ Advertisement::on_service_registered(DNSServiceFlags flags,
 Handle<Value>
 Advertisement::DoStart(const Arguments & args) {
     HandleScope scope;
-    Advertisement * ad = ObjectWrap::Unwrap<Advertisement>(args.This());
 
-    std::ostringstream msg;
-    if ( 9 != args.Length()) {
-        msg << "argument mismatch. expected 9 but got " << args.Length();
-        return ThrowException(Exception::Error(
-                String::New(msg.str().c_str())));
+    if (argumentCountMismatch(args, 9)) {
+        return throwArgumentCountMismatchException(args, 9);
     }
+
+    Advertisement * ad = ObjectWrap::Unwrap<Advertisement>(args.This());
 
     DNSServiceFlags flags;
     if ( args[0]->IsUndefined()) {

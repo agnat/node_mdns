@@ -1,11 +1,14 @@
 #ifndef NODE_JS_MDNS_UTILS_INCLUDED
 #define NODE_JS_MDNS_UTILS_INCLUDED
 
-#include <dns_sd.h>
+#include <sstream>
 #include <errno.h>
 #include <fcntl.h>
+
+#include <dns_sd.h>
+
 #include <node.h>
-#include <node_events.h>
+//#include <node_events.h>
 
 namespace node_mdns {
 
@@ -36,6 +39,21 @@ inline
 v8::Handle<v8::Value>
 throwMdnsError(const char * message, DNSServiceErrorType error_code) {
     return ThrowException(mdnsError(message, error_code));
+}
+
+inline
+bool
+argumentCountMismatch(v8::Arguments const& args, size_t expectedCount) {
+    return args.Length() != expectedCount;
+}
+
+inline
+v8::Handle<v8::Value>
+throwArgumentCountMismatchException(v8::Arguments const& args, size_t expectedCount) {
+    std::ostringstream msg;
+    msg << "argument count mismatch: expected " << expectedCount 
+        << ", but got " <<  args.Length() << " arguments.";
+    return throwError(msg.str().c_str());
 }
 
 } // end of namespace node_mdns

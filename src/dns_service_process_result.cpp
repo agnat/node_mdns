@@ -1,5 +1,3 @@
-#include <sstream>
-
 #include <v8.h>
 
 #include "mdns_utils.hpp"
@@ -13,10 +11,8 @@ namespace node_mdns {
 Handle<Value>
 DNSServiceProcessResult(Arguments const& args) {
     HandleScope scope;
-    if (args.Length() != 1) {
-        std::ostringstream msg;
-        msg << "argument mismatch. expected 1 but got " << args.Length();
-        return throwError(msg.str().c_str());
+    if (argumentCountMismatch(args, 1)) {
+        return throwArgumentCountMismatchException(args, 1);
     }
     if ( ! args[0]->IsObject()) {
         return throwTypeError("argument 1 must be a DNSServiceRef object");
