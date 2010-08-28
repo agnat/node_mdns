@@ -90,7 +90,7 @@ DNSServiceBrowse(Arguments const& args) {
             interfaceIndex, regtype, domain, OnServiceChanged, serviceRef);
 
     if (error != kDNSServiceErr_NoError) {
-        return throwMdnsError("DNSServiceRegister()", error);
+        return throwMdnsError("DNSServiceBrowse()", error);
     }
     if ( ! serviceRef->SetSocketFlags()) {
         return throwError("Failed to set socket flags (O_NONBLOCK, FD_CLOEXEC)");

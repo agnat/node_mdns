@@ -1,0 +1,19 @@
+#!/usr/bin/env node
+
+var mdns  = require('../lib/mdns'),
+    assert = require('assert');
+
+var serviceRef = new mdns.capi.DNSServiceRef();
+
+assert.doesNotThrow(function() {
+  mdns.capi.DNSServiceResolve(serviceRef, 0, 0, 'hostname', '_node-mdns-test._tcp',
+    '.local', function() {}, null);
+});
+
+assert.throws(function() {
+  mdns.capi.DNSServiceResolve();
+});
+
+assert.strictEqual(serviceRef.initialized, true);
+
+// vim: filetype=javascript:
