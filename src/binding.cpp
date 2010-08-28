@@ -15,6 +15,7 @@ Handle<Value> DNSServiceRegister(Arguments const& args);
 Handle<Value> DNSServiceRefSockFD(Arguments const& args); 
 Handle<Value> DNSServiceProcessResult(Arguments const& args); 
 Handle<Value> DNSServiceBrowse(Arguments const& args); 
+Handle<Value> DNSServiceRefDeallocate(Arguments const& args); 
 
 
 typedef Handle<Value> (WrapperFunc)(Arguments const&);
@@ -54,6 +55,7 @@ init (v8::Handle<v8::Object> target) {
     defineFunction(target, "DNSServiceRefSockFD", DNSServiceRefSockFD);
     defineFunction(target, "DNSServiceProcessResult", DNSServiceProcessResult);
     defineFunction(target, "DNSServiceBrowse", DNSServiceBrowse);
+    defineFunction(target, "DNSServiceRefDeallocate", DNSServiceRefDeallocate);
 
     defineFunction(target, "buildException", buildException);
 

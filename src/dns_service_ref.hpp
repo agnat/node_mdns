@@ -37,6 +37,7 @@ class ServiceRef : public node::ObjectWrap {
 
 
         DNSServiceRef & GetServiceRef() { return ref_; }
+        void SetServiceRef(DNSServiceRef ref) { ref_ = ref; }
 
         inline v8::Handle<v8::Value> GetContext() { return context_; }
         inline void SetContext(v8::Handle<v8::Value> context) {
