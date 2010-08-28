@@ -1,7 +1,7 @@
 #include <v8.h>
 
 #include "mdns_utils.hpp"
-#include "mdns_service_ref.hpp"
+#include "dns_service_ref.hpp"
 
 using namespace v8;
 using namespace node;

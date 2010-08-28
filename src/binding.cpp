@@ -3,12 +3,8 @@
 #include <v8.h>
 #include <node_buffer.h>
 
-#include "advertisement.hpp"
-#include "browser.hpp"
-#include "resolver.hpp"
-
 #include "mdns_utils.hpp"
-#include "mdns_service_ref.hpp"
+#include "dns_service_ref.hpp"
 
 using namespace v8;
 using namespace node;
@@ -18,6 +14,7 @@ namespace node_mdns {
 Handle<Value> DNSServiceRegister(Arguments const& args); 
 Handle<Value> DNSServiceRefSockFD(Arguments const& args); 
 Handle<Value> DNSServiceProcessResult(Arguments const& args); 
+Handle<Value> DNSServiceBrowse(Arguments const& args); 
 
 
 typedef Handle<Value> (WrapperFunc)(Arguments const&);
@@ -29,7 +26,8 @@ defineFunction(Handle<Object> target, const char * name, WrapperFunc f) {
             FunctionTemplate::New(f)->GetFunction());
 }
 
-Handle<Value> buildException(Arguments const& args) {
+Handle<Value>
+buildException(Arguments const& args) {
     HandleScope scope;
     if (argumentCountMismatch(args, 1)) {
         return throwArgumentCountMismatchException(args, 1);
@@ -50,15 +48,12 @@ init (v8::Handle<v8::Object> target) {
     using namespace node_mdns;
     v8::HandleScope scope;
 
-    Advertisement::Initialize( target );
-    Browser::Initialize( target );
-    Resolver::Initialize( target );
-
     ServiceRef::Initialize( target );
 
     defineFunction(target, "DNSServiceRegister", DNSServiceRegister);
     defineFunction(target, "DNSServiceRefSockFD", DNSServiceRefSockFD);
     defineFunction(target, "DNSServiceProcessResult", DNSServiceProcessResult);
+    defineFunction(target, "DNSServiceBrowse", DNSServiceBrowse);
 
     defineFunction(target, "buildException", buildException);
 

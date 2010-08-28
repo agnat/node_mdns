@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
-var mdns  = require('../lib/new_mdns'),
+var mdns  = require('../lib/mdns'),
     assert = require('assert');
 
 var serviceRef = new mdns.capi.DNSServiceRef();
 
 assert.throws(function() {
-    mdns.capi.DNSServiceRefSockFD(serviceRef)
+  mdns.capi.DNSServiceRefSockFD(serviceRef)
 });
 
 mdns.capi.DNSServiceRegister(serviceRef, 0, 0, null, "_node-mdns-test._tcp",
@@ -14,9 +14,14 @@ mdns.capi.DNSServiceRegister(serviceRef, 0, 0, null, "_node-mdns-test._tcp",
 
 var fd;
 assert.doesNotThrow(function() {
-    fd = mdns.capi.DNSServiceRefSockFD(serviceRef)
+  fd = mdns.capi.DNSServiceRefSockFD(serviceRef)
 });
 
+assert.notEqual(fd, -1);
 assert.strictEqual(serviceRef.fd, fd);
+
+assert.throws(function() {
+  mdns.capi.DNSServiceRefSockFD("narf");
+});
 
 // vim: filetype=javascript:

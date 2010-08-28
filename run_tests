@@ -14,6 +14,7 @@ for t in $(ls $DIR/tests/test-*); do
     if [[ $? != 0 ]]; then
         echo "FAILED ###"
         FAILED=$(($FAILED + 1))
+        FAILED_TESTS="$FAILED_TESTS\n\t$(basename $t)"
     else
         echo "ok"
         SUCCESSFUL=$(($SUCCESSFUL + 1))
@@ -21,10 +22,14 @@ for t in $(ls $DIR/tests/test-*); do
     TOTAL=$(($TOTAL + 1))
 done
 
+if [[ "$FAILED" -gt 0 ]]; then
+    echo "====================================================="
+    echo -n "failed tests:"
+    echo -e $FAILED_TESTS
+    echo -n -e "\a"
+fi
+
 echo "====================================================="
 echo "total: $TOTAL failed: $FAILED successful: $SUCCESSFUL"
 
-if [[ "$FAILED" -gt 0 ]]; then
-    echo -n -e "\a"
-fi
 exit $FAILED

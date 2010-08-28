@@ -1,9 +1,6 @@
-#include "mdns_service_ref.hpp"
-
-#include <iostream>
+#include "dns_service_ref.hpp"
 
 using namespace v8;
-using namespace node;
 
 namespace node_mdns {
 
@@ -14,7 +11,6 @@ static Persistent<String> initialized_symbol;
 
 ServiceRef::ServiceRef() : ref_(), callback_(), context_() {}
 ServiceRef::~ServiceRef() {
-    std::cout << "ServiceRef::~ServiceRef()" << std::endl;
     // First, dispose the serice ref. This cancels all asynchronous operations.
     if (ref_) {
         DNSServiceRefDeallocate(ref_);
