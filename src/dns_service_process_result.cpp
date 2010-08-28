@@ -23,6 +23,7 @@ DNSServiceProcessResult(Arguments const& args) {
     }
 
     ServiceRef * ref = ObjectWrap::Unwrap<ServiceRef>(args[0]->ToObject());
+    ref->SetThis(args.This());
     DNSServiceErrorType error = DNSServiceProcessResult(ref->GetServiceRef());
     if (error != kDNSServiceErr_NoError) {
         return throwMdnsError("DNSServiceProcessResult()", error);

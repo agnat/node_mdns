@@ -33,10 +33,10 @@ OnServiceRegistered(DNSServiceRef sdRef, DNSServiceFlags flags,
 
     ServiceRef * serviceRef = reinterpret_cast<ServiceRef*>(context);
     Handle<Function> callback = serviceRef->GetCallback();
-    Handle<Object> js_context = serviceRef->GetContext();
+    Handle<Object> this_ = serviceRef->GetThis();
 
-    if ( ! callback.IsEmpty() && ! js_context.IsEmpty()) {
-        callback->Call(js_context, argc, args);
+    if ( ! callback.IsEmpty() && ! this_.IsEmpty()) {
+        callback->Call(this_, argc, args);
     }
 }
 
@@ -119,7 +119,6 @@ DNSServiceRegister(Arguments const& args) {
             return throwTypeError("argument 10 must be a function (callBack)");
         }
         serviceRef->SetCallback(Local<Function>::Cast(args[9]));
-        serviceRef->SetContext(args.This());
     }
 
     DNSServiceErrorType error = DNSServiceRegister( & serviceRef->GetServiceRef(),

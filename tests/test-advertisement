@@ -1,0 +1,31 @@
+#!/usr/bin/env node
+
+var mdns   = require('../lib/new_mdns'),
+    sys    = require('sys'),
+    assert = require('assert');
+
+var t = 500; // ms
+
+var ad1 = mdns.createAdvertisement('_node-mdns-test1._tcp', 4321);
+ad1.start();
+setTimeout(function() { ad1.stop() }, t);
+
+var ad2 = mdns.createAdvertisement('_node-mdns-test2._tcp', 4322, {});
+ad2.start();
+setTimeout(function() { ad2.stop() }, t);
+
+var ad3 = mdns.createAdvertisement('_node-mdns-test3._tcp', 4323, function(error, info, flags) {
+  if (error) assert.fail(error);
+  var ad = this;
+  setTimeout(function(){ ad.stop(); }, t);
+});
+ad3.start();
+
+var ad4 = mdns.createAdvertisement('_node-mdns-test4._tcp', 4324, {}, function(error, info, flags) {
+  if (error) assert.fail(error);
+  var ad = this;
+  setTimeout(function(){ ad.stop(); }, t);
+});
+ad4.start();
+
+// vim: filetype=javascript

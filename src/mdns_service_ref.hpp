@@ -47,12 +47,7 @@ class ServiceRef : public node::ObjectWrap {
         }
 
         inline v8::Handle<v8::Object> GetThis() { return this_; }
-        inline void SetThis(v8::Handle<v8::Object> This) {
-            if ( ! this_.IsEmpty()) {
-                this_.Dispose();
-            }
-            this_ = v8::Persistent<v8::Object>::New(This);
-        }
+        inline void SetThis(v8::Local<v8::Object> This) { this_ = This; }
 
         inline
         bool
@@ -70,7 +65,7 @@ class ServiceRef : public node::ObjectWrap {
 
         DNSServiceRef ref_;
         v8::Persistent<v8::Function> callback_;
-        v8::Persistent<v8::Object>   this_;
+        v8::Local<v8::Object>        this_;
         v8::Persistent<v8::Object>   context_;
 
         static v8::Persistent<v8::FunctionTemplate> constructor_template;

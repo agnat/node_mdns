@@ -25,9 +25,6 @@ ServiceRef::~ServiceRef() {
     if ( ! context_.IsEmpty()) {
         context_.Dispose();
     }
-    if ( ! this_.IsEmpty()) {
-        this_.Dispose();
-    }
 }
 
 void

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+DIR=$(dirname $0)
+if [[ -n "$DIR" ]]; then
+    DIR="."
+fi
+
+for t in "$DIR/tests/test-*"; do
+    echo -n "running $(basename $t) ... "
+    $t;
+    if [[ $? != 0 ]]; then
+        echo -e "FAILED ###\a"
+    else
+        echo "ok"
+    fi
+done
