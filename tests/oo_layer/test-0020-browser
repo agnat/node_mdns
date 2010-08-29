@@ -51,7 +51,10 @@ browser.on('serviceUp', function(info, flags) {
   assert.strictEqual(typeof info.port, 'number');
   assert.strictEqual(info.port, 4321);
 
-  sys.puts(sys.inspect(info));
+  assert.ok(info.addresses instanceof Array);
+  assert.ok(info.addresses.length > 0);
+
+  //sys.puts(sys.inspect(info));
 
   upCount += 1;
   eventCount += 1;
