@@ -68,34 +68,37 @@ DNSServiceRegister(Arguments const& args) {
     }
     uint32_t interfaceIndex = args[2]->ToInteger()->Int32Value();
 
-    const char * name(NULL);
+    bool has_name = false;
     if ( ! args[3]->IsNull() && ! args[3]->IsUndefined()) {
         if ( ! args[3]->IsString()) {
             return throwTypeError("argument 4 must be a string (name)");
         }
-        name = * String::Utf8Value(args[3]->ToString());
+        has_name = true;
     }
+    String::Utf8Value name(args[3]);
 
     if ( ! args[4]->IsString()) {
         return throwTypeError("argument 5 must be a string (regtype)");
     }
     const char * regtype = * String::Utf8Value(args[4]->ToString());
 
-    const char * domain(NULL);
+    bool has_domain = false;
     if ( ! args[5]->IsNull() && ! args[5]->IsUndefined()) {
         if ( ! args[5]->IsString()) {
             return throwTypeError("argument 6 must be a string (domain)");
         }
-        domain = * String::Utf8Value(args[5]->ToString());
+        has_domain = true;
     }
+    String::Utf8Value domain(args[5]);
 
-    const char * host(NULL);
+    bool has_host = false;
     if ( ! args[6]->IsNull() && ! args[6]->IsUndefined()) {
         if ( ! args[6]->IsString()) {
             return throwTypeError("argument 7 must be a string (host)");
         }
-        domain = * String::Utf8Value(args[6]->ToString());
+        has_host = true;
     }
+    String::Utf8Value host(args[6]);
 
     if ( ! args[7]->IsInt32()) {
         return throwTypeError("argument 8 must be an integer (port)");
@@ -127,9 +130,19 @@ DNSServiceRegister(Arguments const& args) {
         serviceRef->SetContext(args[10]);
     }
 
-    DNSServiceErrorType error = DNSServiceRegister( & serviceRef->GetServiceRef(),
-            flags, interfaceIndex, name, regtype, domain, host, htons(port),
-            txtLen, txtRecord, OnServiceRegistered, serviceRef);
+    DNSServiceErrorType error = DNSServiceRegister(
+            & serviceRef->GetServiceRef(),
+            flags,
+            interfaceIndex,
+            has_name ? * name : NULL,
+            regtype,
+            has_domain ? * domain : NULL,
+            has_host ? * host : NULL,
+            htons(port),
+            txtLen,
+            txtRecord,
+            OnServiceRegistered,
+            serviceRef);
     if (error != kDNSServiceErr_NoError) {
         return throwMdnsError("DNSServiceRegister()", error);
     }

@@ -68,17 +68,17 @@ DNSServiceResolve(Arguments const& args) {
     if ( ! args[3]->IsString()) {
         return throwTypeError("argument 4 must be a string (name)");
     }
-    const char * name = * String::Utf8Value(args[3]->ToString());
+    String::Utf8Value name(args[3]->ToString());
 
     if ( ! args[4]->IsString()) {
         return throwTypeError("argument 5 must be a string (regtype)");
     }
-    const char * regtype = * String::Utf8Value(args[4]->ToString());
+    String::Utf8Value regtype(args[4]->ToString());
 
     if ( ! args[5]->IsString()) {
         return throwTypeError("argument 6 must be a string (domain)");
     }
-    const char * domain = * String::Utf8Value(args[5]->ToString());
+    String::Utf8Value domain(args[5]->ToString());
 
     if ( ! args[6]->IsFunction()) {
         return throwTypeError("argument 7 must be a function (callBack)");
@@ -90,7 +90,7 @@ DNSServiceResolve(Arguments const& args) {
     }
 
     DNSServiceErrorType error = DNSServiceResolve( & serviceRef->GetServiceRef(),
-            flags, interfaceIndex, name, regtype, domain, OnResolve, serviceRef);
+            flags, interfaceIndex, *name, *regtype, *domain, OnResolve, serviceRef);
 
     if (error != kDNSServiceErr_NoError) {
         return throwMdnsError("DNSServiceResolve()", error);

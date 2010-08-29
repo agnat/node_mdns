@@ -67,15 +67,16 @@ DNSServiceBrowse(Arguments const& args) {
     if ( ! args[3]->IsString()) {
         return throwTypeError("argument 4 must be a string (regtype)");
     }
-    const char * regtype = * String::Utf8Value(args[3]->ToString());
+    String::Utf8Value regtype(args[3]->ToString());
 
-    const char * domain(NULL);
+    bool has_domain = false;
     if ( ! args[4]->IsNull() && ! args[4]->IsUndefined()) {
         if ( ! args[4]->IsString()) {
             return throwTypeError("argument 5 must be a string (domain)");
         }
-        domain = * String::Utf8Value(args[4]->ToString());
+        has_domain = true;
     }
+    String::Utf8Value domain(args[4]);
 
     if ( ! args[5]->IsFunction()) {
         return throwTypeError("argument 6 must be a function (callBack)");
@@ -87,11 +88,12 @@ DNSServiceBrowse(Arguments const& args) {
     }
 
     DNSServiceErrorType error = DNSServiceBrowse( & serviceRef->GetServiceRef(), flags,
-            interfaceIndex, regtype, domain, OnServiceChanged, serviceRef);
+            interfaceIndex, *regtype, has_domain ? *domain : NULL, OnServiceChanged, serviceRef);
 
     if (error != kDNSServiceErr_NoError) {
         return throwMdnsError("DNSServiceBrowse()", error);
     }
+
     if ( ! serviceRef->SetSocketFlags()) {
         return throwError("Failed to set socket flags (O_NONBLOCK, FD_CLOEXEC)");
     }

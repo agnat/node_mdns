@@ -4,14 +4,20 @@ var mdns   = require('../lib/mdns'),
     sys    = require('sys'),
     assert = require('assert');
 
-var expectedEventCount = 3;
+var expectedEventCount = 4;
 var eventCount = 0;
+
+var timeout = 5000;
+var timeoutId = setTimeout(function() {
+  assert.fail("test did not finish within " + (timeout / 1000) + " seconds.");
+}, timeout)
 
 var browser = mdns.createBrowser('_node-mdns-test._tcp');
 
 function stopBrowserIfDone() {
   if (eventCount === expectedEventCount) {
     browser.stop();
+    clearTimeout(timeoutId);
   }
 }
 
