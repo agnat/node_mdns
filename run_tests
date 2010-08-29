@@ -8,7 +8,7 @@ fi
 TOTAL=0
 FAILED=0
 SUCCESSFUL=0
-for t in $(ls $DIR/tests/test-*); do
+for t in $(find $DIR/tests/ -type f -name "test-*"); do
     echo -n "running $(basename $t) ... "
     $t;
     if [[ $? != 0 ]]; then
