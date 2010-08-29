@@ -22,21 +22,50 @@ function stopBrowserIfDone() {
 }
 
 var changedCount = 0;
-browser.on('serviceChanged', function(info) {
+browser.on('serviceChanged', function(info, flags) {
+  assert.strictEqual(typeof flags, 'number');
+  assert.strictEqual(typeof info.interfaceIndex, 'number');
+  assert.strictEqual(typeof info.serviceName, 'string');
+  assert.strictEqual(typeof info.regtype, 'string');
+  assert.strictEqual(info.regtype, '_node-mdns-test._tcp.');
+  assert.strictEqual(typeof info.replyDomain, 'string');
+  assert.strictEqual(info.replyDomain, 'local.');
+
   changedCount += 1;
   eventCount += 1;
   stopBrowserIfDone();
 });
 
 var upCount = 0;
-browser.on('serviceUp', function(info) {
+browser.on('serviceUp', function(info, flags) {
+  assert.strictEqual(typeof flags, 'number');
+  assert.strictEqual(typeof info.interfaceIndex, 'number');
+  assert.strictEqual(typeof info.serviceName, 'string');
+  assert.strictEqual(typeof info.regtype, 'string');
+  assert.strictEqual(info.regtype, '_node-mdns-test._tcp.');
+  assert.strictEqual(typeof info.replyDomain, 'string');
+  assert.strictEqual(info.replyDomain, 'local.');
+
+  assert.strictEqual(typeof info.fullname, 'string');
+  assert.strictEqual(typeof info.host, 'string');
+  assert.strictEqual(typeof info.port, 'number');
+  assert.strictEqual(info.port, 4321);
+
   upCount += 1;
   eventCount += 1;
   stopBrowserIfDone();
 });
 
 var downCount = 0;
-browser.on('serviceDown', function(info) {
+browser.on('serviceDown', function(info, flags) {
+  assert.strictEqual(typeof flags, 'number');
+  assert.strictEqual(typeof info.interfaceIndex, 'number');
+  assert.strictEqual(typeof info.serviceName, 'string');
+  assert.strictEqual(typeof info.regtype, 'string');
+  assert.strictEqual(info.regtype, '_node-mdns-test._tcp.');
+  assert.strictEqual(typeof info.replyDomain, 'string');
+  assert.strictEqual(info.replyDomain, 'local.');
+
   downCount += 1;
   eventCount += 1;
   stopBrowserIfDone();
