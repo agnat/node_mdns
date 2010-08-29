@@ -81,9 +81,7 @@ process.on('exit', function() {
 
 var ad = mdns.createAdvertisement('_node-mdns-test._tcp', 4321, function(err, info, flags) {
     if (err) throw err;
-    setTimeout(function() {
-      ad.stop();
-    }, 500);
+    setTimeout(function() { ad.stop() }, 500);
 });
 
 ad.start();

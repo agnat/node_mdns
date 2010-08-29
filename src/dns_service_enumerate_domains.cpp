@@ -16,6 +16,26 @@ void
 OnEnumeration(DNSServiceRef sdRef, DNSServiceFlags flags, uint32_t interfaceIndex,
         DNSServiceErrorType errorCode, const char * replyDomain, void * context)
 {
+    if ( ! context) return;
+
+    HandleScope scope;
+    ServiceRef * serviceRef = static_cast<ServiceRef*>(context);
+    Handle<Function> callback = serviceRef->GetCallback();
+    Handle<Object> this_ = serviceRef->GetThis();
+
+    const size_t argc(6);
+    Local<Value> args[argc];
+    args[0] = Local<Object>::New(serviceRef->handle_);
+    args[1] = Integer::New(flags);
+    args[2] = Integer::New(interfaceIndex);
+    args[3] = Integer::New(errorCode);
+    args[4] = String::New(replyDomain);
+    if (serviceRef->GetContext().IsEmpty()) {
+        args[5] = Local<Value>::New(Null());
+    } else {
+        args[5] = Local<Value>::New(serviceRef->GetContext());
+    }
+    callback->Call(this_, argc, args);
 }
 
 Handle<Value>
