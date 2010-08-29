@@ -19,7 +19,7 @@ OnEnumeration(DNSServiceRef sdRef, DNSServiceFlags flags, uint32_t interfaceInde
 }
 
 Handle<Value>
-DNSServiceEnumerateDomains(Arguments const& args) {
+dnsServiceEnumerateDomains(Arguments const& args) {
     HandleScope scope;
     if (argumentCountMismatch(args, 5)) {
         return throwArgumentCountMismatchException(args, 5);
@@ -56,7 +56,7 @@ DNSServiceEnumerateDomains(Arguments const& args) {
             flags, interfaceIndex, OnEnumeration, serviceRef);
 
     if (error != kDNSServiceErr_NoError) {
-        return throwMdnsError("DNSServiceEnumerateDomains()", error);
+        return throwMdnsError("dnsServiceEnumerateDomains()", error);
     }
     if ( ! serviceRef->SetSocketFlags()) {
         return throwError("Failed to set socket flags (O_NONBLOCK, FD_CLOEXEC)");

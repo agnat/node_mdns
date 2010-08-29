@@ -5,10 +5,10 @@ var mdns  = require('../../lib/mdns'),
 
 var serviceRef = new mdns.capi.DNSServiceRef();
 
-mdns.capi.DNSServiceRegister(serviceRef, 0, 0, null, "_node-mdns-test._tcp",
+mdns.capi.dnsServiceRegister(serviceRef, 0, 0, null, "_node-mdns-test._tcp",
     null, null, 4321, null, null, null);
 
-mdns.capi.DNSServiceRefDeallocate(serviceRef);
+mdns.capi.dnsServiceRefDeallocate(serviceRef);
 
 assert.strictEqual(serviceRef.initialized, false);
 

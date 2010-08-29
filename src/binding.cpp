@@ -11,13 +11,13 @@ using namespace node;
 
 namespace node_mdns {
 
-Handle<Value> DNSServiceRegister(Arguments const& args); 
-Handle<Value> DNSServiceRefSockFD(Arguments const& args); 
-Handle<Value> DNSServiceProcessResult(Arguments const& args); 
-Handle<Value> DNSServiceBrowse(Arguments const& args); 
-Handle<Value> DNSServiceRefDeallocate(Arguments const& args); 
-Handle<Value> DNSServiceResolve(Arguments const& args); 
-Handle<Value> DNSServiceEnumerateDomains(Arguments const& args); 
+Handle<Value> dnsServiceRegister(Arguments const& args); 
+Handle<Value> dnsServiceRefSockFD(Arguments const& args); 
+Handle<Value> dnsServiceProcessResult(Arguments const& args); 
+Handle<Value> dnsServiceBrowse(Arguments const& args); 
+Handle<Value> dnsServiceRefDeallocate(Arguments const& args); 
+Handle<Value> dnsServiceResolve(Arguments const& args); 
+Handle<Value> dnsServiceEnumerateDomains(Arguments const& args); 
 
 typedef Handle<Value> (WrapperFunc)(Arguments const&);
 
@@ -52,13 +52,13 @@ init (v8::Handle<v8::Object> target) {
 
     ServiceRef::Initialize( target );
 
-    defineFunction(target, "DNSServiceRegister", DNSServiceRegister);
-    defineFunction(target, "DNSServiceRefSockFD", DNSServiceRefSockFD);
-    defineFunction(target, "DNSServiceProcessResult", DNSServiceProcessResult);
-    defineFunction(target, "DNSServiceBrowse", DNSServiceBrowse);
-    defineFunction(target, "DNSServiceRefDeallocate", DNSServiceRefDeallocate);
-    defineFunction(target, "DNSServiceResolve", DNSServiceResolve);
-    defineFunction(target, "DNSServiceEnumerateDomains", DNSServiceEnumerateDomains);
+    defineFunction(target, "dnsServiceRegister", dnsServiceRegister);
+    defineFunction(target, "dnsServiceRefSockFD", dnsServiceRefSockFD);
+    defineFunction(target, "dnsServiceProcessResult", dnsServiceProcessResult);
+    defineFunction(target, "dnsServiceBrowse", dnsServiceBrowse);
+    defineFunction(target, "dnsServiceRefDeallocate", dnsServiceRefDeallocate);
+    defineFunction(target, "dnsServiceResolve", dnsServiceResolve);
+    defineFunction(target, "dnsServiceEnumerateDomains", dnsServiceEnumerateDomains);
 
     defineFunction(target, "buildException", buildException);
 
