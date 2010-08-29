@@ -18,6 +18,7 @@ Handle<Value> dnsServiceBrowse(Arguments const& args);
 Handle<Value> dnsServiceRefDeallocate(Arguments const& args); 
 Handle<Value> dnsServiceResolve(Arguments const& args); 
 Handle<Value> dnsServiceEnumerateDomains(Arguments const& args); 
+Handle<Value> dnsServiceGetAddrInfo(Arguments const& args); 
 
 typedef Handle<Value> (WrapperFunc)(Arguments const&);
 
@@ -59,6 +60,7 @@ init (v8::Handle<v8::Object> target) {
     defineFunction(target, "dnsServiceRefDeallocate", dnsServiceRefDeallocate);
     defineFunction(target, "dnsServiceResolve", dnsServiceResolve);
     defineFunction(target, "dnsServiceEnumerateDomains", dnsServiceEnumerateDomains);
+    defineFunction(target, "dnsServiceGetAddrInfo", dnsServiceGetAddrInfo);
 
     defineFunction(target, "buildException", buildException);
 
