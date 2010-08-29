@@ -12,7 +12,7 @@ var timeoutId = setTimeout(function() {
   assert.fail("test did not finish within " + (timeout / 1000) + " seconds.");
 }, timeout)
 
-var browser = mdns.createBrowser('_node-mdns-test._tcp');
+var browser = mdns.createBrowser(mdns.tcp('node-mdns-test'));
 
 function stopBrowserIfDone() {
   if (eventCount === expectedEventCount) {
@@ -84,7 +84,7 @@ process.on('exit', function() {
   assert.ok(downCount >= 1);
 });
 
-var ad = mdns.createAdvertisement('_node-mdns-test._tcp', 4321, function(err, info, flags) {
+var ad = mdns.createAdvertisement(mdns.tcp('node-mdns-test'), 4321, function(err, info, flags) {
     if (err) throw err;
     setTimeout(function() { ad.stop() }, 500);
 });

@@ -1,0 +1,14 @@
+#!/usr/bin/env node
+
+var mdns   = require('../../lib/mdns'),
+    sys    = require('sys'),
+    assert = require('assert');
+
+assert.strictEqual( mdns.udp('osc').regtypeString(), '_osc._udp');
+
+assert.strictEqual( mdns.tcp('http', 'blogapi').regtypeString(), '_http._tcp,_blogapi');
+assert.strictEqual( mdns.tcp('http', 'blogapi', 'newblogapi').regtypeString(),
+    '_http._tcp,_blogapi,_newblogapi');
+
+
+// vim: filetype=javascript:
