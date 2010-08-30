@@ -28,14 +28,18 @@ ad.start();
 
 And here is how to browse all HTTP servers on the local network:
 
-bc. var browser = mdns.createBrowser('http');
+bc.. var browser = mdns.createBrowser('http');
+
 browser.on('serviceUp', function(info, flags) {
   sys.puts("Up: " + sys.inspect(info));
 });
+
 browser.on('serviceDown', function(info, flags) {
   sys.puts("Down: " + sys.inspect(info));
 });
+
 browser.start();
+
 
 As you can see the browser object is an EventEmitter. For each HTTP server a 'serviceUp' event is emitted. Likewise, if a server disappears 'serviceDown' is send. A 'serviceUp' info object might look like this:
 
