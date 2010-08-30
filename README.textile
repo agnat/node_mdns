@@ -1,40 +1,40 @@
-h1. node_mdns
+h1. node_mdns - service discovery for node.js
 
-h2. Synopsis
-
-node_mdns is a "node.js":/ry/node add-on. It adds support for multicast DNS service discovery, also known as zeroconf or bonjour.
-
-It provides an object-oriented interface to announce and browse services.
+node_mdns adds support for multicast DNS service discovery, also known as zeroconf or bonjour to "node.js":/ry/node. It provides an object-oriented interface to announce and browse services on the local network.
 
 Internally, it uses the mDNSResponder API which is available on all major platforms.
 
-h2. Build
+h2. Build, Installation and Dependencies
 
-Tested on Mac OS X and Linux. I keep getting reports that it works on (Open-) Solaris, too. On Linux the avahi dns_sd compat library is required.
+On Linux and other systems using the avahi daemon the avahi dns_sd compat library and its header files are required.
 
-bc. node-waf configure build
+node_mdns is available as a npm package. To fetch, compile and install the add-on do:
 
-TODO: install?
+bc. npm install mdns
 
-h2. Quickstart
+If you want to play with the latest source code, here is a more manual approach:
 
-p. To import the add-on use something like this:
+bc.. git clone http://github.com/agnat/node_mdns
+cd node_mdns
+node-waf configure build && ./run_tests
 
-bc. var mdns = require('mdns');
+h2. Tutorial
 
-p. Announce a TCP server on port 4321 with service type 'http':
+Multicast DNS service discovery provides a way to announce and discover services on the local network. 
 
-bc.. var ad = mdns.createAdvertisement('http', 4321, 'tcp');
-ad.start();
+h2. Reference
 
-setTimeout(function() { ad.stop(); }, 10000);
+h3. Advertisement
 
-p. Browse HTTP servers:
+h3. Browser
 
-bc.. var browser = mdns.createBrowser('http', 'tcp');
-browser.addListener('serviceUp', function(info) { puts('found', info); });
-browser.addListener('serviceDown', function(info) { puts('gone', info); });
-browser.start();
+h3. C API
+
+h2. Bugs, Fixes and Contributions
+
+Yes, please.
+
+h2. Design Notes
 
 h2. License (MIT)
 
