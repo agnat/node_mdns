@@ -51,9 +51,9 @@ bc. { interfaceIndex: 4
 
 h2. Reference
 
-h3. Advertisement
+h3. mdns.Advertisement
 
-h3. Browser
+h3. mdns.Browser
 
 h3. C API
 
