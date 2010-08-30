@@ -80,7 +80,7 @@ dnsServiceRegister(Arguments const& args) {
     if ( ! args[4]->IsString()) {
         return throwTypeError("argument 5 must be a string (regtype)");
     }
-    const char * regtype = * String::Utf8Value(args[4]->ToString());
+    String::Utf8Value regtype(args[4]->ToString());
 
     bool has_domain = false;
     if ( ! args[5]->IsNull() && ! args[5]->IsUndefined()) {
@@ -135,7 +135,7 @@ dnsServiceRegister(Arguments const& args) {
             flags,
             interfaceIndex,
             has_name ? * name : NULL,
-            regtype,
+            *regtype,
             has_domain ? * domain : NULL,
             has_host ? * host : NULL,
             htons(port),
