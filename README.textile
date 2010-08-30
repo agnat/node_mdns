@@ -22,13 +22,13 @@ h2. Tutorial
 
 Multicast DNS service discovery provides a way to announce and discover services on the local network. Here is how to announce a HTTP server running on port 4321:
 
-bc.. var mdns = require('mdns');
+bc. var mdns = require('mdns');
 var ad = mdns.createAdvertisement('http', 4321);
 ad.start();
 
 And here is how to browse all HTTP servers on the local network:
 
-bc.. var browser = mdns.createBrowser('http');
+bc. var browser = mdns.createBrowser('http');
 browser.on('serviceUp', function(info, flags) {
   sys.puts("Up: " + sys.inspect(info));
 });
@@ -39,7 +39,7 @@ browser.start();
 
 As you can see the browser object is an EventEmitter. For each HTTP server a 'serviceUp' event is emitted. Likewise, if a server disappears 'serviceDown' is send. A 'serviceUp' info object might look like this:
 
-bc.. { interfaceIndex: 4
+bc. { interfaceIndex: 4
 , serviceName: 'somehost'
 , regtype: '_http._tcp.'
 , replyDomain: 'local.'
