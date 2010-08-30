@@ -39,6 +39,7 @@ browser.on('serviceDown', function(info, flags) {
 });
 
 browser.start();
+
 p.
 
 As you can see the browser object is an EventEmitter. For each HTTP server a 'serviceUp' event is emitted. Likewise, if a server disappears 'serviceDown' is send. A 'serviceUp' info object might look like this:
