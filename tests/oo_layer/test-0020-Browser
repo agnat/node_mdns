@@ -4,9 +4,6 @@ var mdns   = require('../../lib/mdns'),
     sys    = require('sys'),
     assert = require('assert');
 
-var expectedEventCount = 4;
-var eventCount = 0;
-
 var timeout = 5000;
 var timeoutId = setTimeout(function() {
   assert.fail("test did not finish within " + (timeout / 1000) + " seconds.");
@@ -15,7 +12,11 @@ var timeoutId = setTimeout(function() {
 var browser = mdns.createBrowser(mdns.tcp('node-mdns-test'));
 
 function stopBrowserIfDone() {
-  if (eventCount === expectedEventCount) {
+  if (upCount > 0 &&
+      downCount > 0 && 
+      upCount == downCount && 
+      changedCount == upCount + downCount)
+  {
     browser.stop();
     clearTimeout(timeoutId);
   }
@@ -32,7 +33,6 @@ browser.on('serviceChanged', function(info, flags) {
   assert.strictEqual(info.replyDomain, 'local.');
 
   changedCount += 1;
-  eventCount += 1;
   stopBrowserIfDone();
 });
 
@@ -57,7 +57,6 @@ browser.on('serviceUp', function(info, flags) {
   //sys.puts(sys.inspect(info));
 
   upCount += 1;
-  eventCount += 1;
   stopBrowserIfDone();
 });
 
@@ -72,7 +71,6 @@ browser.on('serviceDown', function(info, flags) {
   assert.strictEqual(info.replyDomain, 'local.');
 
   downCount += 1;
-  eventCount += 1;
   stopBrowserIfDone();
 });
 
