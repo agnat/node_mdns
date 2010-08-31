@@ -1,3 +1,5 @@
+#include <limits>
+#include <arpa/inet.h>
 #include <dns_sd.h>
 
 #include <v8.h>

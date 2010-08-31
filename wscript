@@ -4,13 +4,13 @@ from os import unlink, link
 from os.path import exists 
 
 # nice, but requires python 2.6 ... 
-import json
-package = json.load(open('package.json'))
-APPNAME = 'node_' + package['name'] # used by 'node-waf dist'
-VERSION = package['version']        # dito
+#import json
+#package = json.load(open('package.json'))
+#APPNAME = 'node_' + package['name'] # used by 'node-waf dist'
+#VERSION = package['version']        # dito
 
-#APPNAME = 'node_mdns'
-#VERSION = '0.0.2'
+APPNAME = 'node_mdns'
+VERSION = '0.0.3'
 
 def set_options(opt):
   opt.tool_options('compiler_cxx')

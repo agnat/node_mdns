@@ -1,3 +1,4 @@
+#include <arpa/inet.h>
 #include <v8.h>
 
 #include "mdns_utils.hpp"
