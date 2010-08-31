@@ -1,3 +1,5 @@
+#include "node_mdns_config.h"
+
 #include <iostream>
 
 #include <v8.h>
@@ -18,7 +20,10 @@ Handle<Value> dnsServiceBrowse(Arguments const& args);
 Handle<Value> dnsServiceRefDeallocate(Arguments const& args); 
 Handle<Value> dnsServiceResolve(Arguments const& args); 
 Handle<Value> dnsServiceEnumerateDomains(Arguments const& args); 
+
+#if HAVE_GET_ADDR_INFO
 Handle<Value> dnsServiceGetAddrInfo(Arguments const& args); 
+#endif
 
 typedef Handle<Value> (WrapperFunc)(Arguments const&);
 
@@ -60,7 +65,9 @@ init (v8::Handle<v8::Object> target) {
     defineFunction(target, "dnsServiceRefDeallocate", dnsServiceRefDeallocate);
     defineFunction(target, "dnsServiceResolve", dnsServiceResolve);
     defineFunction(target, "dnsServiceEnumerateDomains", dnsServiceEnumerateDomains);
+#if HAVE_GET_ADDR_INFO
     defineFunction(target, "dnsServiceGetAddrInfo", dnsServiceGetAddrInfo);
+#endif
 
     defineFunction(target, "buildException", buildException);
 

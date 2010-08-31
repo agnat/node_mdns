@@ -61,6 +61,7 @@ OnAddressInfo(DNSServiceRef sdRef, DNSServiceFlags flags,
     callback->Call(this_, argc, args);
 }
 
+#if HAVE_GET_ADDR_INFO
 Handle<Value>
 dnsServiceGetAddrInfo(Arguments const& args) {
     HandleScope scope;
@@ -118,5 +119,6 @@ dnsServiceGetAddrInfo(Arguments const& args) {
 
     return Undefined();
 }
+#endif
 
 } // end of namespace node_mdns
