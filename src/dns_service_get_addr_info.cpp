@@ -1,6 +1,7 @@
+#include "node_mdns_config.h"
+
 #include <netinet/in.h>
 #include <arpa/inet.h>
-
 
 #include <v8.h>
 
