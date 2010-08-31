@@ -5,6 +5,8 @@ if [[ -z "$DIR" ]]; then
     DIR="."
 fi
 
+export AVAHI_COMPAT_NOWARN=1
+
 TOTAL=0
 FAILED=0
 SUCCESSFUL=0
