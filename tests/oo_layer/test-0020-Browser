@@ -54,7 +54,7 @@ browser.on('serviceUp', function(info, flags) {
   assert.ok(info.addresses instanceof Array);
   assert.ok(info.addresses.length > 0);
 
-  //sys.puts(sys.inspect(info));
+  sys.puts(sys.inspect(info));
 
   upCount += 1;
   stopBrowserIfDone();
