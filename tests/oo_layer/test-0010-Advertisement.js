@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var mdns   = require('../../lib/mdns'),
-    sys    = require('sys'),
+    util   = require('util'),
     assert = require('assert');
 
 var t = 500; // ms

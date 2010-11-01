@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 var express = require('express'),
     mdns    = require('../lib/mdns'),
-    sys     = require('sys');
+    util    = require('util');
 
 get('/', function() {
   return "Hello World";

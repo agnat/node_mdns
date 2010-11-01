@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var mdns   = require('../../lib/mdns'),
-    sys    = require('sys'),
+    util   = require('util'),
     assert = require('assert');
 
 var timeout = 5000;
@@ -54,7 +54,7 @@ browser.on('serviceUp', function(info, flags) {
   assert.ok(info.addresses instanceof Array);
   assert.ok(info.addresses.length > 0);
 
-  sys.puts(sys.inspect(info));
+  util.puts(util.inspect(info));
 
   upCount += 1;
   stopBrowserIfDone();

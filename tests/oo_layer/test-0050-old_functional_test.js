@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 var mdns   = require('../../lib/mdns'),
-    sys    = require('sys'),
+    util   = require('util'),
     assert = require('assert');
 
 var ad =  mdns.createAdvertisement(["node-mdns-test", 'a', 'b'], 4321, function(err, info, flags) {
@@ -8,7 +8,7 @@ var ad =  mdns.createAdvertisement(["node-mdns-test", 'a', 'b'], 4321, function(
     assert.fail(err)
   } else {
     assert.equal(info['regtype'], '_node-mdns-test._tcp.');
-    //sys.puts('Advertising', sys.inspect(info));
+    //util.puts('Advertising', util.inspect(info));
   }
 });
 var browser = mdns.createBrowser(["node-mdns-test", 'b'], 'tcp');
@@ -16,14 +16,14 @@ var browser = mdns.createBrowser(["node-mdns-test", 'b'], 'tcp');
 timeout_id = setTimeout(function() { assert.fail('time out'); }, 10000);
 
 browser.on('serviceUp', function(info) {
-  //sys.puts('Up', sys.inspect(info));
+  //util.puts('Up', util.inspect(info));
   assert.equal('_node-mdns-test._tcp.', info['regtype']);
   assert.equal(4321, info['port']);
   ad.stop();
 });
 
 browser.on('serviceDown', function(info) {
-  //sys.puts('Down', sys.inspect(info));
+  //util.puts('Down', util.inspect(info));
   assert.equal('_node-mdns-test._tcp.', info['regtype']);
   browser.stop();
   clearTimeout(timeout_id);
