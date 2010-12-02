@@ -1,5 +1,5 @@
 { "name" : "mdns"
-, "version" : "0.0.3"
+, "version" : "0.0.3orlando-1.0"
 , "description" : "mdns/zeroconf/bonjour service discovery add-on"
 , "author": "David Siegel <david@artcom.de>"
 , "contributors": ["Orlando Vazquez", "Ryan Dahl"]
