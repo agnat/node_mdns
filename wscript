@@ -40,7 +40,7 @@ def build(bld):
   bld.add_post_fun(post_build)
   obj = bld.new_task_gen('cxx', 'shlib', 'node_addon')
   obj.target = 'binding'
-  obj.uselib = 'DNSSD'
+  obj.uselib = 'DNS_SD'
   obj.includes = '.'
   obj.source = ['src/binding.cpp',
                 'src/dns_service_browse.cpp',

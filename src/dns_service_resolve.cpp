@@ -10,6 +10,33 @@ using namespace node;
 namespace node_mdns {
 
 void
+ParseTxtRecord(uint16_t txtLen, const unsigned char * txtRecord)
+{
+    char keyBuf[256];
+    uint16_t keyBufLen = sizeof(keyBuf);
+    uint8_t valueLen;
+    const void *value;
+    uint16_t keyCount = TXTRecordGetCount(txtLen, txtRecord);
+
+    for (uint16_t index = 0; index<keyCount; ++index) {
+        DNSServiceErrorType error = TXTRecordGetItemAtIndex(txtLen, txtRecord,
+            index, keyBufLen, keyBuf, &valueLen, &value);
+
+        switch(error) {
+        case kDNSServiceErr_NoError:
+            fprintf(stderr, "Found key: %s", keyBuf);
+            break;
+        case kDNSServiceErr_NoMemory:
+            break;
+        case kDNSServiceErr_Invalid:
+            break;
+        default:
+            break;
+        }
+    }
+}
+
+void
 OnResolve(DNSServiceRef sdRef, DNSServiceFlags flags,
         uint32_t interfaceIndex, DNSServiceErrorType errorCode,
         const char * fullname, const char * hosttarget, uint16_t port,
@@ -32,6 +59,9 @@ OnResolve(DNSServiceRef sdRef, DNSServiceFlags flags,
     args[5] = String::New(hosttarget);
     args[6] = Integer::New( ntohs(port) );
     args[7] = Local<Value>::New(Null()); // TODO: create txtRecord buffer
+
+    ParseTxtRecord(txtLen, txtRecord);
+
     if (serviceRef->GetContext().IsEmpty()) {
         args[8] = Local<Value>::New(Null());
     } else {
