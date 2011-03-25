@@ -9,8 +9,8 @@ using namespace node;
 
 namespace node_mdns {
 
-void
-ParseTxtRecord(uint16_t txtLen, const unsigned char * txtRecord)
+// hackish, refactor once you've learnt v8.
+void ParseTxtRecord(Local<Object>& obj, uint16_t txtLen, const unsigned char * txtRecord)
 {
     char keyBuf[256];
     uint16_t keyBufLen = sizeof(keyBuf);
@@ -18,18 +18,21 @@ ParseTxtRecord(uint16_t txtLen, const unsigned char * txtRecord)
     const void *value;
     uint16_t keyCount = TXTRecordGetCount(txtLen, txtRecord);
 
+    const size_t items = keyCount;
+
     for (uint16_t index = 0; index<keyCount; ++index) {
         DNSServiceErrorType error = TXTRecordGetItemAtIndex(txtLen, txtRecord,
             index, keyBufLen, keyBuf, &valueLen, &value);
 
         switch(error) {
         case kDNSServiceErr_NoError:
-            fprintf(stderr, "Found key: %s", keyBuf);
+            obj->Set(
+                String::New(keyBuf),
+                String::New(static_cast<const char*>(value), valueLen)
+            );
             break;
         case kDNSServiceErr_NoMemory:
-            break;
         case kDNSServiceErr_Invalid:
-            break;
         default:
             break;
         }
@@ -58,9 +61,10 @@ OnResolve(DNSServiceRef sdRef, DNSServiceFlags flags,
     args[4] = String::New(fullname);
     args[5] = String::New(hosttarget);
     args[6] = Integer::New( ntohs(port) );
-    args[7] = Local<Value>::New(Null()); // TODO: create txtRecord buffer
 
-    ParseTxtRecord(txtLen, txtRecord);
+    Local<Object> obj = Object::New();
+    ParseTxtRecord(obj, txtLen, txtRecord);
+    args[7] = obj;
 
     if (serviceRef->GetContext().IsEmpty()) {
         args[8] = Local<Value>::New(Null());
