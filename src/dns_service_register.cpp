@@ -45,13 +45,88 @@ OnServiceRegistered(DNSServiceRef sdRef, DNSServiceFlags flags,
     }
 }
 
+
+class scopedTXTRecord {
+    TXTRecordRef record;
+    TXTRecordRef *recordPtr;
+
+protected:
+    scopedTXTRecord(const scopedTXTRecord&);
+    void operator=(const scopedTXTRecord&);
+
+public:
+    scopedTXTRecord()
+        : recordPtr(NULL)
+    {
+    }
+
+    ~scopedTXTRecord() {
+        if (recordPtr != NULL) {
+            TXTRecordDeallocate(recordPtr);
+        }
+    }
+
+    void initialize() {
+        recordPtr = &record;
+        TXTRecordCreate(recordPtr, 0, NULL);
+    }
+
+    uint8_t getSize() const {
+        return recordPtr != NULL? TXTRecordGetLength(recordPtr) : 0;
+    }
+
+    const void * getTXTRecord() const {
+        return recordPtr != NULL? TXTRecordGetBytesPtr(recordPtr) : NULL;
+    }
+
+    DNSServiceErrorType setValue(const char *k, uint8_t len, const void *val) {
+        return TXTRecordSetValue(recordPtr, k, len, val);
+    }
+};
+
+bool
+createTXTRecord(scopedTXTRecord& txtRecord, Local<Object>& object) {
+    HandleScope scope;
+    Local<Array> names = object->GetPropertyNames();
+    uint32_t length = names->Length();
+
+    for (uint32_t index = 0; index<length; ++index) {
+        Local<Value> key = names->Get(index);
+
+        if (key->IsString()) {
+            Local<Value> buffer = object->Get(key);
+
+            // A DNS-SD key is 7-bit ascii
+            String::AsciiValue keyString(key);
+            std::string buf(*keyString, keyString.length());
+
+            Local<Object> obj;
+            uint8_t valLen = 0;
+            const void *value = NULL;
+
+            if (Buffer::HasInstance(buffer)) {
+                obj = buffer->ToObject();
+                valLen = Buffer::Length(obj);
+                value = Buffer::Data(obj);
+            }
+
+            if (txtRecord.setValue(buf.c_str(), valLen, value) != kDNSServiceErr_NoError) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+    return true;
+}
+
 Handle<Value>
 dnsServiceRegister(Arguments const& args) {
     HandleScope scope;
     if (argumentCountMismatch(args, 11)) {
         return throwArgumentCountMismatchException(args, 11);
     }
-    
+
     if ( ! ServiceRef::HasInstance(args[0])) {
         return throwTypeError("argument 1 must be a DNSServiceRef (sdRef)");
     }
@@ -111,13 +186,16 @@ dnsServiceRegister(Arguments const& args) {
     }
     uint16_t port = static_cast<uint16_t>(raw_port);
 
-    uint16_t txtLen(0);
-    const void * txtRecord(NULL);
-    if ( ! args[8]->IsNull() && ! args[8]->IsUndefined()) {
-        if (Buffer::HasInstance(args[8])) {
-            std::cout << "TODO: implement txt record" << std::endl;
+    scopedTXTRecord record;
+    if (! args[8]->IsNull() && ! args[8]->IsUndefined()) {
+        if (args[8]->IsObject()) {
+            record.initialize();
+            Local<Object> object = args[8]->ToObject();
+            if (! createTXTRecord(record, object)) {
+                return throwTypeError("argument 9 is not a valid TXT Record");
+            }
         } else {
-            return throwTypeError("argument 9 must be a buffer (txtRecord)");
+            return throwTypeError("argument 9 must be an object (txtRecord)");
         }
     }
 
@@ -141,8 +219,8 @@ dnsServiceRegister(Arguments const& args) {
             has_domain ? * domain : NULL,
             has_host ? * host : NULL,
             htons(port),
-            txtLen,
-            txtRecord,
+            record.getSize(),
+            record.getTXTRecord(),
             OnServiceRegistered,
             serviceRef);
     if (error != kDNSServiceErr_NoError) {
