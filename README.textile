@@ -6,6 +6,10 @@ Internally, it uses the mDNSResponder API which is available on all major platfo
 
 On Linux and other systems using the avahi daemon the avahi dns_sd compat library and its header files are required.
 
+on debian:
+
+bc. sudo aptitude install libavahi-compat-libdnssd-dev
+
 h2. Installation
 
 node_mdns is available as a npm package. To fetch, compile and install the add-on do:
