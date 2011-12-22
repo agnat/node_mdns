@@ -21,9 +21,9 @@ def configure(conf):
 
   if conf.check(header_name='dns_sd.h', mandatory=True):
     conf.define('NODE_MDNS_DNS_SD_BACKEND', 1)
- 
+
     conf.check(lib='dns_sd', uselib_store='DNS_SD')
- 
+
     conf.check(function_name='DNSServiceGetAddrInfo',
                header_name="dns_sd.h",
                uselib='DNS_SD')
@@ -32,9 +32,9 @@ def configure(conf):
 
 
 def post_build(ctx):
-  #print("=== post")
+  base_path = ctx.srcnode.abspath(ctx.get_env())
   if not os.path.exists('lib/binding.node'):
-      os.symlink( '../build/default/binding.node', 'lib/binding.node')
+      os.symlink( os.path.join(base_path, 'binding.node'), 'lib/binding.node')
 
 def build(bld):
   bld.add_post_fun(post_build)
@@ -54,5 +54,8 @@ def build(bld):
                 'src/mdns_utils.cpp']
   if bld.env.HAVE_DNSSERVICEGETADDRINFO:
       obj.source.append('src/dns_service_get_addr_info.cpp')
-  
+
+def clean(ctx):
+  if os.path.exists('lib/binding.node'):
+    os.unlink('lib/binding.node')
 # vim: set filetype=python :
