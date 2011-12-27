@@ -4,7 +4,6 @@
 #include <fcntl.h>
 #include <dns_sd.h>
 
-#include <v8.h>
 #include <node.h>
 
 #include <iostream>
