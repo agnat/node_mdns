@@ -49,19 +49,15 @@ bc. { interfaceIndex: 4
 , addresses: [ '10.1.1.50', 'fe80::21f:5bff:fecd:ce64' ]
 }
 
-h2. Reference
+h2. Design Notes
 
-h3. mdns.Advertisement
+The implementation has two layers: A low-level C API and a more userfriendly object based API. The low-level API is implemented in C++ and just wraps functions, datastructures and constants from @dns_sd.h@. Most of the code deals with argument conversion and error handling. A smaller portion deals with callbacks from C(++) to javascript.
 
-h3. mdns.Browser
-
-h3. C API
+The high-level API is written in javascript. It connects the C API to nodes non-blocking IO infrastructure, namely @process.IOWatcher@. This results in excelent separation of concerns and leads to a very robust design. The same code runs on node 0.2 to 0.6 with only minimal changes.
 
 h2. Bugs, Fixes and Contributions
 
 Yes, please.
-
-h2. Design Notes
 
 h2. License (MIT)
 
