@@ -1,5 +1,3 @@
-import sys
-import Options
 import os
 
 # nice, but requires python 2.6 ... 
@@ -28,34 +26,14 @@ def configure(conf):
                header_name="dns_sd.h",
                uselib='DNS_SD')
 
-  conf.write_config_header('node_mdns_config.h');
+  conf.write_config_header('node_mdns_config.h')
 
+def build(ctx):
+  ctx.add_subdirs('src')
 
-def post_build(ctx):
-  if not os.path.exists('lib/binding.node'):
-    if os.path.exists('build/Release/binding.node'):
-      os.symlink( '../build/Release/binding.node', 'lib/binding.node')
-    else:
-      os.symlink( '../build/default/binding.node', 'lib/binding.node')
+def clean(ctx):
+  symlink = os.path.join('lib', 'binding.node') # still not DRY ...
+  if os.path.lexists(symlink):
+    os.unlink(symlink)
 
-def build(bld):
-  bld.add_post_fun(post_build)
-  obj = bld.new_task_gen('cxx', 'shlib', 'node_addon')
-  obj.target = 'binding'
-  obj.uselib = 'DNS_SD'
-  obj.includes = ['.']
-  obj.source = [ 'src/binding.cpp'
-               , 'src/dns_service_browse.cpp'
-               , 'src/dns_service_enumerate_domains.cpp'
-               , 'src/dns_service_process_result.cpp'
-               , 'src/dns_service_ref.cpp'
-               , 'src/dns_service_ref_deallocate.cpp'
-               , 'src/dns_service_ref_sock_fd.cpp'
-               , 'src/dns_service_register.cpp'
-               , 'src/dns_service_resolve.cpp'
-               , 'src/mdns_utils.cpp'
-               ]
-  if bld.env.HAVE_DNSSERVICEGETADDRINFO:
-      obj.source.append('src/dns_service_get_addr_info.cpp')
-  
 # vim: set filetype=python :
