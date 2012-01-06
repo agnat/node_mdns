@@ -48,29 +48,8 @@ buildException(Arguments const& args) {
     return scope.Close(buildException(error));
 }
 
-} // end of namespace node_mdns
-
-extern "C" 
 void
-init (v8::Handle<v8::Object> target) {
-    using namespace node_mdns;
-    v8::HandleScope scope;
-
-    ServiceRef::Initialize( target );
-
-    defineFunction(target, "dnsServiceRegister", dnsServiceRegister);
-    defineFunction(target, "dnsServiceRefSockFD", dnsServiceRefSockFD);
-    defineFunction(target, "dnsServiceProcessResult", dnsServiceProcessResult);
-    defineFunction(target, "dnsServiceBrowse", dnsServiceBrowse);
-    defineFunction(target, "dnsServiceRefDeallocate", dnsServiceRefDeallocate);
-    defineFunction(target, "dnsServiceResolve", dnsServiceResolve);
-    defineFunction(target, "dnsServiceEnumerateDomains", dnsServiceEnumerateDomains);
-#ifdef HAVE_DNSSERVICEGETADDRINFO
-    defineFunction(target, "dnsServiceGetAddrInfo", dnsServiceGetAddrInfo);
-#endif
-
-    defineFunction(target, "buildException", buildException);
-
+addConstants(Handle<Object> target) {
     // DNS Classes
     NODE_DEFINE_CONSTANT(target, kDNSServiceClass_IN);
 
@@ -248,5 +227,46 @@ init (v8::Handle<v8::Object> target) {
 #ifdef kDNSServiceFlagsSuppressUnusable
     NODE_DEFINE_CONSTANT(target, kDNSServiceFlagsSuppressUnusable);
 #endif
+}
+
+Handle<Value>
+exportConstants(Arguments const& args) {
+    HandleScope scope;
+    if (argumentCountMismatch(args, 1)) {
+        return throwArgumentCountMismatchException(args, 1);
+    }
+    if ( ! args[0]->IsObject()) {
+        return throwTypeError("argument 1 must be an object.");
+    }
+
+    addConstants(args[0]->ToObject());
+    return Undefined();
+}
+
+} // end of namespace node_mdns
+
+extern "C" 
+void
+init (Handle<Object> target) {
+    using namespace node_mdns;
+    HandleScope scope;
+
+    ServiceRef::Initialize( target );
+
+    defineFunction(target, "dnsServiceRegister", dnsServiceRegister);
+    defineFunction(target, "dnsServiceRefSockFD", dnsServiceRefSockFD);
+    defineFunction(target, "dnsServiceProcessResult", dnsServiceProcessResult);
+    defineFunction(target, "dnsServiceBrowse", dnsServiceBrowse);
+    defineFunction(target, "dnsServiceRefDeallocate", dnsServiceRefDeallocate);
+    defineFunction(target, "dnsServiceResolve", dnsServiceResolve);
+    defineFunction(target, "dnsServiceEnumerateDomains", dnsServiceEnumerateDomains);
+#ifdef HAVE_DNSSERVICEGETADDRINFO
+    defineFunction(target, "dnsServiceGetAddrInfo", dnsServiceGetAddrInfo);
+#endif
+
+    defineFunction(target, "buildException", buildException);
+    defineFunction(target, "exportConstants", exportConstants);
+
+    addConstants(target);
 }
 
