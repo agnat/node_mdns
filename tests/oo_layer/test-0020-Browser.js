@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 var mdns   = require('../../lib/mdns'),
-    util   = require('util'),
     assert = require('assert');
 
 var timeout = 5000;
@@ -24,7 +23,10 @@ function stopBrowserIfDone() {
 
 var changedCount = 0;
 browser.on('serviceChanged', function(info, flags) {
-  assert.strictEqual(typeof flags, 'number');
+  assert.strictEqual(typeof info.flags, 'number');
+  if (changedCount === 0) {
+    assert.ok(info.flags & mdns.kDNSServiceFlagsAdd);
+  }
   assert.strictEqual(typeof info.interfaceIndex, 'number');
   assert.strictEqual(typeof info.serviceName, 'string');
   assert.strictEqual(typeof info.regtype, 'string');
@@ -37,8 +39,9 @@ browser.on('serviceChanged', function(info, flags) {
 });
 
 var upCount = 0;
-browser.on('serviceUp', function(info, flags) {
-  assert.strictEqual(typeof flags, 'number');
+browser.on('serviceUp', function(info) {
+  //console.log(info);
+  assert.strictEqual(typeof info.flags, 'number');
   assert.strictEqual(typeof info.interfaceIndex, 'number');
   assert.strictEqual(typeof info.serviceName, 'string');
   assert.strictEqual(typeof info.regtype, 'string');
@@ -51,18 +54,18 @@ browser.on('serviceUp', function(info, flags) {
   assert.strictEqual(typeof info.port, 'number');
   assert.strictEqual(info.port, 4321);
 
+  assert.ok('addresses' in info);
   assert.ok(info.addresses instanceof Array);
   assert.ok(info.addresses.length > 0);
 
-  util.puts(util.inspect(info));
 
   upCount += 1;
   stopBrowserIfDone();
 });
 
 var downCount = 0;
-browser.on('serviceDown', function(info, flags) {
-  assert.strictEqual(typeof flags, 'number');
+browser.on('serviceDown', function(info) {
+  assert.strictEqual(typeof info.flags, 'number');
   assert.strictEqual(typeof info.interfaceIndex, 'number');
   assert.strictEqual(typeof info.serviceName, 'string');
   assert.strictEqual(typeof info.regtype, 'string');
@@ -88,5 +91,18 @@ var ad = mdns.createAdvertisement(mdns.tcp('node-mdns-test'), 4321, function(err
 });
 
 ad.start();
+
+
+//=== Regression Tests ========================================================
+
+// autoResolve can not be set to a falsy value.
+// Reported by orlandv and others (issue #9)
+
+// FIX: replaced nested-flag-madness with something more scalable.
+//var regression_browser = mdns.createBrowser(mdns.tcp('node-mdns-t2'),
+//    {autoResolve: false});
+//assert.ok(regression_browser.autoresolve === false);
+
+
 
 // vim: filetype=javascript
