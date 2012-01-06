@@ -3,7 +3,7 @@ var mdns   = require('../../lib/mdns'),
     util   = require('util'),
     assert = require('assert');
 
-var ad =  mdns.createAdvertisement(["node-mdns-test", 'a', 'b'], 4321, function(err, info, flags) {
+var ad =  mdns.createAdvertisement(['node-mdns-test', 'a', 'b'], 4321, function(err, info, flags) {
   if (err) {
     assert.fail(err)
   } else {
@@ -11,7 +11,7 @@ var ad =  mdns.createAdvertisement(["node-mdns-test", 'a', 'b'], 4321, function(
     //util.puts('Advertising', util.inspect(info));
   }
 });
-var browser = mdns.createBrowser(["node-mdns-test", 'b'], 'tcp');
+var browser = mdns.createBrowser(mdns.tcp('node-mdns-test', 'b'));
 
 timeout_id = setTimeout(function() { assert.fail('time out'); }, 10000);
 
