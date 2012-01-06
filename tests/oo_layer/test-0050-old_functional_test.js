@@ -3,7 +3,7 @@ var mdns   = require('../../lib/mdns'),
     util   = require('util'),
     assert = require('assert');
 
-var ad =  mdns.createAdvertisement(['node-mdns-test', 'a', 'b'], 4321, function(err, info, flags) {
+var ad =  mdns.createAdvertisement(mdns.tcp('node-mdns-test', 'a', 'b'), 4321, function(err, info, flags) {
   if (err) {
     assert.fail(err)
   } else {
@@ -39,7 +39,7 @@ assert.throws(function() { mdns.createAdvertisement('narf')});
 assert.throws(function() { mdns.createAdvertisement(function(){})});
 assert.throws(function() { mdns.createAdvertisement('narf', function(){})});
 
-var test_ad = mdns.createAdvertisement('node-mdns-test', 4321);
+var test_ad = mdns.createAdvertisement(mdns.tcp('node-mdns-test'), 4321);
 test_ad.start();
 assert.throws(function() { test_ad.start()});
 test_ad.stop();
