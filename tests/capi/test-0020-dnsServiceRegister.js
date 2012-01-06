@@ -82,4 +82,18 @@ assert.throws(function() {
     null, null, 4321, null, "", null);
 });
 
+assert.throws( function() {
+  var ref = new mdns.capi.DNSServiceRef()
+    , not_a_valid_port = 100000000;
+  mdns.capi.dnsServiceRegister(ref, 0, 0, null, "_node-mdns-test._tcp",
+    null, null, not_a_valid_port, null, null, null);
+});
+
+assert.throws( function() {
+  var ref = new mdns.capi.DNSServiceRef()
+    , not_a_valid_port = -1;
+  mdns.capi.dnsServiceRegister(ref, 0, 0, null, "_node-mdns-test._tcp",
+    null, null, not_a_valid_port, null, null, null);
+});
+
 // vim: filetype=javascript:
