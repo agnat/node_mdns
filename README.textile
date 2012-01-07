@@ -1,12 +1,14 @@
-h1. node_mdns - service discovery for node.js
+h1. mdns - service discovery for node.js
 
-node_mdns adds support for multicast DNS service discovery, also known as zeroconf or bonjour to "node.js":/ry/node. It provides an object-oriented interface to announce and browse services on the local network.
+mdns adds support for multicast DNS service discovery, also known as zeroconf or bonjour to "node.js":/joyent/node. It provides an object-oriented interface to announce and browse services on the local network.
 
-Internally, it uses the mDNSResponder API which is available on all major platforms.
-
-On Linux and other systems using the avahi daemon the avahi dns_sd compat library and its header files are required.
+Internally, it uses the dns_sd API which is available on all major platforms. However, that does not mean it is equally well supported on all platforms. See "Compatibility Notes":#compatibility for more information.
 
 h2. Installation
+
+On Linux and other systems using the avahi daemon the avahi dns_sd compat library and its header files are required.  On ubuntu and other debianesque systems use the following command to install them:
+
+bc. sudo aptitude install libavahi-compat-libdnssd-dev
 
 node_mdns is available as a npm package. To fetch, compile and install the add-on do:
 
@@ -22,26 +24,27 @@ h2. Tutorial
 
 Multicast DNS service discovery provides a way to announce and discover services on the local network. Here is how to announce a HTTP server running on port 4321:
 
-bc. var mdns = require('mdns');
-var ad = mdns.createAdvertisement('http', 4321);
+bc. var mdns = require('mdns')
+  , ad = mdns.createAdvertisement(mdns.tcp('http'), 4321)
+  ;
 ad.start();
 
-And here is how to browse all HTTP servers on the local network:
+A good place to do this is the @'listening'@ event handler of your http server. Here is how to browse all HTTP servers on the local network:
 
-bc. var browser = mdns.createBrowser('http');
-browser.on('serviceUp', function(info, flags) {
-  sys.puts("Up: " + sys.inspect(info));
+bc. var browser = mdns.createBrowser(mdns.tcp('http'));
+browser.on('serviceUp', function(info) {
+  console.log("service up: ", info);
 });
-browser.on('serviceDown', function(info, flags) {
-  sys.puts("Down: " + sys.inspect(info));
+browser.on('serviceDown', function(info) {
+  console.log("service down: ", info);
 });
 browser.start();
 
-As you can see the browser object is an EventEmitter. For each HTTP server a 'serviceUp' event is emitted. Likewise, if a server disappears 'serviceDown' is send. A 'serviceUp' info object might look like this:
+As you can see the browser object is an @EventEmitter@. For each HTTP server a 'serviceUp' event is emitted. Likewise, if a server disappears 'serviceDown' is send. A 'serviceUp' info object might look like this:
 
 bc. { interfaceIndex: 4
 , serviceName: 'somehost'
-, regtype: '_http._tcp.'
+, regtype: {serviceType: 'http', protocol: 'tcp', subtypes: []}
 , replyDomain: 'local.'
 , fullname: 'somehost._http._tcp.local.'
 , host: 'somehost.local.'
@@ -49,15 +52,148 @@ bc. { interfaceIndex: 4
 , addresses: [ '10.1.1.50', 'fe80::21f:5bff:fecd:ce64' ]
 }
 
+h3. On Regtypes
+
+_regtypes_ are strings used to resolve service queries. A _regtype_ always contains a service type identifier and information on the protocol. Additionally it may contain one or more subtype identifiers. Here are some examples:
+
+bc. _http._tcp
+_osc._udp
+_osc._udp,_api-v1,_api-v2
+
+That's an awful lot of underscores and punctation. To make things easier mdns has a helper class, called @RegType@ and some utility functions like @mdns.tcp(...)@ in the examples above. Here are some ways to create a @RegType@ object:
+
+bc. var r0 = mdns.tcp('http')          // string form: _http._tcp
+  , r1 = mdns.udp('osc', 'api-v1') // string form: _osc._udp,_api-v1
+  ;
+
+Wherever mdns calls for a regtype argument you can pass a @RegType@ object or any of the following representations:
+
+bc. var r0 = '_http._tcp,_api-v1'                                          // string form
+  , r1 = ['http', 'tcp', 'api-v1']                                     // array form
+  , r2 = { serviceType: 'http', protocol: 'tcp', subtypes: ['api-v1']} // object form
+  ;
+
+In fact all of these are legal constructor arguments for @RegType@. JSON (de-)serialization works too. And finally there is @mdns.makeRegType(...)@ which turns any representation into a @RegType@ object unless it already is one.
+
+h2. Reference
+
+Many arguments and options in mdns are directly passed to the dns_sd API. This document only covers the more important features. For in depth information on the API and how zeroconf service discovery works refer to "Further Reading":#further_reading.
+
+h3. mdns.Advertisement
+
+An @mdns.Advertisement@ publishes information about a service on the local network.
+
+bq(#fairydust). The hack0r takes a good look at the local network, _someones_ local network and sprinkles it with fairydust. He watches the particles being swirled up into vortices originating in the passing network traffic. Datadevils on a parking lot next to the information highway. Visible entropy. The particles in the vortices are illuminated by open ports and the pale neon light of multicast dns service advertisements. The hack0r smiles.
+
+h4. new mdns.Advertisement(regtype, port, [options], [callback])
+
+Create a new service advertisement with the given @regtype@ and @port@. The @callback@ has the arguments @(error, info)@ and it is run after successful registration and if an error occures. If the advertisement is used without a callback an handler should be attached to the @'error'@ event. The @options@ object contains additional arguments to @DNSServiceRegister(...)@:
+
+- name := up to 63 bytes of unicode to be used as the instance name. Think iTunes shared library names. If not given the hostname is used instead.
+- interfaceIndex := one-based index of the network interface the service should be announced on.
+- txtRecord      := is interesting... but not yet implemented.
+- host           := see documentation of @DNSServiceRegister(...)@
+- domain         := see documentation of @DNSServiceRegister(...)@
+- flags          := see documentation of @DNSServiceRegister(...)@
+- context        := see documentation of @DNSServiceRegister(...)@
+
+h4. Event: 'error'
+
+bc. function (exception) {}
+
+Emitted on asynchronous errors.
+
+h4. start()
+
+Start the advertisement.
+
+h4. stop()
+
+Stop the advertisement.
+
+h3. mdns.Browser
+
+A @mdns.Browser@ performs the discovery part. It emits events as services appear and disappear on the network. For new services it also resolves hostname, port and ip addresses. The "resolver sequence":#resolver_sequence is fully user configurable.
+
+h4. new mdns.Browser(regtype, [options])
+
+Create a new browser to discover services that match the given @regtype@. @options@ may contain the following properties:
+
+- resolverSequence := custom "resolver sequence":#resolver_sequence for this browser
+- interfaceIndex   := one-based index of the network interface the services should be discovered on.
+- domain           := see documentation of @DNSServiceBrowse(...)@
+- context          := see documentation of @DNSServiceBrowse(...)@
+- flags            := see documentation of @DNSServiceBrowse(...)@
+
+h4. Event: 'serviceUp'
+
+Emitted when a new matching service is discovered.
+
+h4. Event: 'serviceDown'
+
+Emitted when a matching service disappears.
+
+h4. Event: 'serviceChanged'
+
+Emitted when a matching service either appears or disappears. It is a new service if @info.flags@ has @mdns.kDNSServiceFlagsAdd@ set.
+
+h4. start()
+
+Start the browser.
+
+h4. stop()
+
+Stop the browser.
+
+h4(#resolver_sequence). Resolver Sequence
+
+A resolver sequence is just an array of functions. The functions are called in order and receive two arguments: an @info@ object to decorate and a @next()@ function. Each function gathers additional information on the service, often by invoking asynchronous operations. When done the data is stored on the @info@ object and the next function is invoked by calling @next()@. This is kind of like webserver middleware as it happens between service discovery and emitting the events.
+
+Resolver sequence items (RSIs) are created by calling factory functions:
+
+bc. var sequence = [
+    mdns.rsi.DNSServiceResolve()
+  , mdns.rsi.DNSGetAddrInfo()
+];
+
+The following RSIs exist:
+
+h5. mdns.rsi.DNSServiceResolve()
+
+Resolves hostname and port. Probably all but the empty sequence start with this item.
+
+h5. mdns.rsi.DNSGetAddrInfo()
+
+Resolves ip addresses using @DNSGetAddrInfo(...)@
+
+h5. mdns.rsi.lookup()
+
+Resolves ip addresses using nodes @dns.lookup(...)@
+
+h4. mdns.Browser.defaultResolverSequence
+
+This is the resolver sequence used by all browser objects that do not override it. It contains two steps. On platforms that have @DNSGetAddrInfo(...)@ it looks like the sequence above. Otherwise @mdns.rsi.lookup(...)@ is used. You could modify the default sequence but you shouldn't.
+
+h3. mdns.RegType
+
 h2. Design Notes
 
-The implementation has two layers: A low-level C API and a more userfriendly object based API. The low-level API is implemented in C++ and just wraps functions, datastructures and constants from @dns_sd.h@. Most of the code deals with argument conversion and error handling. A smaller portion deals with callbacks from C(++) to javascript.
+The implementation has two layers: A low-level API and a more userfriendly object based API. The low-level API is implemented in C++ and just wraps functions, datastructures and constants from @dns_sd.h@. Most of the code deals with argument conversion and error handling. A smaller portion deals with callbacks from C(++) to javascript.
 
-The high-level API is written in javascript. It connects the C API to nodes non-blocking IO infrastructure, namely @process.IOWatcher@. This results in excelent separation of concerns and leads to a very robust design. The same code runs on node 0.2 to 0.6 with only minimal changes.
+The high-level API is written in javascript. It connects the low-level API to nodes non-blocking IO infrastructure, namely @process.IOWatcher@. This results in excelent separation of concerns and leads to a very robust design.
 
 h2. Bugs, Fixes and Contributions
 
 Yes, please.
+
+h2(#compatibility). Compatibility Notes
+
+h2(#further_reading). Further Reading
+
+* "dns_sd API documentatio":http://developer.apple.com/library/mac/#documentation/Networking/Reference/DNSServiceDiscovery_CRef/dns_sd_h/
+* "Bonjour Overview":http://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/NetServices/Introduction.html
+* "DNS Service Discovery Programming Guide":http://developer.apple.com/library/mac/#documentation/Networking/Conceptual/dns_discovery_api/Introduction.html
+- 
 
 h2. License (MIT)
 
@@ -67,5 +203,5 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+p{font-variant: small-caps}.The software is provided "as is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. In no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.
 
