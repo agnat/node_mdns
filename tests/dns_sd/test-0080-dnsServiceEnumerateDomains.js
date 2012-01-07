@@ -6,7 +6,7 @@ var mdns  = require('../../lib/mdns'),
 var serviceRef = new mdns.dns_sd.DNSServiceRef();
 
 assert.doesNotThrow( function() {
-  mdns.dns_sd.dnsServiceEnumerateDomains(serviceRef, mdns.dns_sd.kDNSServiceFlagsBrowseDomains, 0, function() {}, null);
+  mdns.dns_sd.DNSServiceEnumerateDomains(serviceRef, mdns.dns_sd.kDNSServiceFlagsBrowseDomains, 0, function() {}, null);
 });
 
 assert.notEqual(serviceRef.fd, -1);
@@ -14,7 +14,7 @@ assert.strictEqual(serviceRef.initialized, true);
 
 assert.throws(function() {
   var ref = new mdns.dns_sd.DNSServiceRef();
-  mdns.dns_sd.dnsServiceRegister();
+  mdns.dns_sd.DNSServiceRegister();
 });
 
 // vim: filetype=javascript:

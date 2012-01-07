@@ -14,7 +14,7 @@ var timeoutId = setTimeout(function() {
 
 watcher.callback = function() {
   assert.doesNotThrow( function() {
-    mdns.dns_sd.dnsServiceProcessResult(serviceRef);
+    mdns.dns_sd.DNSServiceProcessResult(serviceRef);
   });
 }
 
@@ -32,7 +32,7 @@ var result_callback = function(sdRef, flags, errorCode, name, regtype, domain, c
   watcher.stop();
 }
 
-mdns.dns_sd.dnsServiceRegister(serviceRef, 0, 0, null, "_node-mdns-test._tcp",
+mdns.dns_sd.DNSServiceRegister(serviceRef, 0, 0, null, "_node-mdns-test._tcp",
     null, null, 4321, null, result_callback, "foobar");
 
 watcher.set(serviceRef.fd, true, false);

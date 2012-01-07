@@ -6,57 +6,57 @@ var mdns  = require('../../lib/mdns'),
 var serviceRef = new mdns.dns_sd.DNSServiceRef();
 
 assert.doesNotThrow(function() {
-  mdns.dns_sd.dnsServiceBrowse(serviceRef, 0, 0, "_node-mdns-test._tcp", null, function() {
+  mdns.dns_sd.DNSServiceBrowse(serviceRef, 0, 0, "_node-mdns-test._tcp", null, function() {
     }, null);
 });
 
 assert.throws(function() {
-  mdns.dns_sd.dnsServiceBrowse(serviceRef, 0, 0, "_node-mdns-test._tcp", null, function() {
+  mdns.dns_sd.DNSServiceBrowse(serviceRef, 0, 0, "_node-mdns-test._tcp", null, function() {
     }, null);
 });
 
 assert.throws(function() {
-  mdns.dns_sd.dnsServiceBrowse();
+  mdns.dns_sd.DNSServiceBrowse();
 });
 
 assert.throws(function() {
-  mdns.dns_sd.dnsServiceBrowse("", 0, 0, "_node-mdns-test._tcp", null, function() {
-    }, null);
-});
-
-assert.throws(function() {
-  var ref = new mdns.dns_sd.DNSServiceRef();
-  mdns.dns_sd.dnsServiceBrowse(ref, "", 0, "_node-mdns-test._tcp", null, function() {
+  mdns.dns_sd.DNSServiceBrowse("", 0, 0, "_node-mdns-test._tcp", null, function() {
     }, null);
 });
 
 assert.throws(function() {
   var ref = new mdns.dns_sd.DNSServiceRef();
-  mdns.dns_sd.dnsServiceBrowse(ref, 0, "", "_node-mdns-test._tcp", null, function() {
+  mdns.dns_sd.DNSServiceBrowse(ref, "", 0, "_node-mdns-test._tcp", null, function() {
     }, null);
 });
 
 assert.throws(function() {
   var ref = new mdns.dns_sd.DNSServiceRef();
-  mdns.dns_sd.dnsServiceBrowse(ref, 0, 0, null, null, function() {
+  mdns.dns_sd.DNSServiceBrowse(ref, 0, "", "_node-mdns-test._tcp", null, function() {
     }, null);
 });
 
 assert.throws(function() {
   var ref = new mdns.dns_sd.DNSServiceRef();
-  mdns.dns_sd.dnsServiceBrowse(ref, 0, 0, 0, null, function() {
+  mdns.dns_sd.DNSServiceBrowse(ref, 0, 0, null, null, function() {
     }, null);
 });
 
 assert.throws(function() {
   var ref = new mdns.dns_sd.DNSServiceRef();
-  mdns.dns_sd.dnsServiceBrowse(ref, 0, 0, "_node-mdns-test._tcp", 0, function() {
+  mdns.dns_sd.DNSServiceBrowse(ref, 0, 0, 0, null, function() {
     }, null);
 });
 
 assert.throws(function() {
   var ref = new mdns.dns_sd.DNSServiceRef();
-  mdns.dns_sd.dnsServiceBrowse(ref, 0, 0, "_node-mdns-test._tcp", null, 0, null);
+  mdns.dns_sd.DNSServiceBrowse(ref, 0, 0, "_node-mdns-test._tcp", 0, function() {
+    }, null);
+});
+
+assert.throws(function() {
+  var ref = new mdns.dns_sd.DNSServiceRef();
+  mdns.dns_sd.DNSServiceBrowse(ref, 0, 0, "_node-mdns-test._tcp", null, 0, null);
 });
 
 // vim: filetype=javascript:

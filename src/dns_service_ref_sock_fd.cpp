@@ -9,7 +9,7 @@ using namespace node;
 namespace node_mdns {
 
 Handle<Value>
-dnsServiceRefSockFD(Arguments const& args) {
+DNSServiceRefSockFD(Arguments const& args) {
     HandleScope scope;
     if (argumentCountMismatch(args, 1)) {
         return throwArgumentCountMismatchException(args, 1);

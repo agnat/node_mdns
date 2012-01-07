@@ -40,7 +40,7 @@ OnServiceChanged(DNSServiceRef sdRef, DNSServiceFlags flags,
 }
 
 Handle<Value>
-dnsServiceBrowse(Arguments const& args) {
+DNSServiceBrowse(Arguments const& args) {
     HandleScope scope; 
     if (argumentCountMismatch(args, 7)) {
         return throwArgumentCountMismatchException(args, 7);
@@ -91,7 +91,7 @@ dnsServiceBrowse(Arguments const& args) {
             interfaceIndex, *regtype, has_domain ? *domain : NULL, OnServiceChanged, serviceRef);
 
     if (error != kDNSServiceErr_NoError) {
-        return throwMdnsError("dnsServiceBrowse()", error);
+        return throwMdnsError("DNSServiceBrowse()", error);
     }
 
     if ( ! serviceRef->SetSocketFlags()) {

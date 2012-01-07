@@ -46,7 +46,7 @@ OnServiceRegistered(DNSServiceRef sdRef, DNSServiceFlags flags,
 }
 
 Handle<Value>
-dnsServiceRegister(Arguments const& args) {
+DNSServiceRegister(Arguments const& args) {
     HandleScope scope;
     if (argumentCountMismatch(args, 11)) {
         return throwArgumentCountMismatchException(args, 11);
@@ -146,7 +146,7 @@ dnsServiceRegister(Arguments const& args) {
             OnServiceRegistered,
             serviceRef);
     if (error != kDNSServiceErr_NoError) {
-        return throwMdnsError("dnsServiceRegister()", error);
+        return throwMdnsError("DNSServiceRegister()", error);
     }
     if ( ! serviceRef->SetSocketFlags()) {
         return throwError("Failed to set socket flags (O_NONBLOCK, FD_CLOEXEC)");

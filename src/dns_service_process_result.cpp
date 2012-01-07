@@ -9,7 +9,7 @@ using namespace node;
 namespace node_mdns {
 
 Handle<Value>
-dnsServiceProcessResult(Arguments const& args) {
+DNSServiceProcessResult(Arguments const& args) {
     HandleScope scope;
     if (argumentCountMismatch(args, 1)) {
         return throwArgumentCountMismatchException(args, 1);
@@ -22,7 +22,7 @@ dnsServiceProcessResult(Arguments const& args) {
     ref->SetThis(args.This());
     DNSServiceErrorType error = DNSServiceProcessResult(ref->GetServiceRef());
     if (error != kDNSServiceErr_NoError) {
-        return throwMdnsError("dnsServiceProcessResult()", error);
+        return throwMdnsError("DNSServiceProcessResult()", error);
     }
     return Undefined();
 }

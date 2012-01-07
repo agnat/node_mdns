@@ -63,7 +63,7 @@ OnAddressInfo(DNSServiceRef sdRef, DNSServiceFlags flags,
 }
 
 Handle<Value>
-dnsServiceGetAddrInfo(Arguments const& args) {
+DNSServiceGetAddrInfo(Arguments const& args) {
     HandleScope scope;
 
     if (argumentCountMismatch(args, 7)) {
@@ -111,7 +111,7 @@ dnsServiceGetAddrInfo(Arguments const& args) {
             flags, interfaceIndex, protocol, *hostname, OnAddressInfo, serviceRef);
 
     if (error != kDNSServiceErr_NoError) {
-        return throwMdnsError("dnsServiceGetAddrInfo()", error);
+        return throwMdnsError("DNSServiceGetAddrInfo()", error);
     }
     if ( ! serviceRef->SetSocketFlags()) {
         return throwError("Failed to set socket flags (O_NONBLOCK, FD_CLOEXEC)");

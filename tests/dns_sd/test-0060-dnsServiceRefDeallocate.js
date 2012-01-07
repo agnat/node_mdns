@@ -5,10 +5,10 @@ var mdns  = require('../../lib/mdns'),
 
 var serviceRef = new mdns.dns_sd.DNSServiceRef();
 
-mdns.dns_sd.dnsServiceRegister(serviceRef, 0, 0, null, "_node-mdns-test._tcp",
+mdns.dns_sd.DNSServiceRegister(serviceRef, 0, 0, null, "_node-mdns-test._tcp",
     null, null, 4321, null, null, null);
 
-mdns.dns_sd.dnsServiceRefDeallocate(serviceRef);
+mdns.dns_sd.DNSServiceRefDeallocate(serviceRef);
 
 assert.strictEqual(serviceRef.initialized, false);
 
