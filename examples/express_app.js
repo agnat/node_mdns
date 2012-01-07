@@ -1,13 +1,13 @@
 #!/usr/bin/env node
-var express = require('express'),
-    mdns    = require('../lib/mdns'),
-    util    = require('util');
+var express = require('express')
+  , mdns    = require('../lib/mdns')
+  , app     = express.createServer()
+  ;
 
-get('/', function() {
-  return "Hello World";
+app.get('/', function() { return "Hello World"; });
+
+app.on('listening', function() {
+  mdns.createAdvertisement(mdns.tcp('http') , app.address().port ).start();
 });
 
-var server = run();
-server.addListener('listening', function() {
-  mdns.createAdvertisement('http', Express.server.port, 'tcp').start();
-});
+app.listen(4321);
