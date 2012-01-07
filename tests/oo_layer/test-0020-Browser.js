@@ -29,8 +29,8 @@ browser.on('serviceChanged', function(info, flags) {
   }
   assert.strictEqual(typeof info.interfaceIndex, 'number');
   assert.strictEqual(typeof info.serviceName, 'string');
-  assert.strictEqual(typeof info.regtype, 'string');
-  assert.strictEqual(info.regtype, '_node-mdns-test._tcp.');
+  assert.ok(info.regtype instanceof mdns.RegType);
+  assert.strictEqual('' + info.regtype, '_node-mdns-test._tcp.');
   assert.strictEqual(typeof info.replyDomain, 'string');
   assert.strictEqual(info.replyDomain, 'local.');
 
@@ -44,8 +44,8 @@ browser.on('serviceUp', function(info) {
   assert.strictEqual(typeof info.flags, 'number');
   assert.strictEqual(typeof info.interfaceIndex, 'number');
   assert.strictEqual(typeof info.serviceName, 'string');
-  assert.strictEqual(typeof info.regtype, 'string');
-  assert.strictEqual(info.regtype, '_node-mdns-test._tcp.');
+  assert.ok(info.regtype instanceof mdns.RegType);
+  assert.strictEqual('' + info.regtype, '_node-mdns-test._tcp.');
   assert.strictEqual(typeof info.replyDomain, 'string');
   assert.strictEqual(info.replyDomain, 'local.');
 
@@ -58,7 +58,6 @@ browser.on('serviceUp', function(info) {
   assert.ok(info.addresses instanceof Array);
   assert.ok(info.addresses.length > 0);
 
-
   upCount += 1;
   stopBrowserIfDone();
 });
@@ -68,8 +67,8 @@ browser.on('serviceDown', function(info) {
   assert.strictEqual(typeof info.flags, 'number');
   assert.strictEqual(typeof info.interfaceIndex, 'number');
   assert.strictEqual(typeof info.serviceName, 'string');
-  assert.strictEqual(typeof info.regtype, 'string');
-  assert.strictEqual(info.regtype, '_node-mdns-test._tcp.');
+  assert.ok(info.regtype instanceof mdns.RegType);
+  assert.strictEqual('' + info.regtype, '_node-mdns-test._tcp.');
   assert.strictEqual(typeof info.replyDomain, 'string');
   assert.strictEqual(info.replyDomain, 'local.');
 
