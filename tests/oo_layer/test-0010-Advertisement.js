@@ -20,14 +20,14 @@ function checkAd(info, name, proto) {
   assert.strictEqual(info.regtype.toString(), '_' + name + '._' + proto + '.');
 }
 
-var ad3 = mdns.createAdvertisement(['mdns-test3', 'tcp'], 4323, function(error, info) {
+var ad3 = mdns.createAdvertisement(['mdns-test3', 'tcp'], 4323, {name: 'foobar'}, function(error, info) {
   if (error) assert.fail(error);
   
   checkAd(info, 'mdns-test3', 'tcp');
 
   var ad = this;
   setTimeout(function(){ ad.stop() }, t);
-  console.log(info)
+  //console.log(info)
 });
 ad3.start();
 

@@ -49,14 +49,16 @@ browser.on('serviceUp', function(info) {
   assert.strictEqual(typeof info.replyDomain, 'string');
   assert.strictEqual(info.replyDomain, 'local.');
 
-  assert.strictEqual(typeof info.fullname, 'string');
-  assert.strictEqual(typeof info.host, 'string');
-  assert.strictEqual(typeof info.port, 'number');
-  assert.strictEqual(info.port, 4321);
+  assert.ok(info.paths.length > 0);
+  var some_path = info.paths[0];
+  assert.strictEqual(typeof some_path.fullname, 'string');
+  assert.strictEqual(typeof some_path.host, 'string');
+  assert.strictEqual(typeof some_path.port, 'number');
+  assert.strictEqual(some_path.port, 4321);
 
-  assert.ok('addresses' in info);
-  assert.ok(info.addresses instanceof Array);
-  assert.ok(info.addresses.length > 0);
+  assert.ok('addresses' in some_path);
+  assert.ok(some_path.addresses instanceof Array);
+  assert.ok(some_path.addresses.length > 0);
 
   upCount += 1;
   stopBrowserIfDone();
