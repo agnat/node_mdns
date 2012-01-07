@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
-var mdns  = require('../../lib/mdns'),
-    assert = require('assert');
+var mdns   = require('../../lib/mdns')
+  , assert = require('assert');
 
-var serviceRef = new mdns.capi.DNSServiceRef();
+var serviceRef = new mdns.dns_sd.DNSServiceRef();
 var IOWatcher = process.binding('io_watcher').IOWatcher;
 var watcher = new IOWatcher();
 
@@ -14,7 +14,7 @@ var timeoutId = setTimeout(function() {
 
 watcher.callback = function() {
   assert.doesNotThrow( function() {
-    mdns.capi.dnsServiceProcessResult(serviceRef);
+    mdns.dns_sd.dnsServiceProcessResult(serviceRef);
   });
 }
 
@@ -22,7 +22,7 @@ var result_callback = function(sdRef, flags, errorCode, name, regtype, domain, c
   assert.strictEqual(sdRef, serviceRef);
   assert.strictEqual(typeof flags, "number");
   assert.strictEqual(typeof errorCode, "number");
-  assert.strictEqual(errorCode, mdns.capi.kDNSServiceErr_NoError);
+  assert.strictEqual(errorCode, mdns.dns_sd.kDNSServiceErr_NoError);
   assert.strictEqual(typeof name, "string");
   assert.strictEqual(typeof regtype, "string");
   assert.strictEqual(typeof domain, "string");
@@ -32,7 +32,7 @@ var result_callback = function(sdRef, flags, errorCode, name, regtype, domain, c
   watcher.stop();
 }
 
-mdns.capi.dnsServiceRegister(serviceRef, 0, 0, null, "_node-mdns-test._tcp",
+mdns.dns_sd.dnsServiceRegister(serviceRef, 0, 0, null, "_node-mdns-test._tcp",
     null, null, 4321, null, result_callback, "foobar");
 
 watcher.set(serviceRef.fd, true, false);

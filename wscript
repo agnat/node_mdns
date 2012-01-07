@@ -32,7 +32,7 @@ def build(ctx):
   ctx.add_subdirs('src')
 
 def clean(ctx):
-  symlink = os.path.join('lib', 'binding.node') # still not DRY ...
+  symlink = os.path.join('lib', 'dns_sd.node') # still not DRY ...
   if os.path.lexists(symlink):
     os.unlink(symlink)
   readme = 'README.html'

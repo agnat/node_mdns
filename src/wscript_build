@@ -1,10 +1,10 @@
 import os
 
 obj = bld.new_task_gen('cxx', 'shlib', 'node_addon')
-obj.target = 'binding'
+obj.target = 'dns_sd'
 obj.uselib = 'DNS_SD'
 obj.includes = ['..']
-obj.source = [ 'binding.cpp'
+obj.source = [ 'dns_sd.cpp'
              , 'dns_service_browse.cpp'
              , 'dns_service_enumerate_domains.cpp'
              , 'dns_service_process_result.cpp'

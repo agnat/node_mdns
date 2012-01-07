@@ -3,18 +3,18 @@
 var mdns  = require('../../lib/mdns'),
     assert = require('assert');
 
-var serviceRef = new mdns.capi.DNSServiceRef();
+var serviceRef = new mdns.dns_sd.DNSServiceRef();
 
 assert.doesNotThrow( function() {
-  mdns.capi.dnsServiceEnumerateDomains(serviceRef, mdns.capi.kDNSServiceFlagsBrowseDomains, 0, function() {}, null);
+  mdns.dns_sd.dnsServiceEnumerateDomains(serviceRef, mdns.dns_sd.kDNSServiceFlagsBrowseDomains, 0, function() {}, null);
 });
 
 assert.notEqual(serviceRef.fd, -1);
 assert.strictEqual(serviceRef.initialized, true);
 
 assert.throws(function() {
-  var ref = new mdns.capi.DNSServiceRef();
-  mdns.capi.dnsServiceRegister();
+  var ref = new mdns.dns_sd.DNSServiceRef();
+  mdns.dns_sd.dnsServiceRegister();
 });
 
 // vim: filetype=javascript:

@@ -9,7 +9,7 @@ var timeoutId = setTimeout(function() {
   assert.fail('test did not finish within ' + (timeout / 1000) + ' seconds');
 }, timeout);
 
-var enumerator = mdns.createDomainEnumerator(mdns.capi.kDNSServiceFlagsBrowseDomains, 0);
+var enumerator = mdns.createDomainEnumerator(mdns.dns_sd.kDNSServiceFlagsBrowseDomains, 0);
 enumerator.on('domainChanged', function(domain, flags, interfaceIndex, context) {
   assert.strictEqual(typeof domain, 'string');
   assert.strictEqual(typeof flags, 'number');

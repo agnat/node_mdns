@@ -3,7 +3,7 @@
 var mdns  = require('../../lib/mdns'),
     assert = require('assert');
 
-var serviceRef = new mdns.capi.DNSServiceRef();
+var serviceRef = new mdns.dns_sd.DNSServiceRef();
 
 assert.equal(serviceRef.fd, -1);
 assert.equal(serviceRef.initialized, false);
