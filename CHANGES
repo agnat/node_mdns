@@ -1,0 +1,13 @@
+CHANGES
+
+Version 0.0.3 to 0.0.4
+
+   - New regtype objects:
+     The strings have been replaced with a small RegType object. Also, older
+     versions used tcp as the default protocol. The protocol is now mandatory.
+     However, the new syntax is much more flexible. See README.
+
+   - Callback signature changed:
+     flags is now a property of the info object (info.flags)
+
+   - possibly more

@@ -70,10 +70,35 @@ Wherever mdns calls for a regtype argument you can pass a @RegType@ object or an
 
 bc. var r0 = '_http._tcp,_api-v1'                                          // string form
   , r1 = ['http', 'tcp', 'api-v1']                                     // array form
-  , r2 = { serviceType: 'http', protocol: 'tcp', subtypes: ['api-v1']} // object form
+  , r2 = {serviceType: 'http', protocol: 'tcp', subtypes: ['api-v1']} // object form
   ;
 
 In fact all of these are legal constructor arguments for @RegType@. JSON (de-)serialization works too. And finally there is @mdns.makeRegType(...)@ which turns any representation into a @RegType@ object unless it already is one.
+
+h3(#resolver_sequence). The resolver sequence
+
+The @mdns.Browser@ object uses a resolver sequence to collect additional information on a discovered service. A resolver sequence is basically just an array of functions. The functions are called in order and receive two arguments: an @info@ object to decorate and a @next()@ function. Each function gathers information on the service, often by invoking asynchronous operations. When done the data is stored on the @info@ object and the next function is invoked by calling @next()@. This is kind of like webserver middleware as it happens between service discovery and emitting the events.
+
+Resolver sequence tasks (RSTs) are created by calling factory functions:
+
+bc. var sequence = [
+    mdns.rst.DNSServiceResolve()
+  , mdns.rst.DNSGetAddrInfo({families: [4] })
+];
+
+And of course you can write your own tasks:
+
+bc. var MCHammer = function MCHammer() {
+  return function MCHammer(info, next) {
+    console.log('STOP!');
+    setTimeout(function() {
+        console.log('hammertime...');
+        info.hammertime = new Date();
+        next();
+    }, 2000);
+  }
+}
+
 
 h2. Reference
 
@@ -137,6 +162,10 @@ h4. Event: 'serviceChanged'
 
 Emitted when a matching service either appears or disappears. It is a new service if @info.flags@ has @mdns.kDNSServiceFlagsAdd@ set.
 
+h4. Event: 'error'
+
+Emitted if you try to get a beer after last orders.
+
 h4. start()
 
 Start the browser.
@@ -145,34 +174,47 @@ h4. stop()
 
 Stop the browser.
 
-h4(#resolver_sequence). Resolver Sequence
-
-A resolver sequence is just an array of functions. The functions are called in order and receive two arguments: an @info@ object to decorate and a @next()@ function. Each function gathers additional information on the service, often by invoking asynchronous operations. When done the data is stored on the @info@ object and the next function is invoked by calling @next()@. This is kind of like webserver middleware as it happens between service discovery and emitting the events.
-
-Resolver sequence items (RSIs) are created by calling factory functions:
-
-bc. var sequence = [
-    mdns.rsi.DNSServiceResolve()
-  , mdns.rsi.DNSGetAddrInfo()
-];
-
-The following RSIs exist:
-
-h5. mdns.rsi.DNSServiceResolve()
-
-Resolves hostname and port. Probably all but the empty sequence start with this item.
-
-h5. mdns.rsi.DNSGetAddrInfo()
-
-Resolves ip addresses using @DNSGetAddrInfo(...)@
-
-h5. mdns.rsi.lookup()
-
-Resolves ip addresses using nodes @dns.lookup(...)@
-
 h4. mdns.Browser.defaultResolverSequence
 
-This is the resolver sequence used by all browser objects that do not override it. It contains two steps. On platforms that have @DNSGetAddrInfo(...)@ it looks like the sequence above. Otherwise @mdns.rsi.lookup(...)@ is used. You could modify the default sequence but you shouldn't.
+This is the resolver sequence used by all browser objects that do not override it. It contains two steps. On platforms that have @DNSGetAddrInfo(...)@ it has the following items:
+
+bc. var default_sequence = [
+    mdns.rst.DNSServiceResolve()
+  , mdns.rst.DNSGetAddrInfo()
+  , mdns.rst.makeAddressesUnique()
+];
+
+On platforms that don't, @mdns.rst.lookup(...)@ is used instead.
+
+You could modify the default sequence but you shouldn't.
+
+h3. Resolve Sequence Tasks
+
+h4. mdns.rst.DNSServiceResolve(options)
+
+Resolve hostname and port. Probably all but the empty sequence start with this task. The @options@ object may have the following properties:
+
+- flags := flags passed to @DNSServiceResolve(...)@
+
+h4. mdns.rst.DNSGetAddrInfo(options)
+
+Resolve ip addresses using @DNSGetAddrInfo(...)@
+
+h4. mdns.rst.getaddrinfo(options)
+
+Resolve ip addresses using nodes @cares.getaddrinfo(...)@
+
+h4. mdns.rst.makeAddressesUnique()
+
+Filters the addresses to be unique.
+
+h4. mdns.rst.filterAddresses(f)
+
+Filters the addresses by invoking @f()@ on the address. If @f()@ returns false the address is dropped.
+
+h4. mdns.rst.dumpInfo()
+
+Print the @info@ object.
 
 h3. mdns.RegType
 
@@ -203,5 +245,5 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-p{font-variant: small-caps}.The software is provided "as is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. In no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.
+p{font-variant: small-caps}. The software is provided "as is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. In no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.
 
