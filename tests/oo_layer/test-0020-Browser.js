@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 
-var mdns   = require('../../lib/mdns'),
-    assert = require('assert');
+var mdns   = require('../../lib/mdns')
+  , assert = require('assert')
+  , util   = require('util')
+  ;
 
 var timeout = 5000;
 var timeoutId = setTimeout(function() {
@@ -40,7 +42,7 @@ browser.on('serviceChanged', function(info, flags) {
 
 var upCount = 0;
 browser.on('serviceUp', function(info) {
-  //console.log(info);
+  console.log(info);
   assert.strictEqual(typeof info.flags, 'number');
   assert.strictEqual(typeof info.interfaceIndex, 'number');
   assert.strictEqual(typeof info.serviceName, 'string');
@@ -49,16 +51,14 @@ browser.on('serviceUp', function(info) {
   assert.strictEqual(typeof info.replyDomain, 'string');
   assert.strictEqual(info.replyDomain, 'local.');
 
-  assert.ok(info.paths.length > 0);
-  var some_path = info.paths[0];
-  assert.strictEqual(typeof some_path.fullname, 'string');
-  assert.strictEqual(typeof some_path.host, 'string');
-  assert.strictEqual(typeof some_path.port, 'number');
-  assert.strictEqual(some_path.port, 4321);
+  assert.strictEqual(typeof info.fullname, 'string');
+  assert.strictEqual(typeof info.host, 'string');
+  assert.strictEqual(typeof info.port, 'number');
+  assert.strictEqual(info.port, 4321);
 
-  assert.ok('addresses' in some_path);
-  assert.ok(some_path.addresses instanceof Array);
-  assert.ok(some_path.addresses.length > 0);
+  assert.ok('addresses' in info);
+  assert.ok(Array.isArray(info.addresses));
+  assert.ok(info.addresses.length > 0);
 
   upCount += 1;
   stopBrowserIfDone();
