@@ -70,7 +70,7 @@ Wherever mdns calls for a regtype argument you can pass a @RegType@ object or an
 
 bc. var r0 = '_http._tcp,_api-v1'                                          // string form
   , r1 = ['http', 'tcp', 'api-v1']                                     // array form
-  , r2 = {serviceType: 'http', protocol: 'tcp', subtypes: ['api-v1']} // object form
+  , r2 = {serviceType: 'http', protocol: 'tcp', subtypes: ['api-v1']}  // object form
   ;
 
 In fact all of these are legal constructor arguments for @RegType@. JSON (de-)serialization works too. And finally there is @mdns.makeRegType(...)@ which turns any representation into a @RegType@ object unless it already is one.
