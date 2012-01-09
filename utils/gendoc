@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
-var path = require('path')
-  , fs   = require('fs')
-  , ejs  = require('ejs')
-  , less = require('less')
+var path  = require('path')
+  , fs    = require('fs')
+  , spawn = require('child_process').spawn
+  , ejs   = require('ejs')
+  , less  = require('less')
   ;
 
 var package_dir = path.join(path.dirname(process.argv[1]), '..')
@@ -11,6 +12,7 @@ var package_dir = path.join(path.dirname(process.argv[1]), '..')
   , package = JSON.parse(fs.readFileSync(path.join(package_dir, 'package.json')))
   , readme_in = path.join(doc_dir, 'README.ejs')
   , readme_out = path.join(package_dir, 'README.textile')
+  , readme_html = path.join(package_dir, 'README.html')
   , options = {
       package: package
     }
@@ -26,6 +28,32 @@ ejs.renderFile(readme_in, options, function(error, str) {
   }
   fs.writeFileSync(readme_out, str);
   fs.chmodSync(readme_out, 0440);
+  var rc = spawn('redcloth', [readme_out])
+    , html = ''
+    ;
+  rc.stdout.on('data', function(data){
+    html += data;
+  });
+  rc.stderr.on('data', function(data) {
+    console.log(data.toString());
+  });
+  rc.on('exit', function(code) {
+    if (code) {
+      console.log('redcloth exited with code: ', code);
+    }
+    fs.writeFileSync(readme_html, ejs.render(readme_layout, {body: html}));
+  });
 });
+
+var readme_layout = '\
+<!DOCTYPE html> \
+<html> \
+  <head> \
+  </head> \
+  <body> \
+    <%- body %> \
+  </body> \
+</html> \
+';
 
 // vim: set filetype=javascript :
