@@ -2,3 +2,4 @@ build
 dns_sd.node
 .lock-wscript
 README.html
+node_modules
