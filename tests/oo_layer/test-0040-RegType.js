@@ -34,6 +34,9 @@ compareRegType( mdns.makeRegType(
       JSON.parse(JSON.stringify(mdns.makeRegType(http_regtype))))
     , http_regtype);
 
+compareRegType(new mdns.RegType('http', 'tcp', 'foo', 'bar'),    http_regtype);
+compareRegType(new mdns.RegType(['http', 'tcp', 'foo', 'bar']),    http_regtype);
+
 assert.throws(function() { mdns.tcp('abcdefghijklmnopq') });
 assert.throws(function() { mdns.tcp('abc%') });
 assert.throws(function() { mdns.tcp('abc', 'abcdefghijklmnopq') });

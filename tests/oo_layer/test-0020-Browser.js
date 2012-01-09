@@ -5,6 +5,8 @@ var mdns   = require('../../lib/mdns')
   , util   = require('util')
   ;
 
+// XXX This test will break if two instances are run on the same network
+
 var timeout = 5000;
 var timeoutId = setTimeout(function() {
   assert.fail("test did not finish within " + (timeout / 1000) + " seconds.");
@@ -25,9 +27,18 @@ function stopBrowserIfDone() {
 
 var changedCount = 0;
 browser.on('serviceChanged', function(info, flags) {
+  //console.log("changed:", info);
   assert.strictEqual(typeof info.flags, 'number');
   if (changedCount === 0) {
     assert.ok(info.flags & mdns.kDNSServiceFlagsAdd);
+    assert.strictEqual(typeof info.fullname, 'string');
+    assert.strictEqual(typeof info.host, 'string');
+    assert.strictEqual(typeof info.port, 'number');
+    assert.strictEqual(info.port, 4321);
+
+    assert.ok('addresses' in info);
+    assert.ok(Array.isArray(info.addresses));
+    assert.ok(info.addresses.length > 0);
   }
   assert.strictEqual(typeof info.interfaceIndex, 'number');
   assert.strictEqual(typeof info.serviceName, 'string');
@@ -42,7 +53,7 @@ browser.on('serviceChanged', function(info, flags) {
 
 var upCount = 0;
 browser.on('serviceUp', function(info) {
-  console.log(info);
+  //console.log("up:", info);
   assert.strictEqual(typeof info.flags, 'number');
   assert.strictEqual(typeof info.interfaceIndex, 'number');
   assert.strictEqual(typeof info.serviceName, 'string');
