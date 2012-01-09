@@ -10,6 +10,10 @@ mdns adds support for multicast DNS service discovery, also known as zeroconf or
 
 Internally, it uses the dns_sd API which is available on all major platforms. However, that does not mean it is equally well supported on all platforms. See "Compatibility Notes":#compatibility for more information.
 
+on debian:
+
+bc. sudo aptitude install libavahi-compat-libdnssd-dev
+
 h2. Installation
 
 On Linux and other systems using the avahi daemon the avahi dns_sd compat library and its header files are required.  On ubuntu and other debianesque systems use the following command to install them:
