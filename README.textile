@@ -20,7 +20,7 @@ bc.. git clone http://github.com/agnat/node_mdns
 cd node_mdns
 node-waf configure build && ./run_tests
 
-h2. Tutorial
+h2. Quickstart
 
 Multicast DNS service discovery provides a way to announce and discover services on the local network. Here is how to announce a HTTP server running on port 4321:
 
@@ -62,8 +62,10 @@ _osc._udp,_api-v1,_api-v2
 
 That's an awful lot of underscores and punctation. To make things easier mdns has a helper class, called @RegType@ and some utility functions like @mdns.tcp(...)@ in the examples above. Here are some ways to create a @RegType@ object:
 
-bc. var r0 = mdns.tcp('http')          // string form: _http._tcp
-  , r1 = mdns.udp('osc', 'api-v1') // string form: _osc._udp,_api-v1
+bc. var r0 = mdns.tcp('http')                 // string form: _http._tcp
+  , r1 = mdns.udp('osc', 'api-v1')        // string form: _osc._udp,_api-v1
+  , r2 = new mdns.RegType('http', 'tcp')  // string form: _http._tcp
+  , r3 = mdns.makeRegType('https', 'tcp') // string form: _https._tcp
   ;
 
 Wherever mdns calls for a regtype argument you can pass a @RegType@ object or any of the following representations:
@@ -86,6 +88,10 @@ bc. var sequence = [
   , mdns.rst.DNSGetAddrInfo({families: [4] })
 ];
 
+To use a custom sequence pass it to the browser like this:
+
+bc. var browser = mdns.createBrowser(mdns.tcp('http'), {resolverSequence: sequence});
+
 And of course you can write your own tasks:
 
 bc. var MCHammer = function MCHammer() {
@@ -99,7 +105,6 @@ bc. var MCHammer = function MCHammer() {
   }
 }
 
-
 h2. Reference
 
 Many arguments and options in mdns are directly passed to the dns_sd API. This document only covers the more important features. For in depth information on the API and how zeroconf service discovery works refer to "Further Reading":#further_reading.
@@ -108,7 +113,7 @@ h3. mdns.Advertisement
 
 An @mdns.Advertisement@ publishes information about a service on the local network.
 
-bq(#fairydust). The hack0r takes a good look at the local network, _someones_ local network and sprinkles it with fairydust. He watches the particles being swirled up into vortices originating in the passing network traffic. Datadevils on a parking lot next to the information highway. Visible entropy. The particles in the vortices are illuminated by open ports and the pale neon light of multicast dns service advertisements. The hack0r smiles.
+bq(#fairydust). The hack0r takes a good look at the local network, _someones_ local network and sprinkles it with fairydust. He watches the particles being swirled up into vortices originating in the passing network traffic. Datadevils on a parking lot next to the information freeway. Visible entropy. The particles in the vortices are illuminated by open ports and the pale neon light of multicast dns service advertisements. The hack0r smiles.
 
 h4. new mdns.Advertisement(regtype, port, [options], [callback])
 
@@ -116,7 +121,7 @@ Create a new service advertisement with the given @regtype@ and @port@. The @cal
 
 - name := up to 63 bytes of unicode to be used as the instance name. Think iTunes shared library names. If not given the hostname is used instead.
 - interfaceIndex := one-based index of the network interface the service should be announced on.
-- txtRecord      := is interesting... but not yet implemented.
+- txtRecord      := is interesting... but not yet implemented. You can pass a @Buffer@ object but unfortunatly there is no way to create it.
 - host           := see documentation of @DNSServiceRegister(...)@
 - domain         := see documentation of @DNSServiceRegister(...)@
 - flags          := see documentation of @DNSServiceRegister(...)@
@@ -124,7 +129,7 @@ Create a new service advertisement with the given @regtype@ and @port@. The @cal
 
 h4. Event: 'error'
 
-bc. function (exception) {}
+bc. function(exception) {}
 
 Emitted on asynchronous errors.
 
@@ -152,17 +157,25 @@ Create a new browser to discover services that match the given @regtype@. @optio
 
 h4. Event: 'serviceUp'
 
+bc. function(info) {}
+
 Emitted when a new matching service is discovered.
 
 h4. Event: 'serviceDown'
+
+bc. function(info) {}
 
 Emitted when a matching service disappears.
 
 h4. Event: 'serviceChanged'
 
+bc. function(info) {}
+
 Emitted when a matching service either appears or disappears. It is a new service if @info.flags@ has @mdns.kDNSServiceFlagsAdd@ set.
 
 h4. Event: 'error'
+
+bc. function(exception) {}
 
 Emitted if you try to get a beer after last orders.
 
@@ -232,7 +245,7 @@ h2(#compatibility). Compatibility Notes
 
 h2(#further_reading). Further Reading
 
-* "dns_sd API documentatio":http://developer.apple.com/library/mac/#documentation/Networking/Reference/DNSServiceDiscovery_CRef/dns_sd_h/
+* "dns_sd API documentation":http://developer.apple.com/library/mac/#documentation/Networking/Reference/DNSServiceDiscovery_CRef/dns_sd_h/
 * "Bonjour Overview":http://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/NetServices/Introduction.html
 * "DNS Service Discovery Programming Guide":http://developer.apple.com/library/mac/#documentation/Networking/Conceptual/dns_discovery_api/Introduction.html
 - 
