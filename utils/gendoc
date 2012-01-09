@@ -1,0 +1,7 @@
+#!/usr/bin/env node
+
+var ejs  = require('ejs')
+  , less = require('less')
+  ;
+
+// vim: set filetype=javascript :

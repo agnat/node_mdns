@@ -1,4 +1,4 @@
-h1. mdns - service discovery for node.js
+h1. mdns -- service discovery for node.js
 
 mdns adds support for multicast DNS service discovery, also known as zeroconf or bonjour to "node.js":/joyent/node. It provides an object-oriented interface to announce and browse services on the local network.
 

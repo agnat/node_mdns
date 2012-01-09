@@ -4,6 +4,7 @@ DIR=$(dirname $0)
 if [[ -z "$DIR" ]]; then
     DIR="."
 fi
+DIR+="/.."
 
 export AVAHI_COMPAT_NOWARN=1
 

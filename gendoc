@@ -1,7 +1,0 @@
-#!/bin/bash
-
-out=README.html
-
-echo -e "<!DOCTYPE html>\n<html>\n<body>" > $out
-redcloth README.textile >> $out
-echo -e "</body>\n</html>" >> $out
