@@ -15,5 +15,11 @@
   { "type": "git"
   , "url":  "http://github.com/agnat/node_mdns.git"
   }
+, "homepage": "http://agnat.github.com/node_mdns"
+, "devDependencies": 
+  { "ejs":     "*"
+  , "less":    "*"
+  , "express": "*"
+  }
 }
 
