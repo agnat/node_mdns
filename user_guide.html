@@ -39,20 +39,20 @@ browser.start();</code></pre>
 <pre><code>_http._tcp
 _osc._udp
 _osc._udp,_api-v1,_api-v2</code></pre>
-<p>That&#8217;s an awful lot of underscores and punctation. To make things easier mdns has a helper class, called <code>RegType</code> and some utility functions like <code>mdns.tcp(...)</code> in the examples above. Here are some ways to create a <code>RegType</code> object:</p>
+<p>That&#8217;s an awful lot of underscores and punctuation. To make things easier mdns has a helper class, called <code>RegType</code> and some utility functions like <code>mdns.tcp(...)</code> in the examples above. Here are some ways to create a <code>RegType</code> object:</p>
 <pre><code>var r0 = mdns.tcp('http')                 // string form: _http._tcp
   , r1 = mdns.udp('osc', 'api-v1')        // string form: _osc._udp,_api-v1
   , r2 = new mdns.RegType('http', 'tcp')  // string form: _http._tcp
   , r3 = mdns.makeRegType('https', 'tcp') // string form: _https._tcp
   ;</code></pre>
-<p>Wherever mdns calls for a regtype argument you can pass a <code>RegType</code> object or any of the following representations:</p>
+<p>Wherever mdns calls for a <code>regtype</code> argument you can pass a <code>RegType</code> object or any of the following representations:</p>
 <pre><code>var r0 = '_http._tcp,_api-v1'                                          // string form
   , r1 = ['http', 'tcp', 'api-v1']                                     // array form
   , r2 = {serviceType: 'http', protocol: 'tcp', subtypes: ['api-v1']}  // object form
   ;</code></pre>
 <p>In fact all of these are legal constructor arguments for <code>RegType</code>. <span class="caps">JSON</span> (de-)serialization works too. And finally there is <code>mdns.makeRegType(...)</code> which turns any representation into a <code>RegType</code> object unless it already is one.</p>
 <h3 id="resolver_sequence">The resolver sequence</h3>
-<p>The <code>mdns.Browser</code> object uses a resolver sequence to collect additional information on a discovered service. A resolver sequence is basically just an array of functions. The functions are called in order and receive two arguments: an <code>info</code> object to decorate and a <code>next()</code> function. Each function gathers information on the service, often by invoking asynchronous operations. When done the data is stored on the <code>info</code> object and the next function is invoked by calling <code>next()</code>. This is kind of like webserver middleware as it happens between service discovery and emitting the events.</p>
+<p>The <code>mdns.Browser</code> object uses a resolver sequence to collect additional information on a discovered service. A resolver sequence is basically just an array of functions. The functions are called in order and receive two arguments: an <code>info</code> object to decorate and a <code>next()</code> function. Each function gathers information on the service, often by invoking asynchronous operations. When done the data is stored on the <code>info</code> object and the next function is invoked by calling <code>next()</code>. This is kind of like web server middleware as it happens between service discovery and emitting the events.</p>
 <p>Resolver sequence tasks (RSTs) are created by calling factory functions:</p>
 <pre><code>var sequence = [
     mdns.rst.DNSServiceResolve()
@@ -76,17 +76,17 @@ _osc._udp,_api-v1,_api-v2</code></pre>
 <h3>mdns.Advertisement</h3>
 <p>An <code>mdns.Advertisement</code> publishes information about a service on the local network.</p>
 <blockquote id="fairydust">
-<p id="fairydust">The hack0r takes a good look at the local network, <em>someones</em> local network and sprinkles it with fairydust. He watches the particles being swirled up into vortices originating in the passing network traffic. Datadevils on a parking lot next to the information freeway. Visible entropy. The particles in the vortices are illuminated by open ports and the pale neon light of multicast dns service advertisements. The hack0r smiles.</p>
+<p id="fairydust">The hack0r takes a good look at the local network, <em>someones</em> local network and sprinkles it with fairydust. He watches the particles being swirled up into vortices originating in the passing network traffic. Datadevils on a parking lot next to the information freeway. Visible entropy. The particles in the vortices are illuminated by open ports and the pale neon light of multicast <span class="caps">DNS</span> service advertisements. The hack0r smiles.</p>
 </blockquote>
 <h4>new mdns.Advertisement(regtype, port, [options], [callback])</h4>
-<p>Create a new service advertisement with the given <code>regtype</code> and <code>port</code>. The <code>callback</code> has the arguments <code>(error, info)</code> and it is run after successful registration and if an error occures. If the advertisement is used without a callback an handler should be attached to the <code>'error'</code> event. The <code>options</code> object contains additional arguments to <code>DNSServiceRegister(...)</code>:</p>
+<p>Create a new service advertisement with the given <code>regtype</code> and <code>port</code>. The <code>callback</code> has the arguments <code>(error, info)</code> and it is run after successful registration and if an error occurs. If the advertisement is used without a callback an handler should be attached to the <code>'error'</code> event. The <code>options</code> object contains additional arguments to <code>DNSServiceRegister(...)</code>:</p>
 <dl>
 	<dt>name</dt>
-	<dd>up to 63 bytes of unicode to be used as the instance name. Think iTunes shared library names. If not given the hostname is used instead.</dd>
+	<dd>up to 63 bytes of Unicode to be used as the instance name. Think iTunes shared library names. If not given the host name is used instead.</dd>
 	<dt>interfaceIndex</dt>
 	<dd>one-based index of the network interface the service should be announced on.</dd>
 	<dt>txtRecord</dt>
-	<dd>is interesting&#8230; but not yet implemented. You can pass a <code>Buffer</code> object but unfortunatly there is no way to create it.</dd>
+	<dd>is interesting&#8230; but not yet implemented. You can pass a <code>Buffer</code> object but unfortunately there is no way to create it.</dd>
 	<dt>host</dt>
 	<dd>see documentation of <code>DNSServiceRegister(...)</code></dd>
 	<dt>domain</dt>
@@ -104,7 +104,7 @@ _osc._udp,_api-v1,_api-v2</code></pre>
 <h4>stop()</h4>
 <p>Stop the advertisement.</p>
 <h3>mdns.Browser</h3>
-<p>A <code>mdns.Browser</code> performs the discovery part. It emits events as services appear and disappear on the network. For new services it also resolves hostname, port and ip addresses. The <a href="#resolver_sequence">resolver sequence</a> is fully user configurable.</p>
+<p>A <code>mdns.Browser</code> performs the discovery part. It emits events as services appear and disappear on the network. For new services it also resolves host name, port and IP addresses. The <a href="#resolver_sequence">resolver sequence</a> is fully user configurable.</p>
 <h4>new mdns.Browser(regtype, [options])</h4>
 <p>Create a new browser to discover services that match the given <code>regtype</code>. <code>options</code> may contain the following properties:</p>
 <dl>
@@ -146,7 +146,7 @@ _osc._udp,_api-v1,_api-v2</code></pre>
 <p>You could modify the default sequence but you shouldn&#8217;t.</p>
 <h3>Resolve Sequence Tasks</h3>
 <h4>mdns.rst.DNSServiceResolve(options)</h4>
-<p>Resolve hostname and port. Probably all but the empty sequence start with this task. The <code>options</code> object may have the following properties:</p>
+<p>Resolve host name and port. Probably all but the empty sequence start with this task. The <code>options</code> object may have the following properties:</p>
 <dl>
 	<dt>flags</dt>
 	<dd>flags passed to <code>DNSServiceResolve(...)</code></dd>
@@ -162,9 +162,10 @@ _osc._udp,_api-v1,_api-v2</code></pre>
 <h4>mdns.rst.dumpInfo()</h4>
 <p>Print the <code>info</code> object.</p>
 <h3>mdns.RegType</h3>
-<h2>Design Notes</h2>
-<p>The implementation has two layers: A low-level <span class="caps">API</span> and a more userfriendly object based <span class="caps">API</span>. The low-level <span class="caps">API</span> is implemented in C++ and just wraps functions, datastructures and constants from <code>dns_sd.h</code>. Most of the code deals with argument conversion and error handling. A smaller portion deals with callbacks from C(++) to javascript.</p>
-<p>The high-level <span class="caps">API</span> is written in javascript. It connects the low-level <span class="caps">API</span> to nodes non-blocking IO infrastructure, namely <code>process.IOWatcher</code>. This results in excelent separation of concerns and leads to a very robust design.</p>
+<p><code>mdns.RegType</code> objects are use to represent <em>regtype</em> strings which have been discussed<br />
+h2. Design Notes</p>
+<p>The implementation has two layers: A low-level <span class="caps">API</span> and a more user friendly object based <span class="caps">API</span>. The low-level <span class="caps">API</span> is implemented in C++ and just wraps functions, data structures and constants from <code>dns_sd.h</code>. Most of the code deals with argument conversion and error handling. A smaller portion deals with callbacks from C(++) to javascript.</p>
+<p>The high-level <span class="caps">API</span> is written in javascript. It connects the low-level <span class="caps">API</span> to nodes non-blocking IO infrastructure, namely <code>process.IOWatcher</code>. This results in excellent separation of concerns and leads to a very robust design.</p>
 <h2 id="compatibility">Compatibility Notes</h2>
 <h2 id="further_reading">Further Reading</h2>
 <ul>
