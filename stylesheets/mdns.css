@@ -1,0 +1,25 @@
+html, body {
+  height: 100%;
+}
+body {
+  background-color: white;
+  font-family: Georgia, FreeSerif, Times, serif;
+}
+a {
+  color: #00a;
+}
+a:hover {
+  color: black;
+}
+a:visited {
+  color: #a0a;
+}
+#page {
+  max-width: 50em;
+  padding: 6em;
+}
+pre {
+  padding: 1.6em 1.6em 1.6em 1.6em;
+  background: #f8f8f8;
+  border: 1px solid #e8e8e8;
+}

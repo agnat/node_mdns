@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>mdns &#8212; User Guide</title>
+    <link rel="stylesheet" href="./stylesheets/mdns.css" type="text/css"/>
+  </head>
+  <body>
+    <div id="page">
+      <h1>mdns User Guide</h1>
+<p>mdns adds support for multicast <span class="caps">DNS</span> service discovery, also known as zeroconf or bonjour to <a href="/joyent/node">node.js</a>. It provides an object based interface to announce and browse services on the local network.</p>
+<p>Internally, it uses the dns_sd <span class="caps">API</span> which is available on all major platforms. However, that does not mean it is equally well supported on all platforms. See <a href="#compatibility">Compatibility Notes</a> for more information.</p>
+<h2>Installation</h2>
+<p>On Linux and other systems using the avahi daemon the avahi dns_sd compat library and its header files are required.  On ubuntu and other debianesque systems use the following command to install them:</p>
+<pre><code>sudo aptitude install libavahi-compat-libdnssd-dev</code></pre>
+<p>mdns is available as a npm package. To fetch, compile and install the add-on do:</p>
+<pre><code>npm install mdns</code></pre>
+<p>If you want to play with the latest source code, here is a more manual approach:</p>
+<pre><code>git clone http://github.com/agnat/node_mdns
+cd node_mdns
+node-waf configure build &amp;&amp; ./utils/run_tests</code></pre>
+<h2>Quickstart</h2>
+<p>Multicast <span class="caps">DNS</span> service discovery provides a way to announce and discover services on the local network. Here is how to announce a <span class="caps">HTTP</span> server running on port 4321:</p>
+<pre><code>var mdns = require('mdns')
+  , ad = mdns.createAdvertisement(mdns.tcp('http'), 4321)
+  ;
+ad.start();</code></pre>
+<p>A good place to do this is the <code>'listening'</code> event handler of your http server. Here is how to browse all <span class="caps">HTTP</span> servers on the local network:</p>
+<pre><code>var browser = mdns.createBrowser(mdns.tcp('http'));
+browser.on('serviceUp', function(info) {
+  console.log("service up: ", info);
+});
+browser.on('serviceDown', function(info) {
+  console.log("service down: ", info);
+});
+browser.start();</code></pre>
+<p>As you can see the browser object is an <code>EventEmitter</code>. For each <span class="caps">HTTP</span> server a &#8216;serviceUp&#8217; event is emitted. Likewise, if a server disappears &#8216;serviceDown&#8217; is send. A &#8216;serviceUp&#8217; info object might look like this:</p>
+<pre><code>{ interfaceIndex: 4
+, serviceName: 'somehost'
+, regtype: {serviceType: 'http', protocol: 'tcp', subtypes: []}
+, replyDomain: 'local.'
+, fullname: 'somehost._http._tcp.local.'
+, host: 'somehost.local.'
+, port: 4321
+, addresses: [ '10.1.1.50', 'fe80::21f:5bff:fecd:ce64' ]
+}</code></pre>
+<h3>On Regtypes</h3>
+<p><em>regtypes</em> are strings used to resolve service queries. A <em>regtype</em> always contains a service type identifier and information on the protocol. Additionally it may contain one or more subtype identifiers. Here are some examples:</p>
+<pre><code>_http._tcp
+_osc._udp
+_osc._udp,_api-v1,_api-v2</code></pre>
+<p>That&#8217;s an awful lot of underscores and punctation. To make things easier mdns has a helper class, called <code>RegType</code> and some utility functions like <code>mdns.tcp(...)</code> in the examples above. Here are some ways to create a <code>RegType</code> object:</p>
+<pre><code>var r0 = mdns.tcp('http')                 // string form: _http._tcp
+  , r1 = mdns.udp('osc', 'api-v1')        // string form: _osc._udp,_api-v1
+  , r2 = new mdns.RegType('http', 'tcp')  // string form: _http._tcp
+  , r3 = mdns.makeRegType('https', 'tcp') // string form: _https._tcp
+  ;</code></pre>
+<p>Wherever mdns calls for a regtype argument you can pass a <code>RegType</code> object or any of the following representations:</p>
+<pre><code>var r0 = '_http._tcp,_api-v1'                                          // string form
+  , r1 = ['http', 'tcp', 'api-v1']                                     // array form
+  , r2 = {serviceType: 'http', protocol: 'tcp', subtypes: ['api-v1']}  // object form
+  ;</code></pre>
+<p>In fact all of these are legal constructor arguments for <code>RegType</code>. <span class="caps">JSON</span> (de-)serialization works too. And finally there is <code>mdns.makeRegType(...)</code> which turns any representation into a <code>RegType</code> object unless it already is one.</p>
+<h3 id="resolver_sequence">The resolver sequence</h3>
+<p>The <code>mdns.Browser</code> object uses a resolver sequence to collect additional information on a discovered service. A resolver sequence is basically just an array of functions. The functions are called in order and receive two arguments: an <code>info</code> object to decorate and a <code>next()</code> function. Each function gathers information on the service, often by invoking asynchronous operations. When done the data is stored on the <code>info</code> object and the next function is invoked by calling <code>next()</code>. This is kind of like webserver middleware as it happens between service discovery and emitting the events.</p>
+<p>Resolver sequence tasks (RSTs) are created by calling factory functions:</p>
+<pre><code>var sequence = [
+    mdns.rst.DNSServiceResolve()
+  , mdns.rst.DNSGetAddrInfo({families: [4] })
+];</code></pre>
+<p>To use a custom sequence pass it to the browser like this:</p>
+<pre><code>var browser = mdns.createBrowser(mdns.tcp('http'), {resolverSequence: sequence});</code></pre>
+<p>And of course you can write your own tasks:</p>
+<pre><code>var MCHammer = function MCHammer() {
+  return function MCHammer(info, next) {
+    console.log('STOP!');
+    setTimeout(function() {
+        console.log('hammertime...');
+        info.hammertime = new Date();
+        next();
+    }, 2000);
+  }
+}</code></pre>
+<h2>Reference</h2>
+<p>Many arguments and options in mdns are directly passed to the dns_sd <span class="caps">API</span>. This document only covers the more important features. For in depth information on the <span class="caps">API</span> and how zeroconf service discovery works refer to <a href="#further_reading">Further Reading</a>.</p>
+<h3>mdns.Advertisement</h3>
+<p>An <code>mdns.Advertisement</code> publishes information about a service on the local network.</p>
+<blockquote id="fairydust">
+<p id="fairydust">The hack0r takes a good look at the local network, <em>someones</em> local network and sprinkles it with fairydust. He watches the particles being swirled up into vortices originating in the passing network traffic. Datadevils on a parking lot next to the information freeway. Visible entropy. The particles in the vortices are illuminated by open ports and the pale neon light of multicast dns service advertisements. The hack0r smiles.</p>
+</blockquote>
+<h4>new mdns.Advertisement(regtype, port, [options], [callback])</h4>
+<p>Create a new service advertisement with the given <code>regtype</code> and <code>port</code>. The <code>callback</code> has the arguments <code>(error, info)</code> and it is run after successful registration and if an error occures. If the advertisement is used without a callback an handler should be attached to the <code>'error'</code> event. The <code>options</code> object contains additional arguments to <code>DNSServiceRegister(...)</code>:</p>
+<dl>
+	<dt>name</dt>
+	<dd>up to 63 bytes of unicode to be used as the instance name. Think iTunes shared library names. If not given the hostname is used instead.</dd>
+	<dt>interfaceIndex</dt>
+	<dd>one-based index of the network interface the service should be announced on.</dd>
+	<dt>txtRecord</dt>
+	<dd>is interesting&#8230; but not yet implemented. You can pass a <code>Buffer</code> object but unfortunatly there is no way to create it.</dd>
+	<dt>host</dt>
+	<dd>see documentation of <code>DNSServiceRegister(...)</code></dd>
+	<dt>domain</dt>
+	<dd>see documentation of <code>DNSServiceRegister(...)</code></dd>
+	<dt>flags</dt>
+	<dd>see documentation of <code>DNSServiceRegister(...)</code></dd>
+	<dt>context</dt>
+	<dd>see documentation of <code>DNSServiceRegister(...)</code></dd>
+</dl>
+<h4>Event: &#8216;error&#8217;</h4>
+<pre><code>function(exception) {}</code></pre>
+<p>Emitted on asynchronous errors.</p>
+<h4>start()</h4>
+<p>Start the advertisement.</p>
+<h4>stop()</h4>
+<p>Stop the advertisement.</p>
+<h3>mdns.Browser</h3>
+<p>A <code>mdns.Browser</code> performs the discovery part. It emits events as services appear and disappear on the network. For new services it also resolves hostname, port and ip addresses. The <a href="#resolver_sequence">resolver sequence</a> is fully user configurable.</p>
+<h4>new mdns.Browser(regtype, [options])</h4>
+<p>Create a new browser to discover services that match the given <code>regtype</code>. <code>options</code> may contain the following properties:</p>
+<dl>
+	<dt>resolverSequence</dt>
+	<dd>custom <a href="#resolver_sequence">resolver sequence</a> for this browser</dd>
+	<dt>interfaceIndex</dt>
+	<dd>one-based index of the network interface the services should be discovered on.</dd>
+	<dt>domain</dt>
+	<dd>see documentation of <code>DNSServiceBrowse(...)</code></dd>
+	<dt>context</dt>
+	<dd>see documentation of <code>DNSServiceBrowse(...)</code></dd>
+	<dt>flags</dt>
+	<dd>see documentation of <code>DNSServiceBrowse(...)</code></dd>
+</dl>
+<h4>Event: &#8216;serviceUp&#8217;</h4>
+<pre><code>function(info) {}</code></pre>
+<p>Emitted when a new matching service is discovered.</p>
+<h4>Event: &#8216;serviceDown&#8217;</h4>
+<pre><code>function(info) {}</code></pre>
+<p>Emitted when a matching service disappears.</p>
+<h4>Event: &#8216;serviceChanged&#8217;</h4>
+<pre><code>function(info) {}</code></pre>
+<p>Emitted when a matching service either appears or disappears. It is a new service if <code>info.flags</code> has <code>mdns.kDNSServiceFlagsAdd</code> set.</p>
+<h4>Event: &#8216;error&#8217;</h4>
+<pre><code>function(exception) {}</code></pre>
+<p>Emitted on asynchronous errors.</p>
+<h4>start()</h4>
+<p>Start the browser.</p>
+<h4>stop()</h4>
+<p>Stop the browser.</p>
+<h4>mdns.Browser.defaultResolverSequence</h4>
+<p>This is the resolver sequence used by all browser objects that do not override it. It contains two steps. On platforms that have <code>DNSGetAddrInfo(...)</code> it has the following items:</p>
+<pre><code>var default_sequence = [
+    mdns.rst.DNSServiceResolve()
+  , mdns.rst.DNSGetAddrInfo()
+  , mdns.rst.makeAddressesUnique()
+];</code></pre>
+<p>On platforms that don&#8217;t, <code>mdns.rst.lookup(...)</code> is used instead.</p>
+<p>You could modify the default sequence but you shouldn&#8217;t.</p>
+<h3>Resolve Sequence Tasks</h3>
+<h4>mdns.rst.DNSServiceResolve(options)</h4>
+<p>Resolve hostname and port. Probably all but the empty sequence start with this task. The <code>options</code> object may have the following properties:</p>
+<dl>
+	<dt>flags</dt>
+	<dd>flags passed to <code>DNSServiceResolve(...)</code></dd>
+</dl>
+<h4>mdns.rst.DNSGetAddrInfo(options)</h4>
+<p>Resolve ip addresses using <code>DNSGetAddrInfo(...)</code></p>
+<h4>mdns.rst.getaddrinfo(options)</h4>
+<p>Resolve ip addresses using nodes <code>cares.getaddrinfo(...)</code></p>
+<h4>mdns.rst.makeAddressesUnique()</h4>
+<p>Filters the addresses to be unique.</p>
+<h4>mdns.rst.filterAddresses(f)</h4>
+<p>Filters the addresses by invoking <code>f()</code> on the address. If <code>f()</code> returns false the address is dropped.</p>
+<h4>mdns.rst.dumpInfo()</h4>
+<p>Print the <code>info</code> object.</p>
+<h3>mdns.RegType</h3>
+<h2>Design Notes</h2>
+<p>The implementation has two layers: A low-level <span class="caps">API</span> and a more userfriendly object based <span class="caps">API</span>. The low-level <span class="caps">API</span> is implemented in C++ and just wraps functions, datastructures and constants from <code>dns_sd.h</code>. Most of the code deals with argument conversion and error handling. A smaller portion deals with callbacks from C(++) to javascript.</p>
+<p>The high-level <span class="caps">API</span> is written in javascript. It connects the low-level <span class="caps">API</span> to nodes non-blocking IO infrastructure, namely <code>process.IOWatcher</code>. This results in excelent separation of concerns and leads to a very robust design.</p>
+<h2>Bugs, Fixes and Contributions</h2>
+<p>Yes, please.</p>
+<h2 id="compatibility">Compatibility Notes</h2>
+<h2 id="further_reading">Further Reading</h2>
+<ul>
+	<li><a href="http://developer.apple.com/library/mac/#documentation/Networking/Reference/DNSServiceDiscovery_CRef/dns_sd_h/">dns_sd <span class="caps">API</span> documentation</a></li>
+	<li><a href="http://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/NetServices/Introduction.html">Bonjour Overview</a></li>
+	<li><a href="http://developer.apple.com/library/mac/#documentation/Networking/Conceptual/dns_discovery_api/Introduction.html"><span class="caps">DNS</span> Service Discovery Programming Guide</a><br />
+-</li>
+</ul>
+<h2>License (<span class="caps">MIT</span>)</h2>
+<p>Copyright &#169; 2010 David Siegel</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &#8220;Software&#8221;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+<p><span class="caps">THE</span> <span class="caps">SOFTWARE</span> IS <span class="caps">PROVIDED</span> &#8220;AS IS&#8221;, <span class="caps">WITHOUT</span> <span class="caps">WARRANTY</span> OF <span class="caps">ANY</span> <span class="caps">KIND</span>, <span class="caps">EXPRESS</span> OR <span class="caps">IMPLIED</span>, <span class="caps">INCLUDING</span> <span class="caps">BUT</span> <span class="caps">NOT</span> <span class="caps">LIMITED</span> TO <span class="caps">THE</span> <span class="caps">WARRANTIES</span> OF <span class="caps">MERCHANTABILITY</span>, <span class="caps">FITNESS</span> <span class="caps">FOR</span> A <span class="caps">PARTICULAR</span> <span class="caps">PURPOSE</span> <span class="caps">AND</span> <span class="caps">NONINFRINGEMENT</span>. IN NO <span class="caps">EVENT</span> <span class="caps">SHALL</span> <span class="caps">THE</span> <span class="caps">AUTHORS</span> OR <span class="caps">COPYRIGHT</span> <span class="caps">HOLDERS</span> BE <span class="caps">LIABLE</span> <span class="caps">FOR</span> <span class="caps">ANY</span> <span class="caps">CLAIM</span>, <span class="caps">DAMAGES</span> OR <span class="caps">OTHER</span> <span class="caps">LIABILITY</span>, <span class="caps">WHETHER</span> IN AN <span class="caps">ACTION</span> OF <span class="caps">CONTRACT</span>, <span class="caps">TORT</span> OR <span class="caps">OTHERWISE</span>, <span class="caps">ARISING</span> <span class="caps">FROM</span>, <span class="caps">OUT</span> OF OR IN <span class="caps">CONNECTION</span> <span class="caps">WITH</span> <span class="caps">THE</span> <span class="caps">SOFTWARE</span> OR <span class="caps">THE</span> <span class="caps">USE</span> OR <span class="caps">OTHER</span> <span class="caps">DEALINGS</span> IN <span class="caps">THE</span> <span class="caps">SOFTWARE</span>.</p>
+
+    </div>
+    <a href="http://github.com/agnat/node_mdns"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/edc6dae7a1079163caf7f17c60495bbb6d027c93/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub"></a>
+  </body>
+</html>
+
