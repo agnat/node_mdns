@@ -46,6 +46,19 @@ h2. Documentation
 
 See the "user guide":<%- package.homepage + '/user_guide.html' %>.
 
+h2. Contributors
+
+... in random order:
+
+<%-
+package.contributors.map(function(c) {
+  return '* ' + c.name +
+    ('github' in c ? ' ("' + c.github + '":http://github.com/' + c.github + ')' : '' );
+}).join('\n')
+%>
+
+Your name is missing on the list? Shame on me. Please open an issue.
+
 h2. Bugs and Contributions
 
 If you find a bug, please report it using the "issue tracker":<%- package.bugs.web %>.

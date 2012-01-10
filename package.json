@@ -1,8 +1,6 @@
 { "name" : "mdns"
 , "version" : "0.0.4"
 , "description" : "mdns/zeroconf/bonjour service discovery add-on"
-, "author": "David Siegel <david@artcom.de>"
-, "contributors": ["Orlando Vazquez", "Ryan Dahl"]
 , "main": "./lib/mdns"
 , "scripts": { "install": "node-waf configure build"}
 , "licenses": [
@@ -23,5 +21,26 @@
   , "step":    "*"
   , "mkdirp":  "*"
   }
+, "author": {
+    "name":   "David Siegel"
+  , "email":  "david@artcom.de"
+  , "github": "agnat"
+  }
+, "contributors": [
+    { "name":   "Orlando Vazquez"
+    , "email":  "ovazquez@gmail.com"
+    , "url":    "http://or.lan.do/"
+    , "github": "orlandov"
+    }
+  , { "name":   "Ryan Dahl"
+    , "email":  "ry at tiny clouds dot org"
+    , "url":    "http://four.livejournal.com/"
+    , "github": "ry"
+    }
+  , { "name":   "Dominic Tarr"
+    , "url":    "http://twitter.com/dominictarr"
+    , "github": "dominictarr"
+    }
+  ]
 }
 

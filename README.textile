@@ -46,6 +46,16 @@ h2. Documentation
 
 See the "user guide":http://agnat.github.com/node_mdns/user_guide.html.
 
+h2. Contributors
+
+... in random order:
+
+* Orlando Vazquez ("orlandov":http://github.com/orlandov)
+* Ryan Dahl ("ry":http://github.com/ry)
+* Dominic Tarr ("dominictarr":http://github.com/dominictarr)
+
+Your name is missing on the list? Shame on me. Please open an issue.
+
 h2. Bugs and Contributions
 
 If you find a bug, please report it using the "issue tracker":http://github.com/agnat/node_mdns/issues.
