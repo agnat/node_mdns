@@ -11,9 +11,9 @@ mdns adds support for multicast DNS service discovery, also known as zeroconf or
 
 h2. Synopsis
 
-bc.. var mdns = require('mdns')
-  , ad = mdns.createAdvertisement(mdns.tcp('http'), 4321)
-  ;
+bc.. var mdns = require('mdns');
+
+var ad = mdns.createAdvertisement(mdns.tcp('http'), 4321);
 ad.start();
 
 var browser = mdns.createBrowser(mdns.tcp('http'));
@@ -25,11 +25,11 @@ browser.on('serviceDown', function(info) {
 });
 browser.start();
 
-h3. Documentation
+h2. Documentation
 
 See the "user guide":http://agnat.github.com/node_mdns/user_guide.html.
 
 h2. Bugs and Contributions
 
-If you find a bug, please file it at the "issue tracker":http://github.com/agnat/node_mdns/issues.
+If you find a bug, please report it using the "issue tracker":http://github.com/agnat/node_mdns/issues.
 
