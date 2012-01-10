@@ -5,7 +5,7 @@ h1. mdns -- service discovery for node.js
 |_. Version: | 0.0.4 |
 |_. Installation: | @npm install mdns@ |
 |_. Documentation: | "mdns user guide":http://agnat.github.com/node_mdns/user_guide.html |
-|_. License: | "MIT":#license |
+|_. License: | "MIT":http://github.com/agnat/node_mdns/blob/master/LICENSE |
 
 mdns adds support for multicast DNS service discovery, also known as zeroconf or bonjour to "node.js":/joyent/node. It provides an object based interface to announce and browse services on the local network.
 
@@ -25,26 +25,11 @@ browser.on('serviceDown', function(info) {
 });
 browser.start();
 
+h3. Documentation
+
+See the "user guide":http://agnat.github.com/node_mdns/user_guide.html.
+
 h2. Bugs and Contributions
 
-If you found a bug, please file it at the "issue tracker":http://github.com/agnat/node_mdns/issues.
-
-h2(#compatibility). Compatibility Notes
-
-h2(#further_reading). Further Reading
-
-* "dns_sd API documentation":http://developer.apple.com/library/mac/#documentation/Networking/Reference/DNSServiceDiscovery_CRef/dns_sd_h/
-* "Bonjour Overview":http://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/NetServices/Introduction.html
-* "DNS Service Discovery Programming Guide":http://developer.apple.com/library/mac/#documentation/Networking/Conceptual/dns_discovery_api/Introduction.html
-- 
-
-h2(#license). License (MIT)
-
-Copyright (c) 2010 David Siegel
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+If you find a bug, please file it at the "issue tracker":http://github.com/agnat/node_mdns/issues.
 
