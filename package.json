@@ -20,6 +20,8 @@
   { "ejs":     "*"
   , "less":    "*"
   , "express": "*"
+  , "step":    "*"
+  , "mkdirp":  "*"
   }
 }
 
