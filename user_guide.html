@@ -9,15 +9,6 @@
       <h1>mdns User Guide</h1>
 <p>mdns adds support for multicast <span class="caps">DNS</span> service discovery, also known as zeroconf or bonjour to <a href="/joyent/node">node.js</a>. It provides an object based interface to announce and browse services on the local network.</p>
 <p>Internally, it uses the dns_sd <span class="caps">API</span> which is available on all major platforms. However, that does not mean it is equally well supported on all platforms. See <a href="#compatibility">Compatibility Notes</a> for more information.</p>
-<h2>Installation</h2>
-<p>On Linux and other systems using the avahi daemon the avahi dns_sd compat library and its header files are required.  On ubuntu and other debianesque systems use the following command to install them:</p>
-<pre><code>sudo aptitude install libavahi-compat-libdnssd-dev</code></pre>
-<p>mdns is available as a npm package. To fetch, compile and install the add-on do:</p>
-<pre><code>npm install mdns</code></pre>
-<p>If you want to play with the latest source code, here is a more manual approach:</p>
-<pre><code>git clone http://github.com/agnat/node_mdns
-cd node_mdns
-node-waf configure build &amp;&amp; ./utils/run_tests</code></pre>
 <h2>Quickstart</h2>
 <p>Multicast <span class="caps">DNS</span> service discovery provides a way to announce and discover services on the local network. Here is how to announce a <span class="caps">HTTP</span> server running on port 4321:</p>
 <pre><code>var mdns = require('mdns')
@@ -43,7 +34,7 @@ browser.start();</code></pre>
 , port: 4321
 , addresses: [ '10.1.1.50', 'fe80::21f:5bff:fecd:ce64' ]
 }</code></pre>
-<h3>On Regtypes</h3>
+<h3 id="regtypes">On Regtypes</h3>
 <p><em>regtypes</em> are strings used to resolve service queries. A <em>regtype</em> always contains a service type identifier and information on the protocol. Additionally it may contain one or more subtype identifiers. Here are some examples:</p>
 <pre><code>_http._tcp
 _osc._udp
@@ -174,21 +165,13 @@ _osc._udp,_api-v1,_api-v2</code></pre>
 <h2>Design Notes</h2>
 <p>The implementation has two layers: A low-level <span class="caps">API</span> and a more userfriendly object based <span class="caps">API</span>. The low-level <span class="caps">API</span> is implemented in C++ and just wraps functions, datastructures and constants from <code>dns_sd.h</code>. Most of the code deals with argument conversion and error handling. A smaller portion deals with callbacks from C(++) to javascript.</p>
 <p>The high-level <span class="caps">API</span> is written in javascript. It connects the low-level <span class="caps">API</span> to nodes non-blocking IO infrastructure, namely <code>process.IOWatcher</code>. This results in excelent separation of concerns and leads to a very robust design.</p>
-<h2>Bugs, Fixes and Contributions</h2>
-<p>Yes, please.</p>
 <h2 id="compatibility">Compatibility Notes</h2>
 <h2 id="further_reading">Further Reading</h2>
 <ul>
 	<li><a href="http://developer.apple.com/library/mac/#documentation/Networking/Reference/DNSServiceDiscovery_CRef/dns_sd_h/">dns_sd <span class="caps">API</span> documentation</a></li>
 	<li><a href="http://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/NetServices/Introduction.html">Bonjour Overview</a></li>
-	<li><a href="http://developer.apple.com/library/mac/#documentation/Networking/Conceptual/dns_discovery_api/Introduction.html"><span class="caps">DNS</span> Service Discovery Programming Guide</a><br />
--</li>
+	<li><a href="http://developer.apple.com/library/mac/#documentation/Networking/Conceptual/dns_discovery_api/Introduction.html"><span class="caps">DNS</span> Service Discovery Programming Guide</a></li>
 </ul>
-<h2>License (<span class="caps">MIT</span>)</h2>
-<p>Copyright &#169; 2010 David Siegel</p>
-<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &#8220;Software&#8221;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
-<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
-<p><span class="caps">THE</span> <span class="caps">SOFTWARE</span> IS <span class="caps">PROVIDED</span> &#8220;AS IS&#8221;, <span class="caps">WITHOUT</span> <span class="caps">WARRANTY</span> OF <span class="caps">ANY</span> <span class="caps">KIND</span>, <span class="caps">EXPRESS</span> OR <span class="caps">IMPLIED</span>, <span class="caps">INCLUDING</span> <span class="caps">BUT</span> <span class="caps">NOT</span> <span class="caps">LIMITED</span> TO <span class="caps">THE</span> <span class="caps">WARRANTIES</span> OF <span class="caps">MERCHANTABILITY</span>, <span class="caps">FITNESS</span> <span class="caps">FOR</span> A <span class="caps">PARTICULAR</span> <span class="caps">PURPOSE</span> <span class="caps">AND</span> <span class="caps">NONINFRINGEMENT</span>. IN NO <span class="caps">EVENT</span> <span class="caps">SHALL</span> <span class="caps">THE</span> <span class="caps">AUTHORS</span> OR <span class="caps">COPYRIGHT</span> <span class="caps">HOLDERS</span> BE <span class="caps">LIABLE</span> <span class="caps">FOR</span> <span class="caps">ANY</span> <span class="caps">CLAIM</span>, <span class="caps">DAMAGES</span> OR <span class="caps">OTHER</span> <span class="caps">LIABILITY</span>, <span class="caps">WHETHER</span> IN AN <span class="caps">ACTION</span> OF <span class="caps">CONTRACT</span>, <span class="caps">TORT</span> OR <span class="caps">OTHERWISE</span>, <span class="caps">ARISING</span> <span class="caps">FROM</span>, <span class="caps">OUT</span> OF OR IN <span class="caps">CONNECTION</span> <span class="caps">WITH</span> <span class="caps">THE</span> <span class="caps">SOFTWARE</span> OR <span class="caps">THE</span> <span class="caps">USE</span> OR <span class="caps">OTHER</span> <span class="caps">DEALINGS</span> IN <span class="caps">THE</span> <span class="caps">SOFTWARE</span>.</p>
 
     </div>
     <a href="http://github.com/agnat/node_mdns"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/edc6dae7a1079163caf7f17c60495bbb6d027c93/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub"></a>
