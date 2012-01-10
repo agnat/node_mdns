@@ -1,0 +1,252 @@
+#!/usr/bin/env node
+
+var path   = require('path')
+  , fs     = require('fs')
+  , util   = require('util')
+  , spawn  = require('child_process').spawn
+  , mkdirp = require('mkdirp')
+  , step   = require('step')
+  , ejs    = require('ejs')
+  , less   = require('less')
+  , _j     = path.join
+  ;
+
+if (process.argv.length !== 3) {
+  console.log('Usage:', path.basename(process.argv[1]), ' <outdir>');
+  process.exit(-1);
+}
+
+var outd  = process.argv[2]
+  , rootd = _j(path.dirname(process.argv[1]), '..')
+  , docd  = _j(rootd, 'doc')
+  ;
+
+
+step(
+  function prerequisites() {
+    fs.readFile(_j(rootd, 'package.json'), this.parallel());
+    fs.readFile(_j(docd, 'layout.ejs'), this.parallel());
+  }
+, function(error, package_json, layout) {
+    if (error) throw error;
+    var package = JSON.parse(package_json.toString());
+    layout = layout.toString();
+    render_readme(package, layout, this.parallel());
+    render_pages(package, layout, this.parallel());
+  }
+, function(error) {
+    if (error) throw error;
+    console.log('========== DONE ==========');
+  }
+);
+
+function render_readme(package, layout, next) {
+  var src  = _j(docd, 'README.ejs')
+    , dst = _j(rootd, 'README.textile')
+    ;
+  step(
+    load(src)
+  , render_ejs({package: package})
+  , save(dst)
+  , function(error) {
+      console.log(src, '->', dst);
+      next(error);
+    }
+  );
+};
+
+function render_pages(package, layout, next) {
+  var srcdir = _j(docd, 'pages')
+    , dstdir = outd
+    ;
+  step(
+    function() {
+      render_html_pages(srcdir, dstdir, package, layout, this.parallel());
+      var s = 'stylesheets', i = 'images', js = 'scripts';
+      compile_stylesheets(_j(srcdir, s), _j(dstdir, s), this.parallel())
+      copy_dir(_j(srcdir, i), _j(dstdir, i), this.parallel());
+      copy_dir(_j(srcdir, js), _j(dstdir, js), this.parallel());
+
+    }
+  , function(error) { next(error) }
+  )
+}
+
+function render_html_pages(srcdir, dstdir, package, layout, next) {
+  step(
+      function() {
+        glob(srcdir, 'ejs', this.parallel());
+        mkdirp(dstdir, this.parallel());
+      }
+    , function(error, srcfiles) {
+        if (error) throw error;
+        var self = this;
+        srcfiles.forEach(function(src) {
+          var dst = _j(dstdir, path.basename(src, '.ejs') + '.html');
+          render_html_page(src, dst, package, layout, self.parallel());
+        });
+      }
+    , function(error) { next(error); }
+  );
+}
+
+function render_html_page(src, dst, package, layout, next) {
+  step(
+    load(src)
+  , render_html(package, layout)
+  , save(dst)
+  , function(error) {
+      if (! error) { console.log(src, '->', dst); }
+      next(error)
+    }
+  );
+}
+
+function compile_stylesheets(srcdir, dstdir, next) {
+  step(
+    function() {
+      glob(srcdir, 'less', this.parallel());
+      mkdirp(dstdir, this.parallel());
+    }
+    , function(error, srcfiles) {
+        if (error) throw error;
+        var self = this;
+        srcfiles.forEach(function(src) {
+          var dst = _j(dstdir, path.basename(src, '.less') + '.css');
+          compile_less(src, dst, {}, self.parallel());
+        });
+      }
+  , function(error) { next(error); }
+  );
+}
+
+function copy(src, dst, next) {
+  var src_stream = fs.createReadStream(src)
+    , dst_stream = fs.createWriteStream(dst)
+    ;
+  dst_stream.once('open', function(fd){ util.pump(src_stream, dst_stream); });
+  dst_stream.once('close', function() {
+    console.log(src, '->', dst);
+    next();
+  });
+  dst_stream.on('error', next);
+  src_stream.on('error', next);
+}
+
+function copy_dir(srcdir, dstdir, next) {
+  step(
+    function() {
+      glob(srcdir, this.parallel());
+      mkdirp(dstdir, this.parallel());
+    }
+  , function(error, srcfiles) {
+      if (error) throw error;
+      var self = this;
+      srcfiles.forEach(function(src) {
+        var dst = _j(dstdir, path.basename(src));
+        copy(src, dst, self.parallel());
+      });
+    }
+  , function(error) {
+      next(error);
+    }
+  );
+}
+
+function compile_less(src, dst, options, next) {
+  step(
+    load(src)
+  , function(error, less_src) {
+      less.render(less_src.toString(), options, this);
+    }
+  , save(dst)
+  , function(error) {
+      if (! error) { console.log(src, '->', dst); }
+      next(error)
+    }
+  );
+}
+
+
+var load = function load(src) {
+  return function(error) {
+    if (error) throw error;
+    fs.readFile(src, this) };
+}
+
+var render_ejs = function render_ejs(locals) {
+  return function(error, src) {
+    if (error) throw error;
+    this(null, ejs.render(src.toString(), locals));
+  }
+}
+
+var render_html = function render_html(package, layout) {
+  return function (error, src) {
+    var self = this
+      , rc = spawn('redcloth')
+      , html = ''
+      , metadata = {}
+      , meta = function meta() {
+          var p;
+          if (arguments.length === 1 && typeof arguments[0] === 'object') {
+            for (p in arguments[0]) { metadata[p] = arguments[0][p]; }
+          } else if (arguments.length === 2) {
+            metadata[arguments[0]] = arguments[1];
+          } else {
+            throw new Error('illegal argument');
+          }
+        }
+      ;
+    rc.stdout.on('data', function(data) { html += data });
+    rc.stderr.on('data', function(data) { console.log(data.toString()) });
+    rc.on('exit', function(code) {
+      if (code) {
+        self(code);
+      } else {
+        var p, locals = {body: html}
+        for (p in metadata) { locals[p] = metadata[p] }
+        self(null, ejs.render(layout, locals));
+      }
+    });
+    rc.stdin.write(ejs.render(src.toString(), {package: package, meta: meta}));
+    rc.stdin.destroySoon();
+  }
+}
+
+var save = function(dst) {
+  return function(error, string) {
+    if (error) throw error;
+    fs.writeFile(dst, string, this);
+  }
+}
+
+var glob = function(dir, ext, next) {
+  if ( ! next) {
+    next = ext;
+    ext = null;
+  }
+  var re;
+  if (ext) {
+    re = new RegExp('.*\\.' + ext + '$');
+  }
+  fs.readdir(dir, function(error, files) {
+    if (error) (next||this)(error);
+    var result = [];
+    files.forEach(function(f) { 
+      if (re) {
+        if (re.test(f)) {
+          result.push(_j(dir, f));
+        }
+      } else {
+        result.push(_j(dir, f));
+      }
+    });
+    (next||this)(null, result);
+  });
+}
+
+var _pp = function pretty_path(p) {
+
+}
+// vim: set filetype=javascript :
