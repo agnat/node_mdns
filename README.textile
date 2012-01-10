@@ -53,6 +53,7 @@ h2. Contributors
 * Orlando Vazquez ("orlandov":http://github.com/orlandov)
 * Ryan Dahl ("ry":http://github.com/ry)
 * Dominic Tarr ("dominictarr":http://github.com/dominictarr)
+* Emil Stenqvist ("emilisto":http://github.com/emilisto)
 
 Your name is missing on the list? Shame on me. Please open an issue.
 
