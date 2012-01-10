@@ -1,11 +1,11 @@
 h1. mdns -- service discovery for node.js
 
-|_. Package: | mdns |
-|_. Description: | mdns/zeroconf/bonjour service discovery add-on |
-|_. Version: | 0.0.4 |
-|_. Installation: | @npm install mdns@ |
+|_. Package:       | mdns |
+|_. Description:   | mdns/zeroconf/bonjour service discovery add-on |
+|_. Version:       | 0.0.4 |
+|_. Installation:  | @npm install mdns@ |
 |_. Documentation: | "mdns user guide":http://agnat.github.com/node_mdns/user_guide.html |
-|_. License: | "MIT":http://github.com/agnat/node_mdns/blob/master/LICENSE |
+|_. License:       | "MIT":http://github.com/agnat/node_mdns/blob/master/LICENSE |
 
 mdns adds support for multicast DNS service discovery, also known as zeroconf or bonjour to "node.js":/joyent/node. It provides an object based interface to announce and browse services on the local network.
 

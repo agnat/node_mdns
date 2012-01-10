@@ -1,11 +1,11 @@
 h1. mdns -- service discovery for node.js
 
-|_. Package: | <%- package.name %> |
-|_. Description: | <%- package.description %> |
-|_. Version: | <%- package.version %> |
-|_. Installation: | @npm install <%- package.name %>@ |
+|_. Package:       | <%- package.name %> |
+|_. Description:   | <%- package.description %> |
+|_. Version:       | <%- package.version %> |
+|_. Installation:  | @npm install <%- package.name %>@ |
 |_. Documentation: | "mdns user guide":<%- package.homepage + '/user_guide.html'%> |
-|_. License: | "<%- package.licenses[0].type %>":http://github.com/agnat/node_mdns/blob/master/LICENSE |
+|_. License:       | "<%- package.licenses[0].type %>":http://github.com/agnat/node_mdns/blob/master/LICENSE |
 
 mdns adds support for multicast DNS service discovery, also known as zeroconf or bonjour to "node.js":/joyent/node. It provides an object based interface to announce and browse services on the local network.
 
@@ -54,7 +54,7 @@ h2. Contributors
 package.contributors.map(function(c) {
   return '* ' + c.name +
     ('github' in c ? ' ("' + c.github + '":http://github.com/' + c.github + ')' : '' );
-}).join('\n')
+})/*.sort(function(a,b) { return Math.floor(10 * Math.random()) % 2})*/.join('\n')
 %>
 
 Your name is missing on the list? Shame on me. Please open an issue.
