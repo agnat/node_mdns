@@ -46,7 +46,7 @@ bc. _http._tcp
 _osc._udp
 _osc._udp,_api-v1,_api-v2
 
-That's an awful lot of underscores and punctation. To make things easier mdns has a helper class, called @RegType@ and some utility functions like @mdns.tcp(...)@ in the examples above. Here are some ways to create a @RegType@ object:
+That's an awful lot of underscores and punctuation. To make things easier mdns has a helper class, called @RegType@ and some utility functions like @mdns.tcp(...)@ in the examples above. Here are some ways to create a @RegType@ object:
 
 bc. var r0 = mdns.tcp('http')                 // string form: _http._tcp
   , r1 = mdns.udp('osc', 'api-v1')        // string form: _osc._udp,_api-v1
@@ -54,7 +54,7 @@ bc. var r0 = mdns.tcp('http')                 // string form: _http._tcp
   , r3 = mdns.makeRegType('https', 'tcp') // string form: _https._tcp
   ;
 
-Wherever mdns calls for a regtype argument you can pass a @RegType@ object or any of the following representations:
+Wherever mdns calls for a @regtype@ argument you can pass a @RegType@ object or any of the following representations:
 
 bc. var r0 = '_http._tcp,_api-v1'                                          // string form
   , r1 = ['http', 'tcp', 'api-v1']                                     // array form
@@ -65,7 +65,7 @@ In fact all of these are legal constructor arguments for @RegType@. JSON (de-)se
 
 h3(#resolver_sequence). The resolver sequence
 
-The @mdns.Browser@ object uses a resolver sequence to collect additional information on a discovered service. A resolver sequence is basically just an array of functions. The functions are called in order and receive two arguments: an @info@ object to decorate and a @next()@ function. Each function gathers information on the service, often by invoking asynchronous operations. When done the data is stored on the @info@ object and the next function is invoked by calling @next()@. This is kind of like webserver middleware as it happens between service discovery and emitting the events.
+The @mdns.Browser@ object uses a resolver sequence to collect additional information on a discovered service. A resolver sequence is basically just an array of functions. The functions are called in order and receive two arguments: an @info@ object to decorate and a @next()@ function. Each function gathers information on the service, often by invoking asynchronous operations. When done the data is stored on the @info@ object and the next function is invoked by calling @next()@. This is kind of like web server middleware as it happens between service discovery and emitting the events.
 
 Resolver sequence tasks (RSTs) are created by calling factory functions:
 
@@ -99,15 +99,15 @@ h3. mdns.Advertisement
 
 An @mdns.Advertisement@ publishes information about a service on the local network.
 
-bq(#fairydust). The hack0r takes a good look at the local network, _someones_ local network and sprinkles it with fairydust. He watches the particles being swirled up into vortices originating in the passing network traffic. Datadevils on a parking lot next to the information freeway. Visible entropy. The particles in the vortices are illuminated by open ports and the pale neon light of multicast dns service advertisements. The hack0r smiles.
+bq(#fairydust). The hack0r takes a good look at the local network, _someones_ local network and sprinkles it with fairydust. He watches the particles being swirled up into vortices originating in the passing network traffic. Datadevils on a parking lot next to the information freeway. Visible entropy. The particles in the vortices are illuminated by open ports and the pale neon light of multicast DNS service advertisements. The hack0r smiles.
 
 h4. new mdns.Advertisement(regtype, port, [options], [callback])
 
-Create a new service advertisement with the given @regtype@ and @port@. The @callback@ has the arguments @(error, info)@ and it is run after successful registration and if an error occures. If the advertisement is used without a callback an handler should be attached to the @'error'@ event. The @options@ object contains additional arguments to @DNSServiceRegister(...)@:
+Create a new service advertisement with the given @regtype@ and @port@. The @callback@ has the arguments @(error, info)@ and it is run after successful registration and if an error occurs. If the advertisement is used without a callback an handler should be attached to the @'error'@ event. The @options@ object contains additional arguments to @DNSServiceRegister(...)@:
 
-- name := up to 63 bytes of unicode to be used as the instance name. Think iTunes shared library names. If not given the hostname is used instead.
+- name := up to 63 bytes of Unicode to be used as the instance name. Think iTunes shared library names. If not given the host name is used instead.
 - interfaceIndex := one-based index of the network interface the service should be announced on.
-- txtRecord      := is interesting... but not yet implemented. You can pass a @Buffer@ object but unfortunatly there is no way to create it.
+- txtRecord      := is interesting... but not yet implemented. You can pass a @Buffer@ object but unfortunately there is no way to create it.
 - host           := see documentation of @DNSServiceRegister(...)@
 - domain         := see documentation of @DNSServiceRegister(...)@
 - flags          := see documentation of @DNSServiceRegister(...)@
@@ -129,7 +129,7 @@ Stop the advertisement.
 
 h3. mdns.Browser
 
-A @mdns.Browser@ performs the discovery part. It emits events as services appear and disappear on the network. For new services it also resolves hostname, port and ip addresses. The "resolver sequence":#resolver_sequence is fully user configurable.
+A @mdns.Browser@ performs the discovery part. It emits events as services appear and disappear on the network. For new services it also resolves host name, port and IP addresses. The "resolver sequence":#resolver_sequence is fully user configurable.
 
 h4. new mdns.Browser(regtype, [options])
 
@@ -191,7 +191,7 @@ h3. Resolve Sequence Tasks
 
 h4. mdns.rst.DNSServiceResolve(options)
 
-Resolve hostname and port. Probably all but the empty sequence start with this task. The @options@ object may have the following properties:
+Resolve host name and port. Probably all but the empty sequence start with this task. The @options@ object may have the following properties:
 
 - flags := flags passed to @DNSServiceResolve(...)@
 
@@ -217,11 +217,12 @@ Print the @info@ object.
 
 h3. mdns.RegType
 
+@mdns.RegType@ objects are use to represent _regtype_ strings which have been discussed
 h2. Design Notes
 
-The implementation has two layers: A low-level API and a more userfriendly object based API. The low-level API is implemented in C++ and just wraps functions, datastructures and constants from @dns_sd.h@. Most of the code deals with argument conversion and error handling. A smaller portion deals with callbacks from C(++) to javascript.
+The implementation has two layers: A low-level API and a more user friendly object based API. The low-level API is implemented in C++ and just wraps functions, data structures and constants from @dns_sd.h@. Most of the code deals with argument conversion and error handling. A smaller portion deals with callbacks from C(++) to javascript.
 
-The high-level API is written in javascript. It connects the low-level API to nodes non-blocking IO infrastructure, namely @process.IOWatcher@. This results in excelent separation of concerns and leads to a very robust design.
+The high-level API is written in javascript. It connects the low-level API to nodes non-blocking IO infrastructure, namely @process.IOWatcher@. This results in excellent separation of concerns and leads to a very robust design. 
 
 h2(#compatibility). Compatibility Notes
 
