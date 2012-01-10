@@ -6,22 +6,6 @@ mdns adds support for multicast DNS service discovery, also known as zeroconf or
 
 Internally, it uses the dns_sd API which is available on all major platforms. However, that does not mean it is equally well supported on all platforms. See "Compatibility Notes":#compatibility for more information.
 
-h2. Installation
-
-On Linux and other systems using the avahi daemon the avahi dns_sd compat library and its header files are required.  On ubuntu and other debianesque systems use the following command to install them:
-
-bc. sudo aptitude install libavahi-compat-libdnssd-dev
-
-mdns is available as a npm package. To fetch, compile and install the add-on do:
-
-bc. npm install mdns
-
-If you want to play with the latest source code, here is a more manual approach:
-
-bc.. git clone http://github.com/agnat/node_mdns
-cd node_mdns
-node-waf configure build && ./utils/run_tests
-
 h2. Quickstart
 
 Multicast DNS service discovery provides a way to announce and discover services on the local network. Here is how to announce a HTTP server running on port 4321:
