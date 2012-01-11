@@ -2,13 +2,19 @@ CHANGES
 
 Version 0.0.3 to 0.0.4
 
-   - New regtype objects:
-     The strings have been replaced with a small RegType object. Also, older
+   - New service type objects:
+     The strings have been replaced with a small ServiceType object. Also, older
      versions used TCP as the default protocol. The protocol is now mandatory.
      However, the new syntax is much more flexible. See user guide at
-     http://agnat.github.com/node_mdns/user_guide.html#regtypes.
+     http://agnat.github.com/node_mdns/user_guide.html#service_types.
+
+   - The 'info' object is now called 'service'
+
+   - The info.regtype property is now called service.type
+
+   - The info.serviceName property is now called service.name
 
    - Callback signature changed:
-     flags is now a property of the info object (info.flags)
+     flags is now a property of the service object (service.flags)
 
    - possibly more
