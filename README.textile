@@ -11,8 +11,8 @@ mdns adds support for multicast DNS service discovery, also known as zeroconf or
 
 h2. Synopsis
 
-// import the module
-bc.. var mdns = require('mdns');
+bc.. // import the module
+var mdns = require('mdns');
 
 // advertise a http server on port 4321
 var ad = mdns.createAdvertisement(mdns.tcp('http'), 4321);
