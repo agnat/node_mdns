@@ -50,10 +50,10 @@ h2. Contributors
 
 ... in random order:
 
-* Orlando Vazquez ("orlandov":http://github.com/orlandov)
-* Ryan Dahl ("ry":http://github.com/ry)
-* Dominic Tarr ("dominictarr":http://github.com/dominictarr)
-* Emil Stenqvist ("emilisto":http://github.com/emilisto)
+* Orlando Vazquez (@orlandov)
+* Ryan Dahl (@ry)
+* Dominic Tarr (@dominictarr)
+* Emil Stenqvist (@emilisto)
 
 Your name is missing on the list? Shame on me. Please open an issue.
 
