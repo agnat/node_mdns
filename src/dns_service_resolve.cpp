@@ -72,9 +72,9 @@ DNSServiceResolve(Arguments const& args) {
     String::Utf8Value name(args[3]->ToString());
 
     if ( ! args[4]->IsString()) {
-        return throwTypeError("argument 5 must be a string (regtype)");
+        return throwTypeError("argument 5 must be a string (service type)");
     }
-    String::Utf8Value regtype(args[4]->ToString());
+    String::Utf8Value serviceType(args[4]->ToString());
 
     if ( ! args[5]->IsString()) {
         return throwTypeError("argument 6 must be a string (domain)");
@@ -91,7 +91,7 @@ DNSServiceResolve(Arguments const& args) {
     }
 
     DNSServiceErrorType error = DNSServiceResolve( & serviceRef->GetServiceRef(),
-            flags, interfaceIndex, *name, *regtype, *domain, OnResolve, serviceRef);
+            flags, interfaceIndex, *name, *serviceType, *domain, OnResolve, serviceRef);
 
     if (error != kDNSServiceErr_NoError) {
         return throwMdnsError("DNSServiceResolve()", error);

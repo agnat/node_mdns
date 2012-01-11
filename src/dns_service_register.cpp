@@ -17,8 +17,8 @@ namespace node_mdns {
 static
 void
 OnServiceRegistered(DNSServiceRef sdRef, DNSServiceFlags flags,
-        DNSServiceErrorType errorCode, const char * name, const char * regtype,
-        const char * domain, void * context)
+        DNSServiceErrorType errorCode, const char * name,
+        const char * serviceType, const char * domain, void * context)
 {
     if ( ! context) return;
 
@@ -34,7 +34,7 @@ OnServiceRegistered(DNSServiceRef sdRef, DNSServiceFlags flags,
         args[1] = Integer::New(flags);
         args[2] = Integer::New(errorCode);
         args[3] = String::New(name);
-        args[4] = String::New(regtype);
+        args[4] = String::New(serviceType);
         args[5] = String::New(domain);
         if (serviceRef->GetContext().IsEmpty()) {
             args[6] = Local<Value>::New(Null());
@@ -80,9 +80,9 @@ DNSServiceRegister(Arguments const& args) {
     String::Utf8Value name(args[3]);
 
     if ( ! args[4]->IsString()) {
-        return throwTypeError("argument 5 must be a string (regtype)");
+        return throwTypeError("argument 5 must be a string (service type)");
     }
-    String::Utf8Value regtype(args[4]->ToString());
+    String::Utf8Value serviceType(args[4]->ToString());
 
     bool has_domain = false;
     if ( ! args[5]->IsNull() && ! args[5]->IsUndefined()) {
@@ -137,7 +137,7 @@ DNSServiceRegister(Arguments const& args) {
             flags,
             interfaceIndex,
             has_name ? * name : NULL,
-            *regtype,
+            *serviceType,
             has_domain ? * domain : NULL,
             has_host ? * host : NULL,
             htons(port),

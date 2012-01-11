@@ -30,7 +30,7 @@ As you can see the browser object is an @EventEmitter@. For each HTTP server a '
 
 bc. { interfaceIndex: 4
 , serviceName: 'somehost'
-, regtype: {serviceType: 'http', protocol: 'tcp', subtypes: []}
+, type: {name: 'http', protocol: 'tcp', subtypes: []}
 , replyDomain: 'local.'
 , fullname: 'somehost._http._tcp.local.'
 , host: 'somehost.local.'
@@ -38,30 +38,30 @@ bc. { interfaceIndex: 4
 , addresses: [ '10.1.1.50', 'fe80::21f:5bff:fecd:ce64' ]
 }
 
-h3(#regtypes). On Regtypes
+h3(#service_types). On Service Types
 
-_regtypes_ are strings used to resolve service queries. A _regtype_ always contains a service type identifier and information on the protocol. Additionally it may contain one or more subtype identifiers. Here are some examples:
+Service type strings are used to resolve service queries. A service type always contains the service name and the protocol. Additionally it may contain one or more subtype identifiers. Here are some examples:
 
 bc. _http._tcp
 _osc._udp
 _osc._udp,_api-v1,_api-v2
 
-That's an awful lot of underscores and punctuation. To make things easier mdns has a helper class, called @RegType@ and some utility functions like @mdns.tcp(...)@ in the example above. Here are some ways to create a @RegType@ object:
+That's an awful lot of underscores and punctuation. To make things easier mdns has a helper class, called @ServiceType@ and some utility functions like @mdns.tcp(...)@ in the example above. Here are some ways to create a @ServiceType@ object:
 
 bc. var r0 = mdns.tcp('http')                 // string form: _http._tcp
   , r1 = mdns.udp('osc', 'api-v1')        // string form: _osc._udp,_api-v1
-  , r2 = new mdns.RegType('http', 'tcp')  // string form: _http._tcp
-  , r3 = mdns.makeRegType('https', 'tcp') // string form: _https._tcp
+  , r2 = new mdns.ServiceType('http', 'tcp')  // string form: _http._tcp
+  , r3 = mdns.makeServiceType('https', 'tcp') // string form: _https._tcp
   ;
 
-Wherever mdns calls for a @regtype@ argument you can pass a @RegType@ object or any of the following representations:
+Wherever mdns calls for a @serviceType@ argument you can pass a @ServiceType@ object or any of the following representations:
 
 bc. var r0 = '_http._tcp,_api-v1'                                          // string form
   , r1 = ['http', 'tcp', 'api-v1']                                     // array form
-  , r2 = {serviceType: 'http', protocol: 'tcp', subtypes: ['api-v1']}  // object form
+  , r2 = {name: 'http', protocol: 'tcp', subtypes: ['api-v1']}  // object form
   ;
 
-In fact all of these are legal constructor arguments for @RegType@. JSON (de-)serialization works too. And finally there is @makeRegType(...)@ which turns any representation into a @RegType@ object unless it already is one.
+In fact all of these are legal constructor arguments for @ServiceType@. JSON (de-)serialization works too. And finally there is @makeServiceType(...)@ which turns any representation into a @ServiceType@ object unless it already is one.
 
 h3(#resolver_sequence). The resolver sequence
 
@@ -101,9 +101,9 @@ An @Advertisement@ publishes information about a service on the local network.
 
 bq(#fairydust). The hack0r takes a good look at the local network, _someones_ local network and sprinkles it with fairydust. He watches the particles being swirled up into vortices originating in the passing network traffic. Datadevils on a parking lot next to the information freeway. Visible entropy. The particles in the vortices are illuminated by open ports and the pale neon light of multicast DNS service advertisements. The hack0r smiles.
 
-h4. new mdns.Advertisement(regtype, port, [options], [callback])
+h4. new mdns.Advertisement(serviceType, port, [options], [callback])
 
-Create a new service advertisement with the given @regtype@ and @port@. The @callback@ has the arguments @(error, info)@ and it is run after successful registration and if an error occurs. If the advertisement is used without a callback an handler should be attached to the @'error'@ event. The @options@ object contains additional arguments to @DNSServiceRegister(...)@:
+Create a new service advertisement with the given @serviceType@ and @port@. The @callback@ has the arguments @(error, info)@ and it is run after successful registration and if an error occurs. If the advertisement is used without a callback an handler should be attached to the @'error'@ event. The @options@ object contains additional arguments to @DNSServiceRegister(...)@:
 
 
 - name := up to 63 bytes of Unicode to be used as the instance name. Think iTunes shared library names. If not given the host name is used instead.
@@ -135,9 +135,9 @@ A @mdns.Browser@ performs the discovery part. It emits events as services appear
 Services are reported for each interface they are reachable on. Partly because that is what dns_sd is doing, partly because anything else would mean making assumptions.  
 
 
-h4. new mdns.Browser(regtype, [options])
+h4. new mdns.Browser(serviceType, [options])
 
-Create a new browser to discover services that match the given @regtype@. @options@ may contain the following properties:
+Create a new browser to discover services that match the given @serviceType@. @options@ may contain the following properties:
 
 - resolverSequence := custom "resolver sequence":#resolver_sequence for this browser
 - interfaceIndex   := one-based index of the network interface the services should be discovered on.
@@ -217,71 +217,71 @@ h4. mdns.rst.dumpInfo()
 
 Print the @info@ object.
 
-h3. mdns.RegType
+h3. mdns.ServiceType
 
-@RegType@ objects represent _regtype_ strings which have been discussed "above":#regtypes. They store the required information in a normalized way and help with formating and parsing of these strings.
+@ServiceType@ objects represent service type strings which have been discussed "above":#service_types. They store the required information in a normalized way and help with formating and parsing of these strings.
 
-h4. new mdns.RegType(...)
+h4. new mdns.ServiceType(...)
 
-Construct a @RegType@ object. When called with one argument the argument may be
+Construct a @ServiceType@ object. When called with one argument the argument may be
 
-* a _regtype_ string
+* a service type string
 * an array, the first element being the type, the second the protocol. Additional items are @subtypes@.
-* an object with properties @serviceType@, @protocol@ and optionally @subtypes@
+* an object with properties @name@, @protocol@ and optionally @subtypes@
 
 All tokens may have a leading underscore. The n-ary form treats its arguments as an array. Copy construction works, too.
 
-h4. regtype.serviceType
+h4. service_type.name
 
 The primary service type.
 
-h4. regtype.protocol
+h4. service_type.protocol
 
 The protocol used by the service. Must be 'tcp' or 'udp'.
 
-h4. regtype.subtypes
+h4. service_type.subtypes
 
 Array of subtypes.
 
-h4. regtype.toString()
+h4. service_type.toString()
 
-Convert the object to a regtype string.
+Convert the object to a service type string.
 
-h4. regtype.fromString(string)
+h4. service_type.fromString(string)
 
-Parse a regtype string and store the values.
+Parse a service type string and store the values.
 
-h4. regtype.toArray()
+h4. service_type.toArray()
 
-Returns the regtype in array form.
+Returns the service type in array form.
 
-h4. regtype.fromArray(array)
+h4. service_type.fromArray(array)
 
 Set values from an array.
 
-h4. regtype.fromJSON(obj)
+h4. service_type.fromJSON(obj)
 
-Set values from object, including other @RegType@ objects.
+Set values from object, including other @ServiceType@ objects.
 
 h3. Functions
 
 h4. mdns.tcp(...)
 
-Expressive way to create a @RegType@ with protocol tcp.
+Expressive way to create a @ServiceType@ with protocol tcp.
 
 h4. mdns.udp(...)
 
-Expressive way to create a @RegType@ with protocol udp.
+Expressive way to create a @ServiceType@ with protocol udp.
 
-h4. mdns.makeRegType(...)
+h4. mdns.makeServiceType(...)
 
-Constructs a @RegType@ from its arguments. If the first and only argument is a @RegType@ it is just returned.
+Constructs a @ServiceType@ from its arguments. If the first and only argument is a @ServiceType@ it is just returned.
 
-h4. mdns.createBrowser(regtype, [options])
+h4. mdns.createBrowser(serviceType, [options])
 
 This factory function constructs a @Browser@.
 
-h4. mdns.createAdvertisement(regtype, port, [options], [callback])
+h4. mdns.createAdvertisement(serviceType, port, [options], [callback])
 
 This factory function constructs an @Advertisement@.
 

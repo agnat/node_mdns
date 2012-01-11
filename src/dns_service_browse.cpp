@@ -12,7 +12,7 @@ static
 void
 OnServiceChanged(DNSServiceRef sdRef, DNSServiceFlags flags, 
         uint32_t interfaceIndex, DNSServiceErrorType errorCode, 
-        const char * serviceName, const char * regtype,
+        const char * serviceName, const char * serviceType,
         const char * replyDomain, void * context)
 {
     if ( ! context) return;
@@ -29,7 +29,7 @@ OnServiceChanged(DNSServiceRef sdRef, DNSServiceFlags flags,
     args[2] = Integer::New(interfaceIndex);
     args[3] = Integer::New(errorCode);
     args[4] = String::New(serviceName);
-    args[5] = String::New(regtype);
+    args[5] = String::New(serviceType);
     args[6] = String::New(replyDomain);
     if (serviceRef->GetContext().IsEmpty()) {
         args[7] = Local<Value>::New(Null());
@@ -65,9 +65,9 @@ DNSServiceBrowse(Arguments const& args) {
     uint32_t interfaceIndex = args[2]->ToInteger()->Int32Value();
 
     if ( ! args[3]->IsString()) {
-        return throwTypeError("argument 4 must be a string (regtype)");
+        return throwTypeError("argument 4 must be a string (service type)");
     }
-    String::Utf8Value regtype(args[3]->ToString());
+    String::Utf8Value serviceType(args[3]->ToString());
 
     bool has_domain = false;
     if ( ! args[4]->IsNull() && ! args[4]->IsUndefined()) {
@@ -87,8 +87,9 @@ DNSServiceBrowse(Arguments const& args) {
         serviceRef->SetContext(args[6]);
     }
 
-    DNSServiceErrorType error = DNSServiceBrowse( & serviceRef->GetServiceRef(), flags,
-            interfaceIndex, *regtype, has_domain ? *domain : NULL, OnServiceChanged, serviceRef);
+    DNSServiceErrorType error = DNSServiceBrowse( & serviceRef->GetServiceRef(),
+            flags, interfaceIndex, *serviceType, has_domain ? *domain : NULL,
+            OnServiceChanged, serviceRef);
 
     if (error != kDNSServiceErr_NoError) {
         return throwMdnsError("DNSServiceBrowse()", error);

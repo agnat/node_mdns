@@ -18,13 +18,13 @@ watcher.callback = function() {
   });
 }
 
-var result_callback = function(sdRef, flags, errorCode, name, regtype, domain, context) {
+var result_callback = function(sdRef, flags, errorCode, name, serviceType, domain, context) {
   assert.strictEqual(sdRef, serviceRef);
   assert.strictEqual(typeof flags, "number");
   assert.strictEqual(typeof errorCode, "number");
   assert.strictEqual(errorCode, mdns.dns_sd.kDNSServiceErr_NoError);
   assert.strictEqual(typeof name, "string");
-  assert.strictEqual(typeof regtype, "string");
+  assert.strictEqual(typeof serviceType, "string");
   assert.strictEqual(typeof domain, "string");
   assert.strictEqual(typeof context, "string");
   assert.strictEqual(context, "foobar");

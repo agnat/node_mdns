@@ -16,8 +16,8 @@ setTimeout(function() { ad2.stop() }, t);
 
 function checkAd(info, name, proto) {
   assert.ok('flags' in info);
-  assert.ok(info.regtype instanceof mdns.RegType);
-  assert.strictEqual(info.regtype.toString(), '_' + name + '._' + proto + '.');
+  assert.ok(info.type instanceof mdns.ServiceType);
+  assert.strictEqual(info.type.toString(), '_' + name + '._' + proto + '.');
 }
 
 var ad3 = mdns.createAdvertisement(['mdns-test3', 'tcp'], 4323, {name: 'foobar'}, function(error, info) {
