@@ -6,7 +6,14 @@
   </head>
   <body>
     <div id="page">
-      <h1>mdns User Guide</h1>
+      <div id="header">
+        <ul id="navigation">
+          <li><a href="./index.html">Home</a></li>
+          <li><a href="./user_guide.html">User Guide</a></li>
+        </ul>
+      </div>
+      <div id="content">
+        <h1>mdns User Guide</h1>
 <p>mdns adds support for multicast <span class="caps">DNS</span> service discovery, also known as zeroconf or bonjour to <a href="/joyent/node">node.js</a>. It provides an object based interface to announce and browse services on the local network.</p>
 <p>Internally, it uses the dns_sd <span class="caps">API</span> which is available on all major platforms. However, that does not mean it is equally well supported on all platforms. See <a href="#compatibility">Compatibility Notes</a> for more information.</p>
 <h2>Quickstart</h2>
@@ -17,42 +24,42 @@
 ad.start();</code></pre>
 <p>A good place to do this is the <code>'listening'</code> event handler of your <span class="caps">HTTP</span> server. Here is how to browse all <span class="caps">HTTP</span> servers on the local network:</p>
 <pre><code>var browser = mdns.createBrowser(mdns.tcp('http'));
-browser.on('serviceUp', function(info) {
-  console.log("service up: ", info);
+browser.on('serviceUp', function(service) {
+  console.log("service up: ", service);
 });
-browser.on('serviceDown', function(info) {
-  console.log("service down: ", info);
+browser.on('serviceDown', function(service) {
+  console.log("service down: ", service);
 });
 browser.start();</code></pre>
-<p>As you can see the browser object is an <code>EventEmitter</code>. For each <span class="caps">HTTP</span> server a &#8216;serviceUp&#8217; event is emitted. Likewise, if a server disappears &#8216;serviceDown&#8217; is send. A &#8216;serviceUp&#8217; info object might look like this:</p>
+<p>As you can see the browser object is an <code>EventEmitter</code>. For each <span class="caps">HTTP</span> server a &#8216;serviceUp&#8217; event is emitted. Likewise, if a server disappears &#8216;serviceDown&#8217; is send. A &#8216;serviceUp&#8217; <code>service</code> object might look like this:</p>
 <pre><code>{ interfaceIndex: 4
-, serviceName: 'somehost'
-, regtype: {serviceType: 'http', protocol: 'tcp', subtypes: []}
+, name: 'somehost'
+, type: {name: 'http', protocol: 'tcp', subtypes: []}
 , replyDomain: 'local.'
 , fullname: 'somehost._http._tcp.local.'
 , host: 'somehost.local.'
 , port: 4321
 , addresses: [ '10.1.1.50', 'fe80::21f:5bff:fecd:ce64' ]
 }</code></pre>
-<h3 id="regtypes">On Regtypes</h3>
-<p><em>regtypes</em> are strings used to resolve service queries. A <em>regtype</em> always contains a service type identifier and information on the protocol. Additionally it may contain one or more subtype identifiers. Here are some examples:</p>
+<h3 id="service_types">On Service Types</h3>
+<p>Service type strings are used to resolve service queries. A service type always contains the service name and the protocol. Additionally it may contain one or more subtype identifiers. Here are some examples:</p>
 <pre><code>_http._tcp
 _osc._udp
 _osc._udp,_api-v1,_api-v2</code></pre>
-<p>That&#8217;s an awful lot of underscores and punctuation. To make things easier mdns has a helper class, called <code>RegType</code> and some utility functions like <code>mdns.tcp(...)</code> in the example above. Here are some ways to create a <code>RegType</code> object:</p>
+<p>That&#8217;s an awful lot of underscores and punctuation. To make things easier mdns has a helper class, called <code>ServiceType</code> and some utility functions like <code>mdns.tcp(...)</code> in the example above. Here are some ways to create a <code>ServiceType</code> object:</p>
 <pre><code>var r0 = mdns.tcp('http')                 // string form: _http._tcp
   , r1 = mdns.udp('osc', 'api-v1')        // string form: _osc._udp,_api-v1
-  , r2 = new mdns.RegType('http', 'tcp')  // string form: _http._tcp
-  , r3 = mdns.makeRegType('https', 'tcp') // string form: _https._tcp
+  , r2 = new mdns.ServiceType('http', 'tcp')  // string form: _http._tcp
+  , r3 = mdns.makeServiceType('https', 'tcp') // string form: _https._tcp
   ;</code></pre>
-<p>Wherever mdns calls for a <code>regtype</code> argument you can pass a <code>RegType</code> object or any of the following representations:</p>
+<p>Wherever mdns calls for a <code>serviceType</code> argument you can pass a <code>ServiceType</code> object or any of the following representations:</p>
 <pre><code>var r0 = '_http._tcp,_api-v1'                                          // string form
   , r1 = ['http', 'tcp', 'api-v1']                                     // array form
-  , r2 = {serviceType: 'http', protocol: 'tcp', subtypes: ['api-v1']}  // object form
+  , r2 = {name: 'http', protocol: 'tcp', subtypes: ['api-v1']}  // object form
   ;</code></pre>
-<p>In fact all of these are legal constructor arguments for <code>RegType</code>. <span class="caps">JSON</span> (de-)serialization works too. And finally there is <code>makeRegType(...)</code> which turns any representation into a <code>RegType</code> object unless it already is one.</p>
+<p>In fact all of these are legal constructor arguments for <code>ServiceType</code>. <span class="caps">JSON</span> (de-)serialization works too. And finally there is <code>makeServiceType(...)</code> which turns any representation into a <code>ServiceType</code> object unless it already is one.</p>
 <h3 id="resolver_sequence">The resolver sequence</h3>
-<p>The <code>Browser</code> object uses a resolver sequence to collect additional information on a discovered service. A resolver sequence is basically just an array of functions. The functions are called in order and receive two arguments: an <code>info</code> object to decorate and a <code>next()</code> function. Each function gathers information on the service, often by invoking asynchronous operations. When done the data is stored on the <code>info</code> object and the next function is invoked by calling <code>next()</code>. This is kind of like web server middleware as it happens between service discovery and emitting the events.</p>
+<p>The <code>Browser</code> object uses a resolver sequence to collect address and port information. A resolver sequence is basically just an array of functions. The functions are called in order and receive two arguments: a <code>service</code> object to decorate and a <code>next()</code> function. Each function gathers information on the service, often by invoking asynchronous operations. When done the data is stored on the <code>service</code> object and the next function is invoked by calling <code>next()</code>. This is kind of like web server middleware as it happens between service discovery and emitting the events.</p>
 <p>Resolver sequence tasks (RSTs) are created by calling factory functions:</p>
 <pre><code>var sequence = [
     mdns.rst.DNSServiceResolve()
@@ -62,11 +69,11 @@ _osc._udp,_api-v1,_api-v2</code></pre>
 <pre><code>var browser = mdns.createBrowser(mdns.tcp('http'), {resolverSequence: sequence});</code></pre>
 <p>And of course you can write your own tasks:</p>
 <pre><code>var MCHammer = function MCHammer() {
-  return function MCHammer(info, next) {
+  return function MCHammer(service, next) {
     console.log('STOP!');
     setTimeout(function() {
         console.log('hammertime...');
-        info.hammertime = new Date();
+        service.hammertime = new Date();
         next();
     }, 2000);
   }
@@ -78,8 +85,8 @@ _osc._udp,_api-v1,_api-v2</code></pre>
 <blockquote id="fairydust">
 <p id="fairydust">The hack0r takes a good look at the local network, <em>someones</em> local network and sprinkles it with fairydust. He watches the particles being swirled up into vortices originating in the passing network traffic. Datadevils on a parking lot next to the information freeway. Visible entropy. The particles in the vortices are illuminated by open ports and the pale neon light of multicast <span class="caps">DNS</span> service advertisements. The hack0r smiles.</p>
 </blockquote>
-<h4>new mdns.Advertisement(regtype, port, [options], [callback])</h4>
-<p>Create a new service advertisement with the given <code>regtype</code> and <code>port</code>. The <code>callback</code> has the arguments <code>(error, info)</code> and it is run after successful registration and if an error occurs. If the advertisement is used without a callback an handler should be attached to the <code>'error'</code> event. The <code>options</code> object contains additional arguments to <code>DNSServiceRegister(...)</code>:</p>
+<h4>new mdns.Advertisement(serviceType, port, [options], [callback])</h4>
+<p>Create a new service advertisement with the given <code>serviceType</code> and <code>port</code>. The <code>callback</code> has the arguments <code>(error, service)</code> and it is run after successful registration and if an error occurs. If the advertisement is used without a callback an handler should be attached to the <code>'error'</code> event. The <code>options</code> object contains additional arguments to <code>DNSServiceRegister(...)</code>:</p>
 <dl>
 	<dt>name</dt>
 	<dd>up to 63 bytes of Unicode to be used as the instance name. Think iTunes shared library names. If not given the host name is used instead.</dd>
@@ -105,8 +112,9 @@ _osc._udp,_api-v1,_api-v2</code></pre>
 <p>Stop the advertisement.</p>
 <h3>mdns.Browser</h3>
 <p>A <code>mdns.Browser</code> performs the discovery part. It emits events as services appear and disappear on the network. For new services it also resolves host name, port and IP addresses. The <a href="#resolver_sequence">resolver sequence</a> is fully user configurable.</p>
-<h4>new mdns.Browser(regtype, [options])</h4>
-<p>Create a new browser to discover services that match the given <code>regtype</code>. <code>options</code> may contain the following properties:</p>
+<p>Services are reported for each interface they are reachable on. Partly because that is what dns_sd is doing, partly because anything else would mean making assumptions.</p>
+<h4>new mdns.Browser(serviceType, [options])</h4>
+<p>Create a new browser to discover services that match the given <code>serviceType</code>. <code>options</code> may contain the following properties:</p>
 <dl>
 	<dt>resolverSequence</dt>
 	<dd>custom <a href="#resolver_sequence">resolver sequence</a> for this browser</dd>
@@ -120,14 +128,14 @@ _osc._udp,_api-v1,_api-v2</code></pre>
 	<dd>see documentation of <code>DNSServiceBrowse(...)</code></dd>
 </dl>
 <h4>Event: &#8216;serviceUp&#8217;</h4>
-<pre><code>function onServiceUp(info) {}</code></pre>
+<pre><code>function onServiceUp(service) {}</code></pre>
 <p>Emitted when a new matching service is discovered.</p>
 <h4>Event: &#8216;serviceDown&#8217;</h4>
-<pre><code>function onServiceDown(info) {}</code></pre>
+<pre><code>function onServiceDown(service) {}</code></pre>
 <p>Emitted when a matching service disappears.</p>
 <h4>Event: &#8216;serviceChanged&#8217;</h4>
-<pre><code>function onServiceChanged(info) {}</code></pre>
-<p>Emitted when a matching service either appears or disappears. It is a new service if <code>info.flags</code> has <code>mdns.kDNSServiceFlagsAdd</code> set.</p>
+<pre><code>function onServiceChanged(service) {}</code></pre>
+<p>Emitted when a matching service either appears or disappears. It is a new service if <code>service.flags</code> has <code>mdns.kDNSServiceFlagsAdd</code> set.</p>
 <h4>Event: &#8216;error&#8217;</h4>
 <pre><code>function onError(exception) {}</code></pre>
 <p>Emitted on asynchronous errors.</p>
@@ -158,45 +166,47 @@ _osc._udp,_api-v1,_api-v2</code></pre>
 <p>Filters the addresses to be unique.</p>
 <h4>mdns.rst.filterAddresses(f)</h4>
 <p>Filters the addresses by invoking <code>f()</code> on each address. If <code>f()</code> returns false the address is dropped.</p>
-<h4>mdns.rst.dumpInfo()</h4>
-<p>Print the <code>info</code> object.</p>
-<h3>mdns.RegType</h3>
-<p><code>RegType</code> objects represent <em>regtype</em> strings which have been discussed <a href="#regtypes">above</a>. They store the required information in a normalized way and help with formating and parsing of these strings.</p>
-<h4>new mdns.RegType(&#8230;)</h4>
-<p>Construct a <code>RegType</code> object. When called with one argument the argument may be</p>
+<h4>mdns.rst.logService()</h4>
+<p>Print the <code>service</code> object.</p>
+<h3>mdns.ServiceType</h3>
+<p><code>ServiceType</code> objects represent service type strings which have been discussed <a href="#service_types">above</a>. They store the required information in a normalized way and help with formating and parsing of these strings.</p>
+<h4>new mdns.ServiceType(&#8230;)</h4>
+<p>Construct a <code>ServiceType</code> object. When called with one argument the argument may be</p>
 <ul>
-	<li>a <em>regtype</em> string</li>
+	<li>a service type string</li>
 	<li>an array, the first element being the type, the second the protocol. Additional items are <code>subtypes</code>.</li>
-	<li>an object with properties <code>serviceType</code>, <code>protocol</code> and optionally <code>subtypes</code></li>
+	<li>an object with properties <code>name</code>, <code>protocol</code> and optionally <code>subtypes</code></li>
 </ul>
 <p>All tokens may have a leading underscore. The n-ary form treats its arguments as an array. Copy construction works, too.</p>
-<h4>regtype.serviceType</h4>
+<h4>service_type.name</h4>
 <p>The primary service type.</p>
-<h4>regtype.protocol</h4>
+<h4>service_type.protocol</h4>
 <p>The protocol used by the service. Must be &#8216;tcp&#8217; or &#8216;udp&#8217;.</p>
-<h4>regtype.subtypes</h4>
+<h4>service_type.subtypes</h4>
 <p>Array of subtypes.</p>
-<h4>regtype.toString()</h4>
-<p>Convert the object to a regtype string.</p>
-<h4>regtype.fromString(string)</h4>
-<p>Parse a regtype string and store the values.</p>
-<h4>regtype.toArray()</h4>
-<p>Returns the regtype in array form.</p>
-<h4>regtype.fromArray(array)</h4>
+<h4>service_type.toString()</h4>
+<p>Convert the object to a service type string.</p>
+<h4>service_type.fromString(string)</h4>
+<p>Parse a service type string and store the values.</p>
+<h4>service_type.toArray()</h4>
+<p>Returns the service type in array form.</p>
+<h4>service_type.fromArray(array)</h4>
 <p>Set values from an array.</p>
-<h4>regtype.fromJSON(obj)</h4>
-<p>Set values from object, including other <code>RegType</code> objects.</p>
+<h4>service_type.fromJSON(obj)</h4>
+<p>Set values from object, including other <code>ServiceType</code> objects.</p>
 <h3>Functions</h3>
 <h4>mdns.tcp(&#8230;)</h4>
-<p>Expressive way to create a <code>RegType</code> with protocol tcp.</p>
+<p>Expressive way to create a <code>ServiceType</code> with protocol tcp.</p>
 <h4>mdns.udp(&#8230;)</h4>
-<p>Expressive way to create a <code>RegType</code> with protocol udp.</p>
-<h4>mdns.makeRegType(&#8230;)</h4>
-<p>Constructs a <code>RegType</code> from its arguments. If the first and only argument is a <code>RegType</code> it is just returned.</p>
-<h4>mdns.createBrowser(regtype, [options])</h4>
+<p>Expressive way to create a <code>ServiceType</code> with protocol udp.</p>
+<h4>mdns.makeServiceType(&#8230;)</h4>
+<p>Constructs a <code>ServiceType</code> from its arguments. If the first and only argument is a <code>ServiceType</code> it is just returned.</p>
+<h4>mdns.createBrowser(serviceType, [options])</h4>
 <p>This factory function constructs a <code>Browser</code>.</p>
-<h4>mdns.createAdvertisement(regtype, port, [options], [callback])</h4>
+<h4>mdns.createAdvertisement(serviceType, port, [options], [callback])</h4>
 <p>This factory function constructs an <code>Advertisement</code>.</p>
+<h4>mdns.browseThemAll(options)</h4>
+<p>Creates a browser initialized with the wildcard service type. When started the browser emits events for each <em>service type</em> instead of each service instance. The <code>service</code> objects have no <code>name</code> property. By default the browser has an empty resolver sequence. You still can set one using the <code>options</code> object.</p>
 <h3>Constants</h3>
 <p>All dns_sd constants (supported by the implementation) are exposed on the <code>mdns</code> object. Refer to the <a href="http://developer.apple.com/library/mac/#documentation/Networking/Reference/DNSServiceDiscovery_CRef/dns_sd_h/">dns_sd <span class="caps">API</span> documentation</a> for a list.</p>
 <h3>mdns.dns_sd</h3>
@@ -212,6 +222,7 @@ _osc._udp,_api-v1,_api-v2</code></pre>
 	<li><a href="http://developer.apple.com/library/mac/#documentation/Networking/Conceptual/dns_discovery_api/Introduction.html"><span class="caps">DNS</span> Service Discovery Programming Guide</a></li>
 </ul>
 
+      </div>
     </div>
     <a href="http://github.com/agnat/node_mdns"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/edc6dae7a1079163caf7f17c60495bbb6d027c93/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub"></a>
   </body>

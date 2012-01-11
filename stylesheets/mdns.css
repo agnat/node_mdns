@@ -18,6 +18,19 @@ a:visited {
   max-width: 50em;
   padding: 6em;
 }
+#navigation {
+  margin: 0;
+  padding: 0;
+  float: right;
+}
+#navigation li {
+  display: inline;
+  margin: 0;
+  padding: 0;
+}
+#header {
+  clear: both;
+}
 pre {
   padding: 1.6em 1.6em 1.6em 1.6em;
   background: #f8f8f8;
