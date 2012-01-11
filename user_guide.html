@@ -17,6 +17,7 @@
 <p>mdns adds support for multicast <span class="caps">DNS</span> service discovery, also known as zeroconf or bonjour to <a href="/joyent/node">node.js</a>. It provides an object based interface to announce and browse services on the local network.</p>
 <p>Internally, it uses the dns_sd <span class="caps">API</span> which is available on all major platforms. However, that does not mean it is equally well supported on all platforms. See <a href="#compatibility">Compatibility Notes</a> for more information.</p>
 <h2>Quickstart</h2>
+<p>Before we begin go to the internet and get you a <em>bonjour browser</em> so that you can all the service discovery.</p>
 <p>Multicast <span class="caps">DNS</span> service discovery provides a way to announce and discover services on the local network. Here is how to announce a <span class="caps">HTTP</span> server running on port 4321:</p>
 <pre><code>var mdns = require('mdns')
   , ad = mdns.createAdvertisement(mdns.tcp('http'), 4321)
@@ -31,7 +32,7 @@ browser.on('serviceDown', function(service) {
   console.log("service down: ", service);
 });
 browser.start();</code></pre>
-<p>As you can see the browser object is an <code>EventEmitter</code>. For each <span class="caps">HTTP</span> server a &#8216;serviceUp&#8217; event is emitted. Likewise, if a server disappears &#8216;serviceDown&#8217; is send. A &#8216;serviceUp&#8217; <code>service</code> object might look like this:</p>
+<p>As you can see the browser object is an <code>EventEmitter</code>. For each <span class="caps">HTTP</span> server a <code>'serviceUp'</code> event is emitted. Likewise, if a server disappears <code>'serviceDown'</code> is send. The <code>service</code> object of a <code>'serviceUp'</code> event might look like this:</p>
 <pre><code>{ interfaceIndex: 4
 , name: 'somehost'
 , type: {name: 'http', protocol: 'tcp', subtypes: []}
@@ -41,20 +42,20 @@ browser.start();</code></pre>
 , port: 4321
 , addresses: [ '10.1.1.50', 'fe80::21f:5bff:fecd:ce64' ]
 }</code></pre>
-<h3 id="service_types">On Service Types</h3>
-<p>Service type strings are used to resolve service queries. A service type always contains the service name and the protocol. Additionally it may contain one or more subtype identifiers. Here are some examples:</p>
+<h3 id="service_types">On service types</h3>
+<p>Service type identifiers are strings used to match services to service queries. A service type always contains the service name and the protocol. Additionally it may contain one or more subtype identifiers. Here are some examples:</p>
 <pre><code>_http._tcp
 _osc._udp
 _osc._udp,_api-v1,_api-v2</code></pre>
 <p>That&#8217;s an awful lot of underscores and punctuation. To make things easier mdns has a helper class, called <code>ServiceType</code> and some utility functions like <code>mdns.tcp(...)</code> in the example above. Here are some ways to create a <code>ServiceType</code> object:</p>
-<pre><code>var r0 = mdns.tcp('http')                 // string form: _http._tcp
-  , r1 = mdns.udp('osc', 'api-v1')        // string form: _osc._udp,_api-v1
+<pre><code>var r0 = mdns.tcp('http')                     // string form: _http._tcp
+  , r1 = mdns.udp('osc', 'api-v1')            // string form: _osc._udp,_api-v1
   , r2 = new mdns.ServiceType('http', 'tcp')  // string form: _http._tcp
   , r3 = mdns.makeServiceType('https', 'tcp') // string form: _https._tcp
   ;</code></pre>
 <p>Wherever mdns calls for a <code>serviceType</code> argument you can pass a <code>ServiceType</code> object or any of the following representations:</p>
-<pre><code>var r0 = '_http._tcp,_api-v1'                                          // string form
-  , r1 = ['http', 'tcp', 'api-v1']                                     // array form
+<pre><code>var r0 = '_http._tcp,_api-v1'                                   // string form
+  , r1 = ['http', 'tcp', 'api-v1']                              // array form
   , r2 = {name: 'http', protocol: 'tcp', subtypes: ['api-v1']}  // object form
   ;</code></pre>
 <p>In fact all of these are legal constructor arguments for <code>ServiceType</code>. <span class="caps">JSON</span> (de-)serialization works too. And finally there is <code>makeServiceType(...)</code> which turns any representation into a <code>ServiceType</code> object unless it already is one.</p>
@@ -169,11 +170,11 @@ _osc._udp,_api-v1,_api-v2</code></pre>
 <h4>mdns.rst.logService()</h4>
 <p>Print the <code>service</code> object.</p>
 <h3>mdns.ServiceType</h3>
-<p><code>ServiceType</code> objects represent service type strings which have been discussed <a href="#service_types">above</a>. They store the required information in a normalized way and help with formating and parsing of these strings.</p>
+<p><code>ServiceType</code> objects represent service type identifiers which have been discussed <a href="#service_types">above</a>. They store the required information in a normalized way and help with formating and parsing of these strings.</p>
 <h4>new mdns.ServiceType(&#8230;)</h4>
 <p>Construct a <code>ServiceType</code> object. When called with one argument the argument may be</p>
 <ul>
-	<li>a service type string</li>
+	<li>a service type identifier</li>
 	<li>an array, the first element being the type, the second the protocol. Additional items are <code>subtypes</code>.</li>
 	<li>an object with properties <code>name</code>, <code>protocol</code> and optionally <code>subtypes</code></li>
 </ul>
@@ -185,9 +186,9 @@ _osc._udp,_api-v1,_api-v2</code></pre>
 <h4>service_type.subtypes</h4>
 <p>Array of subtypes.</p>
 <h4>service_type.toString()</h4>
-<p>Convert the object to a service type string.</p>
+<p>Convert the object to a service type identifier.</p>
 <h4>service_type.fromString(string)</h4>
-<p>Parse a service type string and store the values.</p>
+<p>Parse a service type identifier and store the values.</p>
 <h4>service_type.toArray()</h4>
 <p>Returns the service type in array form.</p>
 <h4>service_type.fromArray(array)</h4>
