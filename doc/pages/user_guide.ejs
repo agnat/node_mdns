@@ -132,6 +132,9 @@ h3. mdns.Browser
 
 A @mdns.Browser@ performs the discovery part. It emits events as services appear and disappear on the network. For new services it also resolves host name, port and IP addresses. The "resolver sequence":#resolver_sequence is fully user configurable.
 
+Services are reported for each interface they are reachable on. Partly because that is what dns_sd is doing, partly because anything else would mean making assumptions.  
+
+
 h4. new mdns.Browser(regtype, [options])
 
 Create a new browser to discover services that match the given @regtype@. @options@ may contain the following properties:
@@ -281,6 +284,10 @@ This factory function constructs a @Browser@.
 h4. mdns.createAdvertisement(regtype, port, [options], [callback])
 
 This factory function constructs an @Advertisement@.
+
+h4. mdns.browseThemAll(options)
+
+Creates a browser initialized with the wildcard service type. When started the browser emits events for each _service type_ instead of each service instance. The @info@ objects have no @name@ property. By default the browser has an empty resolver sequence. You still can set one using the @options@ object.
 
 h3. Constants
 
