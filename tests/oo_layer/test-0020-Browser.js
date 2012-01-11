@@ -53,7 +53,7 @@ browser.on('serviceChanged', function(info, flags) {
 
 var upCount = 0;
 browser.on('serviceUp', function(info) {
-  //console.log("up:", info);
+  console.log("up:", info);
   assert.strictEqual(typeof info.flags, 'number');
   assert.strictEqual(typeof info.interfaceIndex, 'number');
   assert.strictEqual(typeof info.serviceName, 'string');
