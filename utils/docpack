@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+// disgusting ... but works for now ...
+
 var path   = require('path')
   , fs     = require('fs')
   , util   = require('util')
@@ -66,9 +68,8 @@ function render_pages(package, layout, next) {
       compile_stylesheets(_j(srcdir, s), _j(dstdir, s), this.parallel())
       copy_dir(_j(srcdir, i), _j(dstdir, i), this.parallel());
       copy_dir(_j(srcdir, js), _j(dstdir, js), this.parallel());
-
     }
-  , function(error) { next(error) }
+  , next
   )
 }
 
@@ -80,13 +81,17 @@ function render_html_pages(srcdir, dstdir, package, layout, next) {
       }
     , function(error, srcfiles) {
         if (error) throw error;
+        if (srcfiles.length === 0) {
+          next();
+          return;
+        }
         var self = this;
         srcfiles.forEach(function(src) {
           var dst = _j(dstdir, path.basename(src, '.ejs') + '.html');
           render_html_page(src, dst, package, layout, self.parallel());
         });
       }
-    , function(error) { next(error); }
+    , next
   );
 }
 
@@ -111,12 +116,16 @@ function compile_stylesheets(srcdir, dstdir, next) {
     , function(error, srcfiles) {
         if (error) throw error;
         var self = this;
+        if (srcfiles.length === 0) {
+          next();
+          return;
+        }
         srcfiles.forEach(function(src) {
           var dst = _j(dstdir, path.basename(src, '.less') + '.css');
           compile_less(src, dst, {}, self.parallel());
         });
       }
-  , function(error) { next(error); }
+    , next
   );
 }
 
@@ -142,14 +151,16 @@ function copy_dir(srcdir, dstdir, next) {
   , function(error, srcfiles) {
       if (error) throw error;
       var self = this;
+      if (srcfiles.length === 0) {
+        next();
+        return;
+      }
       srcfiles.forEach(function(src) {
         var dst = _j(dstdir, path.basename(src));
         copy(src, dst, self.parallel());
       });
     }
-  , function(error) {
-      next(error);
-    }
+  , next
   );
 }
 
