@@ -18,18 +18,18 @@ ad.start();
 A good place to do this is the @'listening'@ event handler of your HTTP server. Here is how to browse all HTTP servers on the local network:
 
 bc. var browser = mdns.createBrowser(mdns.tcp('http'));
-browser.on('serviceUp', function(info) {
-  console.log("service up: ", info);
+browser.on('serviceUp', function(service) {
+  console.log("service up: ", service);
 });
-browser.on('serviceDown', function(info) {
-  console.log("service down: ", info);
+browser.on('serviceDown', function(service) {
+  console.log("service down: ", service);
 });
 browser.start();
 
-As you can see the browser object is an @EventEmitter@. For each HTTP server a 'serviceUp' event is emitted. Likewise, if a server disappears 'serviceDown' is send. A 'serviceUp' info object might look like this:
+As you can see the browser object is an @EventEmitter@. For each HTTP server a 'serviceUp' event is emitted. Likewise, if a server disappears 'serviceDown' is send. A 'serviceUp' @service@ object might look like this:
 
 bc. { interfaceIndex: 4
-, serviceName: 'somehost'
+, name: 'somehost'
 , type: {name: 'http', protocol: 'tcp', subtypes: []}
 , replyDomain: 'local.'
 , fullname: 'somehost._http._tcp.local.'
@@ -65,7 +65,7 @@ In fact all of these are legal constructor arguments for @ServiceType@. JSON (de
 
 h3(#resolver_sequence). The resolver sequence
 
-The @Browser@ object uses a resolver sequence to collect additional information on a discovered service. A resolver sequence is basically just an array of functions. The functions are called in order and receive two arguments: an @info@ object to decorate and a @next()@ function. Each function gathers information on the service, often by invoking asynchronous operations. When done the data is stored on the @info@ object and the next function is invoked by calling @next()@. This is kind of like web server middleware as it happens between service discovery and emitting the events.
+The @Browser@ object uses a resolver sequence to collect address and port information. A resolver sequence is basically just an array of functions. The functions are called in order and receive two arguments: a @service@ object to decorate and a @next()@ function. Each function gathers information on the service, often by invoking asynchronous operations. When done the data is stored on the @service@ object and the next function is invoked by calling @next()@. This is kind of like web server middleware as it happens between service discovery and emitting the events.
 
 Resolver sequence tasks (RSTs) are created by calling factory functions:
 
@@ -81,11 +81,11 @@ bc. var browser = mdns.createBrowser(mdns.tcp('http'), {resolverSequence: sequen
 And of course you can write your own tasks:
 
 bc. var MCHammer = function MCHammer() {
-  return function MCHammer(info, next) {
+  return function MCHammer(service, next) {
     console.log('STOP!');
     setTimeout(function() {
         console.log('hammertime...');
-        info.hammertime = new Date();
+        service.hammertime = new Date();
         next();
     }, 2000);
   }
@@ -103,7 +103,7 @@ bq(#fairydust). The hack0r takes a good look at the local network, _someones_ lo
 
 h4. new mdns.Advertisement(serviceType, port, [options], [callback])
 
-Create a new service advertisement with the given @serviceType@ and @port@. The @callback@ has the arguments @(error, info)@ and it is run after successful registration and if an error occurs. If the advertisement is used without a callback an handler should be attached to the @'error'@ event. The @options@ object contains additional arguments to @DNSServiceRegister(...)@:
+Create a new service advertisement with the given @serviceType@ and @port@. The @callback@ has the arguments @(error, service)@ and it is run after successful registration and if an error occurs. If the advertisement is used without a callback an handler should be attached to the @'error'@ event. The @options@ object contains additional arguments to @DNSServiceRegister(...)@:
 
 
 - name := up to 63 bytes of Unicode to be used as the instance name. Think iTunes shared library names. If not given the host name is used instead.
@@ -147,21 +147,21 @@ Create a new browser to discover services that match the given @serviceType@. @o
 
 h4. Event: 'serviceUp'
 
-bc. function onServiceUp(info) {}
+bc. function onServiceUp(service) {}
 
 Emitted when a new matching service is discovered.
 
 h4. Event: 'serviceDown'
 
-bc. function onServiceDown(info) {}
+bc. function onServiceDown(service) {}
 
 Emitted when a matching service disappears.
 
 h4. Event: 'serviceChanged'
 
-bc. function onServiceChanged(info) {}
+bc. function onServiceChanged(service) {}
 
-Emitted when a matching service either appears or disappears. It is a new service if @info.flags@ has @mdns.kDNSServiceFlagsAdd@ set.
+Emitted when a matching service either appears or disappears. It is a new service if @service.flags@ has @mdns.kDNSServiceFlagsAdd@ set.
 
 h4. Event: 'error'
 
@@ -213,9 +213,9 @@ h4. mdns.rst.filterAddresses(f)
 
 Filters the addresses by invoking @f()@ on each address. If @f()@ returns false the address is dropped.
 
-h4. mdns.rst.dumpInfo()
+h4. mdns.rst.logService()
 
-Print the @info@ object.
+Print the @service@ object.
 
 h3. mdns.ServiceType
 
@@ -287,7 +287,7 @@ This factory function constructs an @Advertisement@.
 
 h4. mdns.browseThemAll(options)
 
-Creates a browser initialized with the wildcard service type. When started the browser emits events for each _service type_ instead of each service instance. The @info@ objects have no @name@ property. By default the browser has an empty resolver sequence. You still can set one using the @options@ object.
+Creates a browser initialized with the wildcard service type. When started the browser emits events for each _service type_ instead of each service instance. The @service@ objects have no @name@ property. By default the browser has an empty resolver sequence. You still can set one using the @options@ object.
 
 h3. Constants
 

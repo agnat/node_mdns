@@ -26,64 +26,64 @@ function stopBrowserIfDone() {
 }
 
 var changedCount = 0;
-browser.on('serviceChanged', function(info, flags) {
-  //console.log("changed:", info);
-  assert.strictEqual(typeof info.flags, 'number');
+browser.on('serviceChanged', function(service, flags) {
+  //console.log("changed:", service);
+  assert.strictEqual(typeof service.flags, 'number');
   if (changedCount === 0) {
-    assert.ok(info.flags & mdns.kDNSServiceFlagsAdd);
-    assert.strictEqual(typeof info.fullname, 'string');
-    assert.strictEqual(typeof info.host, 'string');
-    assert.strictEqual(typeof info.port, 'number');
-    assert.strictEqual(info.port, 4321);
+    assert.ok(service.flags & mdns.kDNSServiceFlagsAdd);
+    assert.strictEqual(typeof service.fullname, 'string');
+    assert.strictEqual(typeof service.host, 'string');
+    assert.strictEqual(typeof service.port, 'number');
+    assert.strictEqual(service.port, 4321);
 
-    assert.ok('addresses' in info);
-    assert.ok(Array.isArray(info.addresses));
-    assert.ok(info.addresses.length > 0);
+    assert.ok('addresses' in service);
+    assert.ok(Array.isArray(service.addresses));
+    assert.ok(service.addresses.length > 0);
   }
-  assert.strictEqual(typeof info.interfaceIndex, 'number');
-  assert.strictEqual(typeof info.serviceName, 'string');
-  assert.ok(info.type instanceof mdns.ServiceType);
-  assert.strictEqual('' + info.type, '_node-mdns-test._tcp.');
-  assert.strictEqual(typeof info.replyDomain, 'string');
-  assert.strictEqual(info.replyDomain, 'local.');
+  assert.strictEqual(typeof service.interfaceIndex, 'number');
+  assert.strictEqual(typeof service.name, 'string');
+  assert.ok(service.type instanceof mdns.ServiceType);
+  assert.strictEqual('' + service.type, '_node-mdns-test._tcp.');
+  assert.strictEqual(typeof service.replyDomain, 'string');
+  assert.strictEqual(service.replyDomain, 'local.');
 
   changedCount += 1;
   stopBrowserIfDone();
 });
 
 var upCount = 0;
-browser.on('serviceUp', function(info) {
-  console.log("up:", info);
-  assert.strictEqual(typeof info.flags, 'number');
-  assert.strictEqual(typeof info.interfaceIndex, 'number');
-  assert.strictEqual(typeof info.serviceName, 'string');
-  assert.ok(info.type instanceof mdns.ServiceType);
-  assert.strictEqual('' + info.type, '_node-mdns-test._tcp.');
-  assert.strictEqual(typeof info.replyDomain, 'string');
-  assert.strictEqual(info.replyDomain, 'local.');
+browser.on('serviceUp', function(service) {
+  console.log("up:", service);
+  assert.strictEqual(typeof service.flags, 'number');
+  assert.strictEqual(typeof service.interfaceIndex, 'number');
+  assert.strictEqual(typeof service.name, 'string');
+  assert.ok(service.type instanceof mdns.ServiceType);
+  assert.strictEqual('' + service.type, '_node-mdns-test._tcp.');
+  assert.strictEqual(typeof service.replyDomain, 'string');
+  assert.strictEqual(service.replyDomain, 'local.');
 
-  assert.strictEqual(typeof info.fullname, 'string');
-  assert.strictEqual(typeof info.host, 'string');
-  assert.strictEqual(typeof info.port, 'number');
-  assert.strictEqual(info.port, 4321);
+  assert.strictEqual(typeof service.fullname, 'string');
+  assert.strictEqual(typeof service.host, 'string');
+  assert.strictEqual(typeof service.port, 'number');
+  assert.strictEqual(service.port, 4321);
 
-  assert.ok('addresses' in info);
-  assert.ok(Array.isArray(info.addresses));
-  assert.ok(info.addresses.length > 0);
+  assert.ok('addresses' in service);
+  assert.ok(Array.isArray(service.addresses));
+  assert.ok(service.addresses.length > 0);
 
   upCount += 1;
   stopBrowserIfDone();
 });
 
 var downCount = 0;
-browser.on('serviceDown', function(info) {
-  assert.strictEqual(typeof info.flags, 'number');
-  assert.strictEqual(typeof info.interfaceIndex, 'number');
-  assert.strictEqual(typeof info.serviceName, 'string');
-  assert.ok(info.type instanceof mdns.ServiceType);
-  assert.strictEqual('' + info.type, '_node-mdns-test._tcp.');
-  assert.strictEqual(typeof info.replyDomain, 'string');
-  assert.strictEqual(info.replyDomain, 'local.');
+browser.on('serviceDown', function(service) {
+  assert.strictEqual(typeof service.flags, 'number');
+  assert.strictEqual(typeof service.interfaceIndex, 'number');
+  assert.strictEqual(typeof service.name, 'string');
+  assert.ok(service.type instanceof mdns.ServiceType);
+  assert.strictEqual('' + service.type, '_node-mdns-test._tcp.');
+  assert.strictEqual(typeof service.replyDomain, 'string');
+  assert.strictEqual(service.replyDomain, 'local.');
 
   downCount += 1;
   stopBrowserIfDone();
@@ -97,7 +97,7 @@ process.on('exit', function() {
   assert.ok(downCount >= 1);
 });
 
-var ad = mdns.createAdvertisement(mdns.tcp('node-mdns-test'), 4321, function(err, info, flags) {
+var ad = mdns.createAdvertisement(mdns.tcp('node-mdns-test'), 4321, function(err, service, flags) {
     if (err) throw err;
     setTimeout(function() { ad.stop() }, 500);
 });

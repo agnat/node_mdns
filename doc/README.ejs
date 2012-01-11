@@ -20,11 +20,11 @@ ad.start();
 
 // watch all http servers
 var browser = mdns.createBrowser(mdns.tcp('http'));
-browser.on('serviceUp', function(info) {
-  console.log("service up: ", info);
+browser.on('serviceUp', function(service) {
+  console.log("service up: ", service);
 });
-browser.on('serviceDown', function(info) {
-  console.log("service down: ", info);
+browser.on('serviceDown', function(service) {
+  console.log("service down: ", service);
 });
 browser.start();
 
