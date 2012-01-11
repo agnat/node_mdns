@@ -8,6 +8,8 @@ Internally, it uses the dns_sd API which is available on all major platforms. Ho
 
 h2. Quickstart
 
+Before we begin go to the internet and get you a _bonjour browser_ so that you can all the service discovery.
+
 Multicast DNS service discovery provides a way to announce and discover services on the local network. Here is how to announce a HTTP server running on port 4321:
 
 bc. var mdns = require('mdns')
@@ -26,7 +28,7 @@ browser.on('serviceDown', function(service) {
 });
 browser.start();
 
-As you can see the browser object is an @EventEmitter@. For each HTTP server a 'serviceUp' event is emitted. Likewise, if a server disappears 'serviceDown' is send. A 'serviceUp' @service@ object might look like this:
+As you can see the browser object is an @EventEmitter@. For each HTTP server a @'serviceUp'@ event is emitted. Likewise, if a server disappears @'serviceDown'@ is send. The @service@ object of a @'serviceUp'@ event might look like this:
 
 bc. { interfaceIndex: 4
 , name: 'somehost'
@@ -38,9 +40,9 @@ bc. { interfaceIndex: 4
 , addresses: [ '10.1.1.50', 'fe80::21f:5bff:fecd:ce64' ]
 }
 
-h3(#service_types). On Service Types
+h3(#service_types). On service types
 
-Service type strings are used to resolve service queries. A service type always contains the service name and the protocol. Additionally it may contain one or more subtype identifiers. Here are some examples:
+Service type identifiers are strings used to match services to service queries. A service type always contains the service name and the protocol. Additionally it may contain one or more subtype identifiers. Here are some examples:
 
 bc. _http._tcp
 _osc._udp
@@ -48,16 +50,16 @@ _osc._udp,_api-v1,_api-v2
 
 That's an awful lot of underscores and punctuation. To make things easier mdns has a helper class, called @ServiceType@ and some utility functions like @mdns.tcp(...)@ in the example above. Here are some ways to create a @ServiceType@ object:
 
-bc. var r0 = mdns.tcp('http')                 // string form: _http._tcp
-  , r1 = mdns.udp('osc', 'api-v1')        // string form: _osc._udp,_api-v1
+bc. var r0 = mdns.tcp('http')                     // string form: _http._tcp
+  , r1 = mdns.udp('osc', 'api-v1')            // string form: _osc._udp,_api-v1
   , r2 = new mdns.ServiceType('http', 'tcp')  // string form: _http._tcp
   , r3 = mdns.makeServiceType('https', 'tcp') // string form: _https._tcp
   ;
 
 Wherever mdns calls for a @serviceType@ argument you can pass a @ServiceType@ object or any of the following representations:
 
-bc. var r0 = '_http._tcp,_api-v1'                                          // string form
-  , r1 = ['http', 'tcp', 'api-v1']                                     // array form
+bc. var r0 = '_http._tcp,_api-v1'                                   // string form
+  , r1 = ['http', 'tcp', 'api-v1']                              // array form
   , r2 = {name: 'http', protocol: 'tcp', subtypes: ['api-v1']}  // object form
   ;
 
@@ -105,7 +107,6 @@ h4. new mdns.Advertisement(serviceType, port, [options], [callback])
 
 Create a new service advertisement with the given @serviceType@ and @port@. The @callback@ has the arguments @(error, service)@ and it is run after successful registration and if an error occurs. If the advertisement is used without a callback an handler should be attached to the @'error'@ event. The @options@ object contains additional arguments to @DNSServiceRegister(...)@:
 
-
 - name := up to 63 bytes of Unicode to be used as the instance name. Think iTunes shared library names. If not given the host name is used instead.
 - interfaceIndex   := one-based index of the network interface the service should be announced on.
 - txtRecord        := is interesting... but not yet implemented. You can pass a @Buffer@ object but unfortunately there is no way to create it.
@@ -133,7 +134,6 @@ h3. mdns.Browser
 A @mdns.Browser@ performs the discovery part. It emits events as services appear and disappear on the network. For new services it also resolves host name, port and IP addresses. The "resolver sequence":#resolver_sequence is fully user configurable.
 
 Services are reported for each interface they are reachable on. Partly because that is what dns_sd is doing, partly because anything else would mean making assumptions.  
-
 
 h4. new mdns.Browser(serviceType, [options])
 
@@ -219,13 +219,13 @@ Print the @service@ object.
 
 h3. mdns.ServiceType
 
-@ServiceType@ objects represent service type strings which have been discussed "above":#service_types. They store the required information in a normalized way and help with formating and parsing of these strings.
+@ServiceType@ objects represent service type identifiers which have been discussed "above":#service_types. They store the required information in a normalized way and help with formating and parsing of these strings.
 
 h4. new mdns.ServiceType(...)
 
 Construct a @ServiceType@ object. When called with one argument the argument may be
 
-* a service type string
+* a service type identifier
 * an array, the first element being the type, the second the protocol. Additional items are @subtypes@.
 * an object with properties @name@, @protocol@ and optionally @subtypes@
 
@@ -245,11 +245,11 @@ Array of subtypes.
 
 h4. service_type.toString()
 
-Convert the object to a service type string.
+Convert the object to a service type identifier.
 
 h4. service_type.fromString(string)
 
-Parse a service type string and store the values.
+Parse a service type identifier and store the values.
 
 h4. service_type.toArray()
 
