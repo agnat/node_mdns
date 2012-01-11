@@ -23,7 +23,6 @@ var outd  = process.argv[2]
   , docd  = _j(rootd, 'doc')
   ;
 
-
 step(
   function prerequisites() {
     fs.readFile(_j(rootd, 'package.json'), this.parallel());
