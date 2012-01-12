@@ -16,8 +16,9 @@
         <h1>mdns User Guide</h1>
 <p>mdns adds support for multicast <span class="caps">DNS</span> service discovery, also known as zeroconf or bonjour to <a href="/joyent/node">node.js</a>. It provides an object based interface to announce and browse services on the local network.</p>
 <p>Internally, it uses the dns_sd <span class="caps">API</span> which is available on all major platforms. However, that does not mean it is equally well supported on all platforms. See <a href="#compatibility">Compatibility Notes</a> for more information.</p>
-<h2>Quickstart</h2>
-<p>Before we begin go to the internet and get you a <em>bonjour browser</em> so that you can all the service discovery.</p>
+<p>The <span class="caps">API</span> is documented in the <a href="#reference">reference section</a> below.</p>
+<h3>Tutorial</h3>
+<p>Before we begin go to the internet and get you a <em>bonjour browser</em> so that you can <em><span class="caps">ALL</span></em> the service discovery.</p>
 <p>Multicast <span class="caps">DNS</span> service discovery provides a way to announce and discover services on the local network. Here is how to announce a <span class="caps">HTTP</span> server running on port 4321:</p>
 <pre><code>var mdns = require('mdns')
   , ad = mdns.createAdvertisement(mdns.tcp('http'), 4321)
@@ -42,6 +43,8 @@ browser.start();</code></pre>
 , port: 4321
 , addresses: [ '10.1.1.50', 'fe80::21f:5bff:fecd:ce64' ]
 }</code></pre>
+<p>In fact you may receive more than one event per service instance. That is because dns_sd reports each available network path to a service. Also, note that you might get more (or less) addresses. This depends on the network topology. If you have both a wired and a wireless connection to the same network you will see both addresses on both interfaces (not including IPv6 addresses).<br />
+The number of IP addresses also depends on the platform and the resolver being used. More on this later.</p>
 <h3 id="service_types">On service types</h3>
 <p>Service type identifiers are strings used to match services to service queries. A service type always contains the service name and the protocol. Additionally it may contain one or more subtype identifiers. Here are some examples:</p>
 <pre><code>_http._tcp
@@ -79,7 +82,7 @@ _osc._udp,_api-v1,_api-v2</code></pre>
     }, 2000);
   }
 }</code></pre>
-<h2>Reference</h2>
+<h2 id="reference">Reference</h2>
 <p>Many arguments and options in mdns are directly passed to the dns_sd <span class="caps">API</span>. This document only covers the more important features. For in depth information on the <span class="caps">API</span> and how zeroconf service discovery works refer to <a href="#further_reading">Further Reading</a>.</p>
 <h3>mdns.Advertisement</h3>
 <p>An <code>Advertisement</code> publishes information about a service on the local network.</p>
