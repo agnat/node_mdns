@@ -6,18 +6,43 @@
   </head>
   <body>
     <div id="page">
-      <div id="header">
-        <ul id="navigation">
-          <li><a href="./index.html">Home</a></li>
-          <li><a href="./user_guide.html">User Guide</a></li>
-        </ul>
-      </div>
+      <header>
+        <nav>
+          <ul>
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./user_guide.html">User Guide</a></li>
+            <li><a href="http://github.com/agnat/node_mdns">GitHub</a></li>
+          </ul>
+        </nv>
+      </header>
       <div id="content">
         <h1>mdns User Guide</h1>
-<p>mdns adds support for multicast <span class="caps">DNS</span> service discovery, also known as zeroconf or bonjour to <a href="/joyent/node">node.js</a>. It provides an object based interface to announce and browse services on the local network.</p>
+<ul id="toc">
+	<li><a href="#introduction">Introduction</a></li>
+	<li><a href="#tutorial">Tutorial</a>
+	<ul>
+		<li><a href="#service_types">On service types</a></li>
+		<li><a href="#resolver_sequence">The resolver sequence</a></li>
+	</ul></li>
+	<li><a href="#reference">Reference</a>
+	<ul>
+		<li><a href="#advertisement" title="">mdns.Advertisement</a></li>
+		<li><a href="#browser" title="">mdns.Browser</a></li>
+		<li><a href="#rst">Resolver sequence tasks</a></li>
+		<li><a href="#service_type">mdns.ServiceType</a></li>
+		<li><a href="#functions">Functions</a></li>
+		<li><a href="#constants">Constants</a></li>
+		<li><a href="#dns_sd">mdns.dns_sd</a></li>
+	</ul></li>
+	<li><a href="#design_notes">Design Notes</a></li>
+	<li><a href="#compatibility">Compatibility Notes</a></li>
+	<li><a href="#further_reading">Further Reading</a></li>
+</ul>
+<h2 id="introduction">Introduction</h2>
+<p>mdns adds support for multicast <span class="caps">DNS</span> service discovery, also known as zeroconf or bonjour to node.js. It provides an object based interface to announce and browse services on the local network.</p>
 <p>Internally, it uses the dns_sd <span class="caps">API</span> which is available on all major platforms. However, that does not mean it is equally well supported on all platforms. See <a href="#compatibility">Compatibility Notes</a> for more information.</p>
 <p>The <span class="caps">API</span> is documented in the <a href="#reference">reference section</a> below.</p>
-<h3>Tutorial</h3>
+<h2 id="tutorial">Tutorial</h2>
 <p>Before we begin go to the internet and get you a <em>bonjour browser</em> so that you can <em><span class="caps">ALL</span></em> the service discovery.</p>
 <p>Multicast <span class="caps">DNS</span> service discovery provides a way to announce and discover services on the local network. Here is how to announce a <span class="caps">HTTP</span> server running on port 4321:</p>
 <pre><code>var mdns = require('mdns')
@@ -43,10 +68,10 @@ browser.start();</code></pre>
 , port: 4321
 , addresses: [ '10.1.1.50', 'fe80::21f:5bff:fecd:ce64' ]
 }</code></pre>
-<p>In fact you may receive more than one event per service instance. That is because dns_sd reports each available network path to a service. Also, note that you might get more (or less) addresses. This depends on the network topology. If you have both a wired and a wireless connection to the same network you will see both addresses on both interfaces (not including IPv6 addresses).<br />
-The number of IP addresses also depends on the platform and the resolver being used. More on this later.</p>
+<p>In fact you might receive more than one event per service instance. That is because dns_sd reports each available network path to a service. Also, note that you might get more (or less) addresses. This depends on the network topology. If you have both a wired and a wireless connection to the same network you will see both addresses on both interfaces (not including IPv6 addresses). The number of IP addresses also depends on the platform and the resolver being used. More on this later.</p>
+<p>The <code>name</code> property is not necessarily the host name. It is a user defined string specifically meant to be displayed in the user interface. It only defaults to the host name.</p>
 <h3 id="service_types">On service types</h3>
-<p>Service type identifiers are strings used to match services to service queries. A service type always contains the service name and the protocol. Additionally it may contain one or more subtype identifiers. Here are some examples:</p>
+<p>Service type identifiers are strings used to match service instances to service queries. A service type always contains the service name and the protocol. Additionally it may contain one or more subtype identifiers. Here are some examples:</p>
 <pre><code>_http._tcp
 _osc._udp
 _osc._udp,_api-v1,_api-v2</code></pre>
@@ -63,13 +88,13 @@ _osc._udp,_api-v1,_api-v2</code></pre>
   ;</code></pre>
 <p>In fact all of these are legal constructor arguments for <code>ServiceType</code>. <span class="caps">JSON</span> (de-)serialization works too. And finally there is <code>makeServiceType(...)</code> which turns any representation into a <code>ServiceType</code> object unless it already is one.</p>
 <h3 id="resolver_sequence">The resolver sequence</h3>
-<p>The <code>Browser</code> object uses a resolver sequence to collect address and port information. A resolver sequence is basically just an array of functions. The functions are called in order and receive two arguments: a <code>service</code> object to decorate and a <code>next()</code> function. Each function gathers information on the service, often by invoking asynchronous operations. When done the data is stored on the <code>service</code> object and the next function is invoked by calling <code>next()</code>. This is kind of like web server middleware as it happens between service discovery and emitting the events.</p>
+<p>The <code>Browser</code> object uses a resolver sequence to collect address and port information. A resolver sequence is basically just an array of functions. The functions are called in order and receive two arguments: a <code>service</code> object to decorate and a <code>next()</code> function. Each function gathers information on the service, often by invoking asynchronous operations. When done the data is stored on the <code>service</code> object and the next function is invoked by calling <code>next()</code>. This is kind of like web server middleware as it happens between service discovery and emitting the events. On the other hand it is just another async function chain thing.</p>
 <p>Resolver sequence tasks (RSTs) are created by calling factory functions:</p>
 <pre><code>var sequence = [
     mdns.rst.DNSServiceResolve()
   , mdns.rst.DNSGetAddrInfo({families: [4] })
 ];</code></pre>
-<p>To use a custom sequence pass it to the browser like this:</p>
+<p>A browser with a custom sequence is created like this:</p>
 <pre><code>var browser = mdns.createBrowser(mdns.tcp('http'), {resolverSequence: sequence});</code></pre>
 <p>And of course you can write your own tasks:</p>
 <pre><code>var MCHammer = function MCHammer() {
@@ -82,9 +107,15 @@ _osc._udp,_api-v1,_api-v2</code></pre>
     }, 2000);
   }
 }</code></pre>
+<p>Although it seems a bit complicated this design solves a number of problems:</p>
+<ol>
+	<li>The default behavior to resolve all services down to the IP is very convenient. But it is very expensive and very time consuming, too. Many applications just don&#8217;t need every port number for every service instance. They just need one. Now it is up to the user to plug together whatever the application requires.</li>
+	<li>Portability was another issue. Not all platforms support all functions required by the (old) default behavior. The resolver sequence provides the necessary abstraction to handle this cleanly.</li>
+	<li>Something with separation of concerns.</li>
+</ol>
 <h2 id="reference">Reference</h2>
 <p>Many arguments and options in mdns are directly passed to the dns_sd <span class="caps">API</span>. This document only covers the more important features. For in depth information on the <span class="caps">API</span> and how zeroconf service discovery works refer to <a href="#further_reading">Further Reading</a>.</p>
-<h3>mdns.Advertisement</h3>
+<h3 id="advertisement">mdns.Advertisement</h3>
 <p>An <code>Advertisement</code> publishes information about a service on the local network.</p>
 <blockquote id="fairydust">
 <p id="fairydust">The hack0r takes a good look at the local network, <em>someones</em> local network and sprinkles it with fairydust. He watches the particles being swirled up into vortices originating in the passing network traffic. Datadevils on a parking lot next to the information freeway. Visible entropy. The particles in the vortices are illuminated by open ports and the pale neon light of multicast <span class="caps">DNS</span> service advertisements. The hack0r smiles.</p>
@@ -114,7 +145,7 @@ _osc._udp,_api-v1,_api-v2</code></pre>
 <p>Start the advertisement.</p>
 <h4>ad.stop()</h4>
 <p>Stop the advertisement.</p>
-<h3>mdns.Browser</h3>
+<h3 id="browser">mdns.Browser</h3>
 <p>A <code>mdns.Browser</code> performs the discovery part. It emits events as services appear and disappear on the network. For new services it also resolves host name, port and IP addresses. The <a href="#resolver_sequence">resolver sequence</a> is fully user configurable.</p>
 <p>Services are reported for each interface they are reachable on. Partly because that is what dns_sd is doing, partly because anything else would mean making assumptions.</p>
 <h4>new mdns.Browser(serviceType, [options])</h4>
@@ -155,7 +186,7 @@ _osc._udp,_api-v1,_api-v2</code></pre>
   , mdns.rst.makeAddressesUnique()
 ];</code></pre>
 <p>On platforms that don&#8217;t, <code>mdns.rst.getaddrinfo(...)</code> is used instead. You could modify the default sequence but you shouldn&#8217;t.</p>
-<h3>Resolve Sequence Tasks</h3>
+<h3 id="rst">Resolve sequence tasks</h3>
 <h4>mdns.rst.DNSServiceResolve(options)</h4>
 <p>Resolve host name and port. Probably all but the empty sequence start with this task. The <code>options</code> object may have the following properties:</p>
 <dl>
@@ -172,7 +203,7 @@ _osc._udp,_api-v1,_api-v2</code></pre>
 <p>Filters the addresses by invoking <code>f()</code> on each address. If <code>f()</code> returns false the address is dropped.</p>
 <h4>mdns.rst.logService()</h4>
 <p>Print the <code>service</code> object.</p>
-<h3>mdns.ServiceType</h3>
+<h3 id="service_type">mdns.ServiceType</h3>
 <p><code>ServiceType</code> objects represent service type identifiers which have been discussed <a href="#service_types">above</a>. They store the required information in a normalized way and help with formating and parsing of these strings.</p>
 <h4>new mdns.ServiceType(&#8230;)</h4>
 <p>Construct a <code>ServiceType</code> object. When called with one argument the argument may be</p>
@@ -198,7 +229,7 @@ _osc._udp,_api-v1,_api-v2</code></pre>
 <p>Set values from an array.</p>
 <h4>service_type.fromJSON(obj)</h4>
 <p>Set values from object, including other <code>ServiceType</code> objects.</p>
-<h3>Functions</h3>
+<h3 id="functions">Functions</h3>
 <h4>mdns.tcp(&#8230;)</h4>
 <p>Expressive way to create a <code>ServiceType</code> with protocol tcp.</p>
 <h4>mdns.udp(&#8230;)</h4>
@@ -211,11 +242,11 @@ _osc._udp,_api-v1,_api-v2</code></pre>
 <p>This factory function constructs an <code>Advertisement</code>.</p>
 <h4>mdns.browseThemAll(options)</h4>
 <p>Creates a browser initialized with the wildcard service type. When started the browser emits events for each <em>service type</em> instead of each service instance. The <code>service</code> objects have no <code>name</code> property. By default the browser has an empty resolver sequence. You still can set one using the <code>options</code> object.</p>
-<h3>Constants</h3>
+<h3 id="constants">Constants</h3>
 <p>All dns_sd constants (supported by the implementation) are exposed on the <code>mdns</code> object. Refer to the <a href="http://developer.apple.com/library/mac/#documentation/Networking/Reference/DNSServiceDiscovery_CRef/dns_sd_h/">dns_sd <span class="caps">API</span> documentation</a> for a list.</p>
-<h3>mdns.dns_sd</h3>
-<p><code>mdns.dns_sd</code> contains the native functions and data structures.</p>
-<h2>Design Notes</h2>
+<h3 id="dns_sd">mdns.dns_sd</h3>
+<p><code>mdns.dns_sd</code> contains the native functions and data structures. The functions are bound to javascript using the exact C names and arguments. This breaks with the usual node convention of lower-case function names.</p>
+<h2 id="design_notes">Design Notes</h2>
 <p>The implementation has two layers: A low-level <span class="caps">API</span> and a more user friendly object based <span class="caps">API</span>. The low-level <span class="caps">API</span> is implemented in C++ and just wraps functions, data structures and constants from <code>dns_sd.h</code>. Most of the code deals with argument conversion and error handling. A smaller portion deals with callbacks from C(++) to javascript.</p>
 <p>The high-level <span class="caps">API</span> is written in javascript. It connects the low-level <span class="caps">API</span> to nodes non-blocking IO infrastructure, namely <code>process.IOWatcher</code>. This results in excellent separation of concerns and leads to a very robust design&#8230; because Ryan is doing all the work.</p>
 <h2 id="compatibility">Compatibility Notes</h2>

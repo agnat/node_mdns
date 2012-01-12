@@ -8,28 +8,31 @@ body {
 a {
   color: #00a;
 }
-a:hover {
-  color: black;
-}
 a:visited {
   color: #a0a;
+}
+a:hover {
+  color: black;
 }
 #page {
   max-width: 50em;
   padding: 6em;
 }
-#navigation {
+nav ul {
+  text-align: right;
   margin: 0;
   padding: 0;
-  float: right;
+  margin-bottom: 1.0em;
 }
-#navigation li {
+nav li {
   display: inline;
   margin: 0;
+  margin-left: 0.2em;
   padding: 0;
 }
-#header {
-  clear: both;
+header {
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 6.0em;
 }
 pre {
   padding: 1.6em 1.6em 1.6em 1.6em;
