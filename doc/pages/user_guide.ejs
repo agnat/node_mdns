@@ -2,13 +2,33 @@
 
 h1. mdns User Guide
 
-mdns adds support for multicast DNS service discovery, also known as zeroconf or bonjour to "node.js":/joyent/node. It provides an object based interface to announce and browse services on the local network.
+(#toc)* "Introduction":#introduction
+* "Tutorial":#tutorial
+** "On service types":#service_types
+** "The resolver sequence":#resolver_sequence
+* "Reference":#reference
+** "mdns.Advertisement()":#advertisement
+** "mdns.Browser()":#browser
+** "Resolver sequence tasks":#rst
+** "mdns.ServiceType":#service_type
+** "Functions":#functions
+** "Constants":#constants
+** "mdns.dns_sd":#dns_sd
+* "Design Notes":#design_notes
+* "Compatibility Notes":#compatibility
+* "Further Reading":#further_reading
+
+h2(#introduction). Introduction
+
+mdns adds support for multicast DNS service discovery, also known as zeroconf or bonjour to node.js. It provides an object based interface to announce and browse services on the local network.
 
 Internally, it uses the dns_sd API which is available on all major platforms. However, that does not mean it is equally well supported on all platforms. See "Compatibility Notes":#compatibility for more information.
 
-h2. Quickstart
+The API is documented in the "reference section":#reference below.
 
-Before we begin go to the internet and get you a _bonjour browser_ so that you can all the service discovery.
+h2(#tutorial). Tutorial
+
+Before we begin go to the internet and get you a _bonjour browser_ so that you can _ALL_ the service discovery.
 
 Multicast DNS service discovery provides a way to announce and discover services on the local network. Here is how to announce a HTTP server running on port 4321:
 
@@ -40,9 +60,13 @@ bc. { interfaceIndex: 4
 , addresses: [ '10.1.1.50', 'fe80::21f:5bff:fecd:ce64' ]
 }
 
+In fact you might receive more than one event per service instance. That is because dns_sd reports each available network path to a service. Also, note that you might get more (or less) addresses. This depends on the network topology. If you have both a wired and a wireless connection to the same network you will see both addresses on both interfaces (not including IPv6 addresses). The number of IP addresses also depends on the platform and the resolver being used. More on this later.
+
+The @name@ property is not necessarily the host name. It is a user defined string specifically meant to be displayed in the user interface. It only defaults to the host name.
+
 h3(#service_types). On service types
 
-Service type identifiers are strings used to match services to service queries. A service type always contains the service name and the protocol. Additionally it may contain one or more subtype identifiers. Here are some examples:
+Service type identifiers are strings used to match service instances to service queries. A service type always contains the service name and the protocol. Additionally it may contain one or more subtype identifiers. Here are some examples:
 
 bc. _http._tcp
 _osc._udp
@@ -67,7 +91,7 @@ In fact all of these are legal constructor arguments for @ServiceType@. JSON (de
 
 h3(#resolver_sequence). The resolver sequence
 
-The @Browser@ object uses a resolver sequence to collect address and port information. A resolver sequence is basically just an array of functions. The functions are called in order and receive two arguments: a @service@ object to decorate and a @next()@ function. Each function gathers information on the service, often by invoking asynchronous operations. When done the data is stored on the @service@ object and the next function is invoked by calling @next()@. This is kind of like web server middleware as it happens between service discovery and emitting the events.
+The @Browser@ object uses a resolver sequence to collect address and port information. A resolver sequence is basically just an array of functions. The functions are called in order and receive two arguments: a @service@ object to decorate and a @next()@ function. Each function gathers information on the service, often by invoking asynchronous operations. When done the data is stored on the @service@ object and the next function is invoked by calling @next()@. This is kind of like web server middleware as it happens between service discovery and emitting the events. On the other hand it is just another async function chain thing.
 
 Resolver sequence tasks (RSTs) are created by calling factory functions:
 
@@ -76,7 +100,7 @@ bc. var sequence = [
   , mdns.rst.DNSGetAddrInfo({families: [4] })
 ];
 
-To use a custom sequence pass it to the browser like this:
+A browser with a custom sequence is created like this:
 
 bc. var browser = mdns.createBrowser(mdns.tcp('http'), {resolverSequence: sequence});
 
@@ -93,11 +117,17 @@ bc. var MCHammer = function MCHammer() {
   }
 }
 
-h2. Reference
+Although it seems a bit complicated this design solves a number of problems:
+
+# The default behavior to resolve all services down to the IP is very convenient. But it is very expensive and very time consuming, too. Many applications just don't need every port number for every service instance. They just need one. Now it is up to the user to plug together whatever the application requires.
+# Portability was another issue. Not all platforms support all functions required by the (old) default behavior. The resolver sequence provides the necessary abstraction to handle this cleanly.
+# Something with separation of concerns.
+
+h2(#reference). Reference
 
 Many arguments and options in mdns are directly passed to the dns_sd API. This document only covers the more important features. For in depth information on the API and how zeroconf service discovery works refer to "Further Reading":#further_reading.
 
-h3. mdns.Advertisement
+h3(#advertisement). mdns.Advertisement
 
 An @Advertisement@ publishes information about a service on the local network.
 
@@ -129,7 +159,7 @@ h4. ad.stop()
 
 Stop the advertisement.
 
-h3. mdns.Browser
+h3(#browser). mdns.Browser
 
 A @mdns.Browser@ performs the discovery part. It emits events as services appear and disappear on the network. For new services it also resolves host name, port and IP addresses. The "resolver sequence":#resolver_sequence is fully user configurable.
 
@@ -189,7 +219,7 @@ bc. var default_sequence = [
 
 On platforms that don't, @mdns.rst.getaddrinfo(...)@ is used instead. You could modify the default sequence but you shouldn't.
 
-h3. Resolve Sequence Tasks
+h3(#rst). Resolve sequence tasks
 
 h4. mdns.rst.DNSServiceResolve(options)
 
@@ -217,7 +247,7 @@ h4. mdns.rst.logService()
 
 Print the @service@ object.
 
-h3. mdns.ServiceType
+h3(#service_type). mdns.ServiceType
 
 @ServiceType@ objects represent service type identifiers which have been discussed "above":#service_types. They store the required information in a normalized way and help with formating and parsing of these strings.
 
@@ -263,7 +293,7 @@ h4. service_type.fromJSON(obj)
 
 Set values from object, including other @ServiceType@ objects.
 
-h3. Functions
+h3(#functions). Functions
 
 h4. mdns.tcp(...)
 
@@ -289,15 +319,15 @@ h4. mdns.browseThemAll(options)
 
 Creates a browser initialized with the wildcard service type. When started the browser emits events for each _service type_ instead of each service instance. The @service@ objects have no @name@ property. By default the browser has an empty resolver sequence. You still can set one using the @options@ object.
 
-h3. Constants
+h3(#constants). Constants
 
 All dns_sd constants (supported by the implementation) are exposed on the @mdns@ object. Refer to the "dns_sd API documentation":http://developer.apple.com/library/mac/#documentation/Networking/Reference/DNSServiceDiscovery_CRef/dns_sd_h/ for a list.
 
-h3. mdns.dns_sd
+h3(#dns_sd). mdns.dns_sd
 
-@mdns.dns_sd@ contains the native functions and data structures.
+@mdns.dns_sd@ contains the native functions and data structures. The functions are bound to javascript using the exact C names and arguments. This breaks with the usual node convention of lower-case function names.
 
-h2. Design Notes
+h2(#design_notes). Design Notes
 
 The implementation has two layers: A low-level API and a more user friendly object based API. The low-level API is implemented in C++ and just wraps functions, data structures and constants from @dns_sd.h@. Most of the code deals with argument conversion and error handling. A smaller portion deals with callbacks from C(++) to javascript.
 
