@@ -35,8 +35,5 @@ def distclean(ctx):
   symlink = os.path.join('lib', 'dns_sd.node') # still not DRY ...
   if os.path.lexists(symlink):
     os.unlink(symlink)
-  readme = 'README.html'
-  if os.path.exists(readme):
-    os.unlink(readme)
 
 # vim: set filetype=python :

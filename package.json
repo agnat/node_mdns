@@ -2,7 +2,6 @@
 , "version": "0.0.5-dev"
 , "description": "mdns/zeroconf/bonjour service discovery add-on"
 , "main": "./lib/mdns.js"
-, "scripts": { "install": "node-waf configure build"}
 , "keywords": ["service discovery", "zeroconf", "bonjour"]
 , "licenses": [
     { "type": "MIT"
