@@ -1,4 +1,4 @@
-h1. mdns -- service discovery for node.js
+h1. mdns -- Service Discovery for node.js
 
 |_. Package:       | <%- package.name %> |
 |_. Description:   | <%- package.description %> |
@@ -37,9 +37,7 @@ mdns is available as a npm package. To fetch, compile and install the add-on do:
 
 bc. npm install mdns
 
-On Linux and other systems using the avahi daemon the avahi dns_sd compat library and its header files are required.  On ubuntu and other debianesque systems use the following command to install them:
-
-bc. sudo aptitude install libavahi-compat-libdnssd-dev
+On Linux and other systems using the avahi daemon the avahi dns_sd compat library and its header files are required.  On ubuntu and other debianesque systems the package name is @libavahi-compat-libdnssd-dev@.
 
 If you want to play with the latest source code, here is a more manual approach:
 
@@ -58,7 +56,7 @@ h2. Contributors
 
 <%-
 package.contributors.map(function(c) {
-  return '* ' + c.name + ('github' in c ? ' (@' + c.github + ')' : '' );
+  return '* ' + c.name + ('github' in c ? ' ("@' + c.github + '":http://github.com/' + c.github + ')' : '' );
 })/*.sort(function(a,b) { return Math.floor(10 * Math.random()) % 2})*/.join('\n')
 %>
 
