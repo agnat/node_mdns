@@ -29,7 +29,7 @@ browser.on('serviceDown', function(service) {
 browser.start();
 
 // discover all available service types
-var wildcard = mdns.browseThemAll(); // wildcard is just another browser...
+var all_the_types = mdns.browseThemAll(); // all_the_types is just another browser...
 
 h2. Installation
 
@@ -43,8 +43,7 @@ If you want to play with the latest source code, here is a more manual approach:
 
 bc.. git clone http://github.com/agnat/node_mdns
 cd node_mdns
-npm link
-node-waf configure build && ./utils/run_tests
+npm link && utils/run_tests
 
 h2. Documentation
 
