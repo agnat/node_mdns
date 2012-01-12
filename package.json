@@ -1,14 +1,15 @@
 { "name" : "mdns"
 , "version" : "0.0.4"
 , "description" : "mdns/zeroconf/bonjour service discovery add-on"
-, "main": "./lib/mdns"
+, "main": "./lib/mdns.js"
 , "scripts": { "install": "node-waf configure build"}
+, "keywords": ["service discovery", "zeroconf", "bonjour"]
 , "licenses": [
     { "type": "MIT"
     , "url": "http://github.com/agnat/node_mdns/raw/master/LICENSE"
     }
   ]
-, "bugs": { "web": "http://github.com/agnat/node_mdns/issues" }
+, "bugs": { "url": "http://github.com/agnat/node_mdns/issues" }
 , "repository":
   { "type": "git"
   , "url":  "http://github.com/agnat/node_mdns.git"
