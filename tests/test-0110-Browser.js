@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var mdns   = require('../../lib/mdns')
+var mdns   = require('../lib/mdns')
   , assert = require('assert')
   , util   = require('util')
   ;
