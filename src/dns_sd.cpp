@@ -7,6 +7,7 @@
 
 #include "mdns_utils.hpp"
 #include "dns_service_ref.hpp"
+#include "txt_record_ref.hpp"
 
 using namespace v8;
 using namespace node;
@@ -20,10 +21,10 @@ Handle<Value> DNSServiceBrowse(Arguments const& args);
 Handle<Value> DNSServiceRefDeallocate(Arguments const& args); 
 Handle<Value> DNSServiceResolve(Arguments const& args); 
 Handle<Value> DNSServiceEnumerateDomains(Arguments const& args); 
-
 #ifdef HAVE_DNSSERVICEGETADDRINFO
 Handle<Value> DNSServiceGetAddrInfo(Arguments const& args); 
 #endif
+Handle<Value> TXTRecordCreate(Arguments const& args); 
 
 typedef Handle<Value> (WrapperFunc)(Arguments const&);
 
@@ -252,6 +253,7 @@ init (Handle<Object> target) {
     HandleScope scope;
 
     ServiceRef::Initialize( target );
+    TxtRecordRef::Initialize( target );
 
     defineFunction(target, "DNSServiceRegister", DNSServiceRegister);
     defineFunction(target, "DNSServiceRefSockFD", DNSServiceRefSockFD);
@@ -263,6 +265,7 @@ init (Handle<Object> target) {
 #ifdef HAVE_DNSSERVICEGETADDRINFO
     defineFunction(target, "DNSServiceGetAddrInfo", DNSServiceGetAddrInfo);
 #endif
+    defineFunction(target, "TXTRecordCreate", TXTRecordCreate);
 
     defineFunction(target, "buildException", buildException);
     defineFunction(target, "exportConstants", exportConstants);

@@ -115,7 +115,9 @@ DNSServiceRegister(Arguments const& args) {
     const void * txtRecord(NULL);
     if ( ! args[8]->IsNull() && ! args[8]->IsUndefined()) {
         if (Buffer::HasInstance(args[8])) {
-            std::cout << "TODO: implement txt record" << std::endl;
+            Local<Object> bufferObject = args[8]->ToObject();
+            txtRecord = Buffer::Data(bufferObject);
+            txtLen = Buffer::Length(bufferObject);
         } else {
             return throwTypeError("argument 9 must be a buffer (txtRecord)");
         }
