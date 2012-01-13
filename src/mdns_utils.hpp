@@ -1,5 +1,5 @@
-#ifndef NODE_JS_MDNS_UTILS_INCLUDED
-#define NODE_JS_MDNS_UTILS_INCLUDED
+#ifndef NODE_MDNS_UTILS_INCLUDED
+#define NODE_MDNS_UTILS_INCLUDED
 
 #include <sstream>
 #include <errno.h>
@@ -58,4 +58,4 @@ throwArgumentCountMismatchException(v8::Arguments const& args, size_t expectedCo
 
 } // end of namespace node_mdns
 
-#endif // NODE_JS_MDNS_UTILS_INCLUDED
+#endif // NODE_MDNS_UTILS_INCLUDED

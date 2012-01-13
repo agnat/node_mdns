@@ -1,5 +1,5 @@
-#ifndef NODE_JS_MDNS_SERVICE_REF_INCLUDED
-#define NODE_JS_MDNS_SERVICE_REF_INCLUDED
+#ifndef NODE_MDNS_SERVICE_REF_INCLUDED
+#define NODE_MDNS_SERVICE_REF_INCLUDED
 
 #include <fcntl.h>
 #include <dns_sd.h>
@@ -74,4 +74,4 @@ class ServiceRef : public node::ObjectWrap {
 };
 
 } // end of namespace node_mdns
-#endif // NODE_JS_MDNS_SERVICE_REF_INCLUDED
+#endif // NODE_MDNS_SERVICE_REF_INCLUDED

@@ -26,7 +26,7 @@ ServiceRef::~ServiceRef() {
 
 void
 ServiceRef::Initialize(Handle<Object> target) {
-    v8::Local<v8::FunctionTemplate> t = FunctionTemplate::New(New);
+    Local<FunctionTemplate> t = FunctionTemplate::New(New);
     constructor_template = Persistent<FunctionTemplate>::New(t);
     constructor_template->InstanceTemplate()->SetInternalFieldCount(1);
     constructor_template->SetClassName(String::NewSymbol("DNSServiceRef"));
@@ -39,8 +39,8 @@ ServiceRef::Initialize(Handle<Object> target) {
     target->Set(String::NewSymbol("DNSServiceRef"), constructor_template->GetFunction());
 }
 
-v8::Handle<v8::Value>
-ServiceRef::New(const v8::Arguments & args) {
+Handle<Value>
+ServiceRef::New(const Arguments & args) {
     HandleScope scope;
     ServiceRef * o = new ServiceRef();
     o->Wrap(args.Holder());
