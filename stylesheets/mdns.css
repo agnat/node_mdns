@@ -18,6 +18,10 @@ a:hover {
   max-width: 50em;
   padding: 6em;
 }
+header {
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 6.0em;
+}
 nav ul {
   text-align: right;
   margin: 0;
@@ -30,9 +34,11 @@ nav li {
   margin-left: 0.2em;
   padding: 0;
 }
-header {
-  border-bottom: 1px solid #ccc;
-  margin-bottom: 6.0em;
+#content {
+  min-height: 20em;
+}
+footer {
+  border-top: 1px solid #ccc;
 }
 pre {
   padding: 1.6em 1.6em 1.6em 1.6em;

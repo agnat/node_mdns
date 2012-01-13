@@ -39,7 +39,7 @@
 	<li><a href="#further_reading">Further Reading</a></li>
 </ul>
 <h2 id="introduction">Introduction</h2>
-<p>mdns adds support for multicast <span class="caps">DNS</span> service discovery, also known as zeroconf or bonjour to node.js. It provides an object based interface to announce and browse services on the local network.</p>
+<p>mdns adds multicast <span class="caps">DNS</span> service discovery, also known as zeroconf or bonjour to node.js. It provides an object based interface to announce and browse services on the local network.</p>
 <p>Internally, it uses the dns_sd <span class="caps">API</span> which is available on all major platforms. However, that does not mean it is equally well supported on all platforms. See <a href="#compatibility">Compatibility Notes</a> for more information.</p>
 <p>The <span class="caps">API</span> is documented in the <a href="#reference">reference section</a> below.</p>
 <h2 id="tutorial">Tutorial</h2>
@@ -50,14 +50,16 @@
   ;
 ad.start();</code></pre>
 <p>A good place to do this is the <code>'listening'</code> event handler of your <span class="caps">HTTP</span> server. Here is how to browse all <span class="caps">HTTP</span> servers on the local network:</p>
-<pre><code>var browser = mdns.createBrowser(mdns.tcp('http'));
-browser.on('serviceUp', function(service) {
+<pre><code>var browser = mdns.createBrowser(mdns.tcp('http'));</code>
+
+<code>browser.on('serviceUp', function(service) {
   console.log("service up: ", service);
 });
 browser.on('serviceDown', function(service) {
   console.log("service down: ", service);
-});
-browser.start();</code></pre>
+});</code>
+
+<code>browser.start();</code></pre>
 <p>As you can see the browser object is an <code>EventEmitter</code>. For each <span class="caps">HTTP</span> server a <code>'serviceUp'</code> event is emitted. Likewise, if a server disappears <code>'serviceDown'</code> is send. The <code>service</code> object of a <code>'serviceUp'</code> event might look like this:</p>
 <pre><code>{ interfaceIndex: 4
 , name: 'somehost'
@@ -208,9 +210,9 @@ _osc._udp,_api-v1,_api-v2</code></pre>
 <h4>new mdns.ServiceType(&#8230;)</h4>
 <p>Construct a <code>ServiceType</code> object. When called with one argument the argument may be</p>
 <ul>
-	<li>a service type identifier</li>
+	<li>a service type identifier (string)</li>
 	<li>an array, the first element being the type, the second the protocol. Additional items are <code>subtypes</code>.</li>
-	<li>an object with properties <code>name</code>, <code>protocol</code> and optionally <code>subtypes</code></li>
+	<li>an object with properties <code>name</code>, <code>protocol</code> and optional <code>subtypes</code></li>
 </ul>
 <p>All tokens may have a leading underscore. The n-ary form treats its arguments as an array. Copy construction works, too.</p>
 <h4>service_type.name</h4>
@@ -258,7 +260,10 @@ _osc._udp,_api-v1,_api-v2</code></pre>
 </ul>
 
       </div>
+      <footer>
+      </footer>
     </div>
+    <!-- GitHub Ribbon ... srsly? -->
     <a href="http://github.com/agnat/node_mdns"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/edc6dae7a1079163caf7f17c60495bbb6d027c93/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub"></a>
   </body>
 </html>
