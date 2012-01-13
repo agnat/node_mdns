@@ -20,7 +20,7 @@ h1. mdns User Guide
 
 h2(#introduction). Introduction
 
-mdns adds support for multicast DNS service discovery, also known as zeroconf or bonjour to node.js. It provides an object based interface to announce and browse services on the local network.
+mdns adds multicast DNS service discovery, also known as zeroconf or bonjour to node.js. It provides an object based interface to announce and browse services on the local network.
 
 Internally, it uses the dns_sd API which is available on all major platforms. However, that does not mean it is equally well supported on all platforms. See "Compatibility Notes":#compatibility for more information.
 
@@ -39,16 +39,18 @@ ad.start();
 
 A good place to do this is the @'listening'@ event handler of your HTTP server. Here is how to browse all HTTP servers on the local network:
 
-bc. var browser = mdns.createBrowser(mdns.tcp('http'));
+bc.. var browser = mdns.createBrowser(mdns.tcp('http'));
+
 browser.on('serviceUp', function(service) {
   console.log("service up: ", service);
 });
 browser.on('serviceDown', function(service) {
   console.log("service down: ", service);
 });
+
 browser.start();
 
-As you can see the browser object is an @EventEmitter@. For each HTTP server a @'serviceUp'@ event is emitted. Likewise, if a server disappears @'serviceDown'@ is send. The @service@ object of a @'serviceUp'@ event might look like this:
+p. As you can see the browser object is an @EventEmitter@. For each HTTP server a @'serviceUp'@ event is emitted. Likewise, if a server disappears @'serviceDown'@ is send. The @service@ object of a @'serviceUp'@ event might look like this:
 
 bc. { interfaceIndex: 4
 , name: 'somehost'
@@ -255,9 +257,9 @@ h4. new mdns.ServiceType(...)
 
 Construct a @ServiceType@ object. When called with one argument the argument may be
 
-* a service type identifier
+* a service type identifier (string)
 * an array, the first element being the type, the second the protocol. Additional items are @subtypes@.
-* an object with properties @name@, @protocol@ and optionally @subtypes@
+* an object with properties @name@, @protocol@ and optional @subtypes@
 
 All tokens may have a leading underscore. The n-ary form treats its arguments as an array. Copy construction works, too.
 
