@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+// docpack - documentation for take-away
 // disgusting ... but works for now ...
 
 var path   = require('path')
