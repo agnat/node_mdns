@@ -5,7 +5,6 @@ var mdns  = require('../lib/mdns')
   , t = require('./mdns_test')
   ;
 
-t.lifeExpectancy = 15000;
 
 var browser = new mdns.browseThemAll()
   , up = 0
@@ -24,7 +23,10 @@ browser.on('serviceChanged', function(service) {
   if (type.matches(service.type)) ++changed;
 });
 
-var ad = t.runTestAd(type, 1337, 2000, 10000, function() {
+// it takes forever until the service type disappears
+var cooltime = 10000;
+t.lifeExpectancy = cooltime + 5000;
+var ad = t.runTestAd(type, 1337, 1000, cooltime, function() {
   assert.strictEqual(down, up);
   assert.strictEqual(down + up, changed);
   browser.stop();
