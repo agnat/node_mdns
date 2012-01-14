@@ -71,6 +71,14 @@ browser.on('serviceUp', function(service) {
   assert.ok(Array.isArray(service.addresses));
   assert.ok(service.addresses.length > 0);
 
+  assert.ok('rawTxtRecord' in service);
+  assert.ok(service.rawTxtRecord);
+  assert.ok(service.txtRecord);
+  var p;
+  for (p in txt_record) {
+    assert.strictEqual('' + txt_record[p], service.txtRecord[p]);
+  }
+  
   upCount += 1;
   stopBrowserIfDone();
 });
@@ -97,10 +105,12 @@ process.on('exit', function() {
   assert.ok(downCount >= 1);
 });
 
-var ad = mdns.createAdvertisement(mdns.tcp('node-mdns-test'), 4321, function(err, service, flags) {
-    if (err) throw err;
-    setTimeout(function() { ad.stop() }, 500);
-});
+var txt_record = {type: 'bacon', chunky: true, strips: 5}
+  , ad = mdns.createAdvertisement(mdns.tcp('node-mdns-test'), 4321,
+      {txtRecord: txt_record}, function(err, service, flags) {
+        if (err) throw err;
+        setTimeout(function() { ad.stop() }, 500);
+      });
 
 ad.start();
 
@@ -111,10 +121,6 @@ ad.start();
 // Reported by orlandv and others (issue #9)
 
 // FIX: replaced nested-flag-madness with something more scalable.
-//var regression_browser = mdns.createBrowser(mdns.tcp('node-mdns-t2'),
-//    {autoResolve: false});
-//assert.ok(regression_browser.autoresolve === false);
-
 
 
 // vim: filetype=javascript
