@@ -1,8 +1,10 @@
 #include <arpa/inet.h>
 #include <v8.h>
+#include <node_buffer.h>
 
 #include "mdns_utils.hpp"
 #include "dns_service_ref.hpp"
+
 
 using namespace v8;
 using namespace node;
@@ -31,7 +33,11 @@ OnResolve(DNSServiceRef sdRef, DNSServiceFlags flags,
     args[4] = String::New(fullname);
     args[5] = String::New(hosttarget);
     args[6] = Integer::New( ntohs(port) );
-    args[7] = Local<Value>::New(Null()); // TODO: create txtRecord buffer
+    if (txtRecord && txtLen) {
+        args[7] = Local<Value>::New(Buffer::New((char*)txtRecord, txtLen)->handle_);
+    } else {
+        args[7] = Local<Value>::New(Null());
+    }
     if (serviceRef->GetContext().IsEmpty()) {
         args[8] = Local<Value>::New(Null());
     } else {
