@@ -14,6 +14,7 @@ using namespace node;
 
 namespace node_mdns {
 
+// === dns_sd ===========================================
 Handle<Value> DNSServiceRegister(Arguments const& args); 
 Handle<Value> DNSServiceRefSockFD(Arguments const& args); 
 Handle<Value> DNSServiceProcessResult(Arguments const& args); 
@@ -25,12 +26,53 @@ Handle<Value> DNSServiceEnumerateDomains(Arguments const& args);
 Handle<Value> DNSServiceGetAddrInfo(Arguments const& args); 
 #endif
 Handle<Value> TXTRecordCreate(Arguments const& args); 
+Handle<Value> TXTRecordDeallocate(Arguments const& args); 
+Handle<Value> TXTRecordGetCount(Arguments const& args); 
+Handle<Value> TXTRecordSetValue(Arguments const& args); 
+Handle<Value> TXTRecordGetLength(Arguments const& args); 
 
-typedef Handle<Value> (WrapperFunc)(Arguments const&);
+// === additions ========================================
+Handle<Value> txtRecordBufferToObject(Arguments const& args); 
+Handle<Value> exportConstants(Arguments const& args);
+Handle<Value> buildException(Arguments const& args);
+
+// === locals ===========================================
+void defineFunction(Handle<Object> target, const char * name, InvocationCallback f);
+void addConstants(Handle<Object> target);
+
+void
+init(Handle<Object> target) {
+    HandleScope scope;
+
+    ServiceRef::Initialize( target );
+    TxtRecordRef::Initialize( target );
+
+    defineFunction(target, "DNSServiceRegister", DNSServiceRegister);
+    defineFunction(target, "DNSServiceRefSockFD", DNSServiceRefSockFD);
+    defineFunction(target, "DNSServiceProcessResult", DNSServiceProcessResult);
+    defineFunction(target, "DNSServiceBrowse", DNSServiceBrowse);
+    defineFunction(target, "DNSServiceRefDeallocate", DNSServiceRefDeallocate);
+    defineFunction(target, "DNSServiceResolve", DNSServiceResolve);
+    defineFunction(target, "DNSServiceEnumerateDomains", DNSServiceEnumerateDomains);
+#ifdef HAVE_DNSSERVICEGETADDRINFO
+    defineFunction(target, "DNSServiceGetAddrInfo", DNSServiceGetAddrInfo);
+#endif
+    defineFunction(target, "TXTRecordCreate", TXTRecordCreate);
+    defineFunction(target, "TXTRecordDeallocate", TXTRecordDeallocate);
+    defineFunction(target, "TXTRecordGetCount", TXTRecordGetCount);
+    defineFunction(target, "TXTRecordSetValue", TXTRecordSetValue);
+    defineFunction(target, "TXTRecordGetLength", TXTRecordGetLength);
+
+    defineFunction(target, "txtRecordBufferToObject", txtRecordBufferToObject);
+    defineFunction(target, "buildException", buildException);
+    defineFunction(target, "exportConstants", exportConstants);
+
+    addConstants(target);
+}
 
 inline
 void
-defineFunction(Handle<Object> target, const char * name, WrapperFunc f) {
+defineFunction(Handle<Object> target, const char * name, InvocationCallback f) {
     target->Set(String::NewSymbol(name),
             FunctionTemplate::New(f)->GetFunction());
 }
@@ -246,30 +288,5 @@ exportConstants(Arguments const& args) {
 
 } // end of namespace node_mdns
 
-extern "C" 
-void
-init (Handle<Object> target) {
-    using namespace node_mdns;
-    HandleScope scope;
-
-    ServiceRef::Initialize( target );
-    TxtRecordRef::Initialize( target );
-
-    defineFunction(target, "DNSServiceRegister", DNSServiceRegister);
-    defineFunction(target, "DNSServiceRefSockFD", DNSServiceRefSockFD);
-    defineFunction(target, "DNSServiceProcessResult", DNSServiceProcessResult);
-    defineFunction(target, "DNSServiceBrowse", DNSServiceBrowse);
-    defineFunction(target, "DNSServiceRefDeallocate", DNSServiceRefDeallocate);
-    defineFunction(target, "DNSServiceResolve", DNSServiceResolve);
-    defineFunction(target, "DNSServiceEnumerateDomains", DNSServiceEnumerateDomains);
-#ifdef HAVE_DNSSERVICEGETADDRINFO
-    defineFunction(target, "DNSServiceGetAddrInfo", DNSServiceGetAddrInfo);
-#endif
-    defineFunction(target, "TXTRecordCreate", TXTRecordCreate);
-
-    defineFunction(target, "buildException", buildException);
-    defineFunction(target, "exportConstants", exportConstants);
-
-    addConstants(target);
-}
+extern "C" void init(Handle<Object> target) { node_mdns::init(target); }
 

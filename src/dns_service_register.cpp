@@ -8,6 +8,7 @@
 
 #include "mdns_utils.hpp"
 #include "dns_service_ref.hpp"
+#include "txt_record_ref.hpp"
 
 using namespace v8;
 using namespace node;
@@ -118,8 +119,13 @@ DNSServiceRegister(Arguments const& args) {
             Local<Object> bufferObject = args[8]->ToObject();
             txtRecord = Buffer::Data(bufferObject);
             txtLen = Buffer::Length(bufferObject);
+        } else if (TxtRecordRef::HasInstance(args[8])) {
+            TxtRecordRef * ref = ObjectWrap::Unwrap<TxtRecordRef>(args[8]->ToObject());
+            txtLen = TXTRecordGetLength( & ref->GetTxtRecordRef());
+            txtRecord = TXTRecordGetBytesPtr( & ref->GetTxtRecordRef());
+            std::cerr << "TXTRecord: " << txtLen << std::endl;
         } else {
-            return throwTypeError("argument 9 must be a buffer (txtRecord)");
+            return throwTypeError("argument 9 must be a buffer or a dns_sd.TXTRecordRef");
         }
     }
 
@@ -134,6 +140,7 @@ DNSServiceRegister(Arguments const& args) {
         serviceRef->SetContext(args[10]);
     }
 
+    // eleven arguments ... srsly?
     DNSServiceErrorType error = DNSServiceRegister(
             & serviceRef->GetServiceRef(),
             flags,
@@ -145,7 +152,7 @@ DNSServiceRegister(Arguments const& args) {
             htons(port),
             txtLen,
             txtRecord,
-            OnServiceRegistered,
+            OnServiceRegistered, // XXX better set no callback if the user didn't
             serviceRef);
     if (error != kDNSServiceErr_NoError) {
         return throwMdnsError("DNSServiceRegister()", error);

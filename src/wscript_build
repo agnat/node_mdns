@@ -16,6 +16,11 @@ obj.source = [ 'dns_sd.cpp'
              , 'mdns_utils.cpp'
              , 'txt_record_ref.cpp'
              , 'txt_record_create.cpp'
+             , 'txt_record_deallocate.cpp'
+             , 'txt_record_get_count.cpp'
+             , 'txt_record_set_value.cpp'
+             , 'txt_record_get_length.cpp'
+             , 'txt_record_buffer_to_object.cpp'
              ]
 if bld.env.HAVE_DNSSERVICEGETADDRINFO:
   obj.source.append('dns_service_get_addr_info.cpp')
