@@ -30,12 +30,12 @@ txtRecordBufferToObject(Arguments const& args) {
     void * data = Buffer::Data(buffer);
     uint16_t item_count = TXTRecordGetCount(buffer_length, data);
     DNSServiceErrorType error;
-    const void ** value_ptr;
+    const void * value_ptr;
     uint8_t value_length;
     for (uint16_t i = 0; i < item_count; ++i) {
         while (kDNSServiceErr_NoMemory == (error =
                     TXTRecordGetItemAtIndex(buffer_length, data, i, key.size(),
-                        &*key.begin(), & value_length, value_ptr)))
+                        &*key.begin(), & value_length, & value_ptr)))
         {
             key.resize(key.size() * 2);
         }
@@ -43,7 +43,7 @@ txtRecordBufferToObject(Arguments const& args) {
             return throwMdnsError("TXTRecordGetItemAtIndex", error);
         }
         result->Set(String::New(&*key.begin()),
-                String::New(static_cast<const char*>(*value_ptr), value_length));
+                String::New(static_cast<const char*>(value_ptr), value_length));
     }
     return scope.Close(result);
 }
