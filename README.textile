@@ -1,7 +1,7 @@
-h1. mdns -- Service Discovery for node.js
+h1. mdns -- node.js Service Discovery
 
 |_. Package:       | mdns |
-|_. Description:   | mdns/zeroconf/bonjour service discovery add-on |
+|_. Description:   | Multicast DNS service discovery |
 |_. Version:       | 0.0.5-dev |
 |_. Installation:  | @npm install mdns@ |
 |_. Documentation: | "mdns user guide":http://agnat.github.com/node_mdns/user_guide.html |

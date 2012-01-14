@@ -1,8 +1,8 @@
 { "name": "mdns"
 , "version": "0.0.5-dev"
-, "description": "mdns/zeroconf/bonjour service discovery add-on"
+, "description": "multicast DNS service discovery"
 , "main": "./lib/mdns.js"
-, "keywords": ["service discovery", "zeroconf", "bonjour"]
+, "keywords": ["mdns", "zeroconf", "bonjour", "dns_sd", "mDNSResponder"]
 , "licenses": [
     { "type": "MIT"
     , "url": "http://github.com/agnat/node_mdns/raw/master/LICENSE"
