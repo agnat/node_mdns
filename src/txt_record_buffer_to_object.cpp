@@ -16,8 +16,8 @@ namespace node_mdns {
 Handle<Value>
 txtRecordBufferToObject(Arguments const& args) {
     HandleScope scope;
-    if (argumentCountMismatch(args, 2)) {
-        return throwArgumentCountMismatchException(args, 2);
+    if (argumentCountMismatch(args, 1)) {
+        return throwArgumentCountMismatchException(args, 1);
     }
     if ( ! args[0]->IsObject() || ! Buffer::HasInstance(args[0]->ToObject())) {
         return throwTypeError("argument 1 must be a buffer (txtRecord)");
@@ -33,10 +33,19 @@ txtRecordBufferToObject(Arguments const& args) {
     const void ** value_ptr;
     uint8_t value_length;
     for (uint16_t i = 0; i < item_count; ++i) {
-        error = TXTRecordGetItemAtIndex(buffer_length, data, i, key.size(), &*key.begin(), & value_length, value_ptr);
-        std::cerr << "TODO" << std::endl;
+        while (kDNSServiceErr_NoMemory == (error =
+                    TXTRecordGetItemAtIndex(buffer_length, data, i, key.size(),
+                        &*key.begin(), & value_length, value_ptr)))
+        {
+            key.resize(key.size() * 2);
+        }
+        if (error != kDNSServiceErr_NoError) {
+            return throwMdnsError("TXTRecordGetItemAtIndex", error);
+        }
+        result->Set(String::New(&*key.begin()),
+                String::New(static_cast<const char*>(*value_ptr), value_length));
     }
-    return Undefined();
+    return scope.Close(result);
 }
 
 } // end of namespace node_mdns
