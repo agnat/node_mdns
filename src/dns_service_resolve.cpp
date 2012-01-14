@@ -1,3 +1,4 @@
+#include <string.h>
 #include <arpa/inet.h>
 #include <v8.h>
 #include <node_buffer.h>
