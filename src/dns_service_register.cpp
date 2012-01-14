@@ -123,7 +123,6 @@ DNSServiceRegister(Arguments const& args) {
             TxtRecordRef * ref = ObjectWrap::Unwrap<TxtRecordRef>(args[8]->ToObject());
             txtLen = TXTRecordGetLength( & ref->GetTxtRecordRef());
             txtRecord = TXTRecordGetBytesPtr( & ref->GetTxtRecordRef());
-            std::cerr << "TXTRecord: " << txtLen << std::endl;
         } else {
             return throwTypeError("argument 9 must be a buffer or a dns_sd.TXTRecordRef");
         }

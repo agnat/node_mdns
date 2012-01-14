@@ -23,7 +23,6 @@ TXTRecordGetCount(Arguments const& args) {
 
     Local<Object> buffer = args[0]->ToObject();
     uint16_t result = ::TXTRecordGetCount(Buffer::Length(buffer), Buffer::Data(buffer));
-    std::cerr << "count: " << result << std::endl;
     return scope.Close(Integer::New(result));
 }
 
