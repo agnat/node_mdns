@@ -35,7 +35,7 @@ OnResolve(DNSServiceRef sdRef, DNSServiceFlags flags,
     args[6] = Integer::New( ntohs(port) );
     if (txtRecord && txtLen) {
         Buffer * buffer = Buffer::New(txtLen);
-        memcpy(Buffer::Data(buffer), txtRecord, txtLen);
+        memcpy(Buffer::Data(buffer->handle_), txtRecord, txtLen);
         args[7] = Local<Value>::New(buffer->handle_);
     } else {
         args[7] = Local<Value>::New(Null());
