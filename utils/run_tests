@@ -11,7 +11,7 @@ export AVAHI_COMPAT_NOWARN=1
 TOTAL=0
 FAILED=0
 SUCCESSFUL=0
-for t in $(find $DIR/tests/ -type f -name "test-*"); do
+for t in $(find $DIR/tests/ -type f -name "test-*" | sort); do
     echo -n "running $(basename $t) ... "
     $t;
     if [[ $? != 0 ]]; then
