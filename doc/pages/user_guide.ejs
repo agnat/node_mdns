@@ -63,7 +63,7 @@ bc. { interfaceIndex: 4
 , addresses: [ '10.1.1.50', 'fe80::21f:5bff:fecd:ce64' ]
 }
 
-In fact you might receive more than one event per service instance. That is because dns_sd reports each available network path to a service. Also, note that you might get more (or less) addresses. This depends on the network topology. If you have both a wired and a wireless connection to the same network you will see both addresses on both interfaces (not including IPv6 addresses). The number of IP addresses also depends on the platform and the resolver being used. More on this later.
+In fact you might receive more than one event per service instance. That is because dns_sd reports each available network path to a service. Also, note that you might get more (or less) addresses. This depends on the network topology. While testing you will often run both peers on the same machine. Now, if you have both a wired and a wireless connection to the same network you will see both addresses on both interfaces (not including IPv6 addresses). The number of IP addresses also depends on the platform and the resolver being used. More on this later.
 
 The @name@ property is not necessarily the host name. It is a user defined string specifically meant to be displayed in the user interface. It only defaults to the host name.
 
@@ -109,7 +109,7 @@ var ad = mdns.createAdvertisement(mdns.tcp('http'), 4321, {txtRecord: txt_record
 
 Non-string values are automatically converted. You can also use @Buffer@ objects as values to pass raw data.
 
-The size of the TXT record is very limited. That is because everything has to fit into a single DNS message (512 bytes)[1]. The documentation mentions a 'typical size' of 100-200 bytes, whatever that means. There also is a hard limit of 255 bytes for each key-value pair. That's why they also recommend _short keys_ (9 bytes max). The bottom line is: Keep it brief.
+The size of the TXT record is very limited. That is because everything has to fit into a single DNS message (512 bytes)[1]. The documentation mentions a "typical size" of 100-200 bytes, whatever that means. There also is a hard limit of 255 bytes for each key-value pair. That's why they also recommend _short keys_ (9 bytes max). The bottom line is: Keep it brief.
 
 DNS distinguishes between keys with no value and keys with an empty value:
 
