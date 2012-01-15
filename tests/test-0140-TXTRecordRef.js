@@ -16,6 +16,8 @@ dns_sd.TXTRecordSetValue(txtRecord, 'foo', 'bar');
 assert.strictEqual(dns_sd.TXTRecordGetLength(txtRecord), 8);
 dns_sd.TXTRecordSetValue(txtRecord, 'foobar', 'foobar');
 assert.strictEqual(dns_sd.TXTRecordGetLength(txtRecord), 22);
+dns_sd.TXTRecordSetValue(txtRecord, 'buffer', new Buffer('raw'));
+assert.strictEqual(dns_sd.TXTRecordGetLength(txtRecord), 33);
 
 assert.throws(function() { dns_sd.TXTRecordCreate() });
 assert.throws(function() { dns_sd.TXTRecordCreate('narf') });

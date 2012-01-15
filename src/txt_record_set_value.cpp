@@ -9,6 +9,16 @@ using namespace node;
 
 namespace node_mdns {
 
+size_t length(Handle<Value> v) {
+    if (v->IsString()) {
+        return v->ToString()->Utf8Length();
+    } else if (Buffer::HasInstance(v)) {
+        return Buffer::Length(v->ToObject());
+    } else {
+        return 0;
+    }
+}
+
 Handle<Value>
 TXTRecordSetValue(Arguments const& args) {
     HandleScope scope;
@@ -25,14 +35,15 @@ TXTRecordSetValue(Arguments const& args) {
     }
     String::Utf8Value key(args[1]);
     
-    if ( ! args[2]->IsNull() && ! args[2]->IsUndefined() && ! args[2]->IsString()) {
-        return throwTypeError("argument 1 must be null, undefined or a string (value)");
+    if ( ! (args[2]->IsNull() || args[2]->IsUndefined() ||
+        Buffer::HasInstance(args[2]) || args[2]->IsString())) {
+        return throwTypeError("argument 1 must be null, undefined, a buffer or a string (value)");
     }
-    bool has_value = args[2]->IsString();
-    uint8_t length = has_value ? args[2]->ToString()->Utf8Length() : 0;
+    bool has_value = ! (args[2]->IsNull() || args[2]->IsUndefined());
     
     DNSServiceErrorType code = TXTRecordSetValue( & ref->GetTxtRecordRef(), *key,
-            length, *String::Utf8Value(args[2]->ToString()));
+            length(args[2]),
+            args[2]->IsString() ? *String::Utf8Value(args[2]->ToString()) : Buffer::Data(args[2]->ToObject()));
 
     if (code != kDNSServiceErr_NoError) {
         return throwMdnsError("failed to set txt record value", code);
