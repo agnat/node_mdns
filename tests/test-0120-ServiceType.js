@@ -36,6 +36,7 @@ compareServiceType( mdns.makeServiceType(
 
 compareServiceType(new mdns.ServiceType('http', 'tcp', 'foo', 'bar'),    http_type);
 compareServiceType(new mdns.ServiceType(['http', 'tcp', 'foo', 'bar']),    http_type);
+compareServiceType(new mdns.ServiceType({name: 'http', protocol: 'tcp', subtypes: ['foo', 'bar']}), http_type);
 
 assert.throws(function() { mdns.tcp('abcdefghijklmnopq') });
 assert.throws(function() { mdns.tcp('abc%') });
