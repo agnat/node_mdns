@@ -5,7 +5,7 @@ var mdns   = require('../lib/mdns')
   , util   = require('util')
   ;
 
-// XXX This test will break if two instances are run on the same network
+// XXX This test will break if two instances run on the same network
 
 var timeout = 5000;
 var timeoutId = setTimeout(function() {
@@ -105,7 +105,7 @@ process.on('exit', function() {
   assert.ok(downCount >= 1);
 });
 
-var txt_record = {type: 'bacon', chunky: true, strips: 5}
+var txt_record = {type: 'bacon', chunky: true, strips: 5, buffer: new Buffer('raw')}
   , ad = mdns.createAdvertisement(mdns.tcp('node-mdns-test'), 4321,
       {txtRecord: txt_record}, function(err, service, flags) {
         if (err) throw err;
@@ -118,9 +118,10 @@ ad.start();
 //=== Regression Tests ========================================================
 
 // autoResolve can not be set to a falsy value.
-// Reported by orlandv and others (issue #9)
+// Reported by @orlandv and others (issue #9)
 
-// FIX: replaced nested-flag-madness with something more scalable.
+// FIX: replaced nested-flag-madness with something more flexible. Just don't
+//      do any argument forwarding in the first place ...
 
 
 // vim: filetype=javascript
