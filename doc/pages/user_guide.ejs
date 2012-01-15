@@ -5,6 +5,7 @@ h1. mdns User Guide
 (#toc)* "Introduction":#introduction
 * "Tutorial":#tutorial
 ** "On service types":#service_types
+** "TXT Records":#txt_records
 ** "The resolver sequence":#resolver_sequence
 * "Reference":#reference
 ** "mdns.Advertisement()":#advertisement
@@ -91,6 +92,38 @@ bc. var r0 = '_http._tcp,_api-v1'                                   // string fo
 
 In fact all of these are legal constructor arguments for @ServiceType@. JSON (de-)serialization works too. And finally there is @makeServiceType(...)@ which turns any representation into a @ServiceType@ object unless it already is one.
 
+bq(note). mdns liberally makes up service types for testing purposes and it is probably OK if you do the same for your media art project or something. But if you ship a product you should register your service type with the "IANA":http://www.iana.org/form/ports-services.
+
+h3(#txt_records) TXT Records
+
+Each service has an associated DNS TXT record. The application can use it to publish a small amount of metadata. The record contains key-value pairs. The keys must be all printable ascii characters excluding '='. The value may contain any data.
+
+The TXT record is passed to the @Advertisement@ as an @object@:
+
+bc. var txt_record = {
+    name: 'bacon'
+  , chunky: true
+  , strips: 5
+};
+var ad = mdns.createAdvertisement(mdns.tcp('http'), 4321, {txtRecord: txt_record});
+
+Non-string values are automatically converted. You can also use @Buffer@ objects as values to pass raw data.
+
+The size of the TXT record is very limited. That is because everything has to fit into a single DNS message (512 bytes)[1]. The documentation mentions a 'typical size' of 100-200 bytes, whatever that means. There also is a hard limit of 255 bytes for each key-value pair. That's why they also recommend _short keys_ (9 bytes max). The bottom line is: Keep it brief.
+
+DNS distinguishes between keys with no value and keys with an empty value:
+
+bc. var record = {
+    empty: ''
+  , just_a_flag: null // or undefined
+}
+
+When browsing for services, the incoming TXT record is automatically decoded and attached to the @txtRecord@ property of the @service@ object.
+
+Now, what to put into a TXT record? Let's start with what _not_ to put in there. You should not put anything in the TXT record that is _required_ to successfully establish a connection to your service. Things like the protocol version &c. should be negotiated _in-band_ whenever possible. Multicast DNS is pretty much a local thing. If your application relies to much on mDNS it will not work in a wide area network. So, just think twice before depending on the TXT record.
+
+fn1. This is not entirely accurate. It is possible to use larger TXT records. But you should read the relevant sections of the internet draft before doing so.
+
 h3(#resolver_sequence). The resolver sequence
 
 The @Browser@ object uses a resolver sequence to collect address and port information. A resolver sequence is basically just an array of functions. The functions are called in order and receive two arguments: a @service@ object to decorate and a @next()@ function. Each function gathers information on the service, often by invoking asynchronous operations. When done the data is stored on the @service@ object and the next function is invoked by calling @next()@. This is kind of like web server middleware as it happens between service discovery and emitting the events. On the other hand it is just another async function chain thing.
@@ -108,20 +141,20 @@ bc. var browser = mdns.createBrowser(mdns.tcp('http'), {resolverSequence: sequen
 
 And of course you can write your own tasks:
 
-bc. var MCHammer = function MCHammer() {
+bc. var MCHammer = function MCHammer(options) {
   return function MCHammer(service, next) {
     console.log('STOP!');
     setTimeout(function() {
         console.log('hammertime...');
         service.hammertime = new Date();
         next();
-    }, 2000);
+    }, options.delay || 1000);
   }
 }
 
 Although it seems a bit complicated this design solves a number of problems:
 
-# The default behavior to resolve all services down to the IP is very convenient. But it is very expensive and very time consuming, too. Many applications just don't need every port number for every service instance. They just need one. Now it is up to the user to plug together whatever the application requires.
+# The default behavior to resolve all services down to the IP is very convenient. But it is very expensive and very time consuming too. Many applications just don't need every port number for every service instance. They just need one. Now it is up to the user to plug together whatever the application requires.
 # Portability was another issue. Not all platforms support all functions required by the (old) default behavior. The resolver sequence provides the necessary abstraction to handle this cleanly.
 # Something with separation of concerns.
 
@@ -317,6 +350,10 @@ h4. mdns.createAdvertisement(serviceType, port, [options], [callback])
 
 This factory function constructs an @Advertisement@.
 
+h4. mdns.resolve(service, [sequence], callback)
+
+Fill in a @service@ object by running a resolver @sequence@. If no sequence is given the @Browser.defaultResolverSequence@ is used. The callback has the signature @(error, service)@.
+
 h4. mdns.browseThemAll(options)
 
 Creates a browser initialized with the wildcard service type. When started the browser emits events for each _service type_ instead of each service instance. The @service@ objects have no @name@ property. By default the browser has an empty resolver sequence. You still can set one using the @options@ object.
@@ -342,5 +379,6 @@ h2(#further_reading). Further Reading
 * "dns_sd API documentation":http://developer.apple.com/library/mac/#documentation/Networking/Reference/DNSServiceDiscovery_CRef/dns_sd_h/
 * "Bonjour Overview":http://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/NetServices/Introduction.html
 * "DNS Service Discovery Programming Guide":http://developer.apple.com/library/mac/#documentation/Networking/Conceptual/dns_discovery_api/Introduction.html
+* "Internet Draft: DNS-Based Service Discovery":http://files.dns-sd.org/draft-cheshire-dnsext-dns-sd.txt
 
 <!-- vim: set linebreak filetype=textile spell spelllang=en_us : -->
