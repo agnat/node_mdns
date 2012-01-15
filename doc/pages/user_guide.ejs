@@ -107,7 +107,7 @@ bc. var txt_record = {
 };
 var ad = mdns.createAdvertisement(mdns.tcp('http'), 4321, {txtRecord: txt_record});
 
-Non-string values are automatically converted. You can also use @Buffer@ objects as values to pass raw data.
+Non-string values are automatically converted. @Buffer@ objects as values work too.
 
 The size of the TXT record is very limited. That is because everything has to fit into a single DNS message (512 bytes)[1]. The documentation mentions a "typical size" of 100-200 bytes, whatever that means. There also is a hard limit of 255 bytes for each key-value pair. That's why they also recommend _short keys_ (9 bytes max). The bottom line is: Keep it brief.
 
@@ -120,7 +120,7 @@ bc. var record = {
 
 When browsing for services, the incoming TXT record is automatically decoded and attached to the @txtRecord@ property of the @service@ object.
 
-Now, what to put into a TXT record? Let's start with what _not_ to put in there. You should not put anything in the TXT record that is _required_ to successfully establish a connection to your service. Things like the protocol version &c. should be negotiated _in-band_ whenever possible. Multicast DNS is pretty much a local thing. If your application relies to much on mDNS it will not work in a wide area network. So, just think twice before depending on the TXT record.
+Now, what to put into a TXT record? Let's start with what _not_ to put in there. You should not put anything in the TXT record that is _required_ to successfully establish a connection to your service. Things like the protocol version should be negotiated _in-band_ whenever possible. Multicast DNS is pretty much a local thing. If your application relies to much on mDNS it will not work in a wide area network. So, just think twice before depending on the TXT record. That said the TXT record may be used to help with legacy or proprietary protocols. Another application is to convey additional information to the user. Think about a printer dialog. It is very helpful to display the printers location, information about color support &c. _before_ the user makes a choice.
 
 fn1. This is not entirely accurate. It is possible to use larger TXT records. But you should read the relevant sections of the internet draft before doing so.
 
