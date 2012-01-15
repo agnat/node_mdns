@@ -64,3 +64,4 @@ h2. Bugs and Contributions
 
 If you find a bug, please report it using the "issue tracker":http://github.com/agnat/node_mdns/issues.
 
+<!-- vim: set linebreak filetype=textile spell spelllang=en_us : -->
