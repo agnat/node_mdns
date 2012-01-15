@@ -25,4 +25,4 @@ assert.throws(function() { dns_sd.TXTRecordCreate(txtRecord) });
 
 dns_sd.TXTRecordDeallocate( txtRecord );
 
-process.nextTick(function() { console.log('done') });
+process.nextTick(function() { /*console.log('done')*/ });
