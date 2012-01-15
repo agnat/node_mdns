@@ -94,7 +94,7 @@ In fact all of these are legal constructor arguments for @ServiceType@. JSON (de
 
 bq(note). mdns liberally makes up service types for testing purposes and it is probably OK if you do the same for your media art project or something. But if you ship a product you should register your service type with the "IANA":http://www.iana.org/form/ports-services.
 
-h3(#txt_records) TXT Records
+h3(#txt_records). TXT Records
 
 Each service has an associated DNS TXT record. The application can use it to publish a small amount of metadata. The record contains key-value pairs. The keys must be all printable ascii characters excluding '='. The value may contain any data.
 
@@ -116,7 +116,7 @@ DNS distinguishes between keys with no value and keys with an empty value:
 bc. var record = {
     empty: ''
   , just_a_flag: null // or undefined
-}
+};
 
 When browsing for services, the incoming TXT record is automatically decoded and attached to the @txtRecord@ property of the @service@ object.
 
