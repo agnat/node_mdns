@@ -4,6 +4,7 @@ obj = bld.new_task_gen('cxx', 'shlib', 'node_addon')
 obj.target = 'dns_sd'
 obj.uselib = 'DNS_SD'
 obj.includes = ['..']
+obj.cxxflags = ['-Wall']
 obj.source = [ 'dns_sd.cpp'
              , 'dns_service_browse.cpp'
              , 'dns_service_enumerate_domains.cpp'
