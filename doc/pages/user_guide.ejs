@@ -92,7 +92,7 @@ bc. var r0 = '_http._tcp,_api-v1'                                   // string fo
 
 In fact all of these are legal constructor arguments for @ServiceType@. JSON (de-)serialization works too. And finally there is @makeServiceType(...)@ which turns any representation into a @ServiceType@ object unless it already is one.
 
-bq(note). mdns liberally makes up service types for testing purposes and it is probably OK if you do the same for your media art project or something. But if you ship a product you should register your service type with the "IANA":http://www.iana.org/form/ports-services.
+Note: mdns liberally makes up service types for testing purposes and it is probably OK if you do the same for your media art project or something. But if you ship a product you should register your service type with the "IANA":http://www.iana.org/form/ports-services.
 
 h3(#txt_records). TXT Records
 
@@ -120,7 +120,7 @@ bc. var record = {
 
 When browsing for services, the incoming TXT record is automatically decoded and attached to the @txtRecord@ property of the @service@ object.
 
-Now, what to put into a TXT record? Let's start with what _not_ to put in there. You should not put anything in the TXT record that is _required_ to successfully establish a connection to your service. Things like the protocol version should be negotiated _in-band_ whenever possible. Multicast DNS is pretty much a local thing. If your application relies to much on mDNS it will not work in a wide area network. So, just think twice before depending on the TXT record. That said the TXT record may be used to help with legacy or proprietary protocols. Another application is to convey additional information to the user. Think about a printer dialog. It is very helpful to display the printers location, information about color support &c. _before_ the user makes a choice.
+Now, what to put into a TXT record? Let's start with what _not_ to put in there. You should not put anything in the TXT record that is _required_ to successfully establish a connection to your service. Things like the protocol version should be negotiated _in-band_ whenever possible. Multicast DNS is pretty much a local thing. If your application relies to much on mDNS it will not work in a wide area network. So, just think twice before depending on the TXT record. That said, the TXT record may be used to help with legacy or proprietary protocols. Another application is to convey additional information to the user. Think about a printer dialog. It is very helpful to display the printers location, information about color support &c. _before_ the user makes a choice.
 
 fn1. This is not entirely accurate. It is possible to use larger TXT records. But you should read the relevant sections of the internet draft before doing so.
 
