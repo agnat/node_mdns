@@ -11,7 +11,7 @@ exports.suffixedServiceType = function suffixedServiceType(serviceName, protocol
   return mdns.makeServiceType.apply(this, arguments)
 }
 
-exports.runTestAd = function createTestAd(type, port, uptime, cooltime, cb) {
+exports.runTestAd = function runTestAd(type, port, uptime, cooltime, cb) {
   if ( ! cb ) {
     cb = cooltime;
     cooltime = uptime;
