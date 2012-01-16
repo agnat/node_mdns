@@ -151,7 +151,7 @@ DNSServiceRegister(Arguments const& args) {
             htons(port),
             txtLen,
             txtRecord,
-            OnServiceRegistered, // XXX better set no callback if the user didn't
+            args[9]->IsFunction() ? OnServiceRegistered : NULL,
             serviceRef);
     if (error != kDNSServiceErr_NoError) {
         return throwMdnsError("DNSServiceRegister()", error);
