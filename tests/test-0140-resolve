@@ -29,6 +29,7 @@ browser.on('serviceUp', function(service) {
   var s1 = clone(service);
   mdns.resolve(s1, function(error, service) {
     console.log('default resolve:', error, service);
+    if (error) throw error;
     assert.ok('host' in service);
     assert.ok('port' in service);
     assert.ok('fullname' in service);
@@ -41,6 +42,7 @@ browser.on('serviceUp', function(service) {
   var seq2 = [rst.DNSServiceResolve(), rst.getaddrinfo()];
   mdns.resolve(s2, seq2, function(error, service) {
     console.log('getaddrinfo resolve:', error, service);
+    if (error) throw error;
     assert.ok('host' in service);
     assert.ok('port' in service);
     assert.ok('fullname' in service);
