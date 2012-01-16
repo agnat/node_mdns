@@ -7,7 +7,7 @@ import os
 #VERSION = package['version']        # dito
 
 APPNAME = 'node_mdns'
-VERSION = '0.0.4'
+VERSION = '0.0.5-dev'
 
 def set_options(opt):
   opt.tool_options('compiler_cxx')
