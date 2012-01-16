@@ -16,6 +16,7 @@ setTimeout(function() { ad2.stop() }, t);
 
 function checkAd(service, name, proto) {
   assert.ok('flags' in service);
+  assert.strictEqual(typeof service.flags, 'number');
   assert.ok(service.type instanceof mdns.ServiceType);
   assert.strictEqual(service.type.toString(), '_' + name + '._' + proto + '.');
 }
