@@ -39,8 +39,6 @@ TXTRecordSetValue(Arguments const& args) {
         Buffer::HasInstance(args[2]) || args[2]->IsString())) {
         return throwTypeError("argument 1 must be null, undefined, a buffer or a string (value)");
     }
-    bool has_value = ! (args[2]->IsNull() || args[2]->IsUndefined());
-    
     DNSServiceErrorType code = TXTRecordSetValue( & ref->GetTxtRecordRef(), *key,
             length(args[2]),
             args[2]->IsString() ? *String::Utf8Value(args[2]->ToString()) : Buffer::Data(args[2]->ToObject()));

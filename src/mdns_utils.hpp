@@ -43,7 +43,7 @@ throwMdnsError(const char * message, DNSServiceErrorType error_code) {
 
 inline
 bool
-argumentCountMismatch(v8::Arguments const& args, size_t expectedCount) {
+argumentCountMismatch(v8::Arguments const& args, int expectedCount) {
     return args.Length() != expectedCount;
 }
 
