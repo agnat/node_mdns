@@ -22,7 +22,7 @@ browser.on('serviceUp', function(service) {
 
   var result_count = 0;
   function done() {
-    if (++result_count === 2) {
+    if (++result_count === 3) {
       t.done();
     }
   }
@@ -47,6 +47,18 @@ browser.on('serviceUp', function(service) {
     assert.ok('port' in service);
     assert.ok('fullname' in service);
     assert.ok('addresses' in service);
+    browser.stop();
+    done();
+  });
+
+  var s3 = clone(service);
+  var seq3 = [rst.DNSServiceResolve()];
+  mdns.resolve(s2, seq3, function(error, service) {
+    //console.log('resolve (no addresses):', error, service);
+    if (error) throw error;
+    assert.ok('host' in service);
+    assert.ok('port' in service);
+    assert.ok('fullname' in service);
     browser.stop();
     done();
   });
