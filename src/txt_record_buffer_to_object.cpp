@@ -43,7 +43,9 @@ txtRecordBufferToObject(Arguments const& args) {
             return throwMdnsError("TXTRecordGetItemAtIndex", error);
         }
         result->Set(String::New(&*key.begin()),
-                String::New(static_cast<const char*>(value_ptr), value_length));
+                value_ptr ? 
+                String::New(static_cast<const char*>(value_ptr), value_length) :
+                Undefined());
     }
     return scope.Close(result);
 }
