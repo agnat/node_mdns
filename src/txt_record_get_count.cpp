@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include <node.h>
 #include <node_buffer.h>
 

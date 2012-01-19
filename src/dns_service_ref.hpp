@@ -6,8 +6,6 @@
 
 #include <node.h>
 
-#include <iostream>
-
 namespace node_mdns {
 
 class ServiceRef : public node::ObjectWrap {

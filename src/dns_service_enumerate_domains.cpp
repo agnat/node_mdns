@@ -2,7 +2,6 @@
 
 #include <v8.h>
 #include <node.h>
-#include <node_buffer.h>
 
 #include "mdns_utils.hpp"
 #include "dns_service_ref.hpp"

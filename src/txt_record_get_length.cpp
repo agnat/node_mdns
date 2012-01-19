@@ -1,7 +1,4 @@
-#include <iostream>
-
 #include <node.h>
-#include <node_buffer.h>
 
 #include "mdns_utils.hpp"
 #include "txt_record_ref.hpp"
