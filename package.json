@@ -5,11 +5,12 @@
 , "scripts": { "test": "utils/run_tests" }
 , "keywords": ["mdns", "zeroconf", "bonjour", "dns_sd", "mDNSResponder"]
 , "devDependencies": 
-  { "ejs":     "*"
-  , "less":    "*"
-  , "express": "*"
-  , "step":    "*"
-  , "mkdirp":  "*"
+  { "ejs":      "*"
+  , "less":     "*"
+  , "express":  "*"
+  , "step":     "*"
+  , "mkdirp":   "*"
+  , "nodeunit": "*"
   }
 , "repository":
   { "type": "git"
