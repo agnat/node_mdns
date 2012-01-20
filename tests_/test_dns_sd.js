@@ -20,7 +20,7 @@ exports['testing DNSServiceRef constructor'] = function(t) {
 
 //=== DNSServiceRegister ======================================================
 
-exports['DNSServiceRegister(...)'] = function(t) {
+exports['testing DNSServiceRegister(...)'] = function(t) {
   var serviceRef = new dns_sd.DNSServiceRef();
 
   t.doesNotThrow(function() {
@@ -297,7 +297,7 @@ exports['DNSServiceRegister(...)'] = function(t) {
 
 //=== DNSServiceProcessResult =================================================
 
-exports['DNSServiceProcessResult(...)'] = function(t) {
+exports['testing DNSServiceProcessResult(...)'] = function(t) {
   var serviceRef = new dns_sd.DNSServiceRef()
     , IOWatcher  = process.binding('io_watcher').IOWatcher
     , watcher    = new IOWatcher()
@@ -350,7 +350,7 @@ exports['DNSServiceProcessResult(...)'] = function(t) {
 
 //=== DNSServiceRefSockFD =====================================================
 
-exports['DNSServiceRefSockFD(...)'] = function(t) {
+exports['testing DNSServiceRefSockFD(...)'] = function(t) {
   var serviceRef = new dns_sd.DNSServiceRef();
 
   t.throws(function() {dns_sd.DNSServiceRefSockFD(serviceRef)},
@@ -375,7 +375,7 @@ exports['DNSServiceRefSockFD(...)'] = function(t) {
 
 //=== DNSServiceBrowse ========================================================
 
-exports['DNSServiceBrowse(...)'] = function(t) {
+exports['testing DNSServiceBrowse(...)'] = function(t) {
   var serviceRef = new dns_sd.DNSServiceRef();
 
   t.doesNotThrow(function() {
@@ -407,8 +407,7 @@ exports['DNSServiceBrowse(...)'] = function(t) {
     var ref = new dns_sd.DNSServiceRef();
     dns_sd.DNSServiceBrowse(ref, 0, "", service_type, null,
       function() {}, null);
-  }, '"interfaceIndex" must be a number, not a string'
-  );
+  }, '"interfaceIndex" must be a number, not a string');
 
   t.throws(function() {
     var ref = new dns_sd.DNSServiceRef();
@@ -430,6 +429,178 @@ exports['DNSServiceBrowse(...)'] = function(t) {
     var ref = new dns_sd.DNSServiceRef();
     dns_sd.DNSServiceBrowse(ref, 0, 0, service_type, null, 0, null);
   }, '"callback" must be a function, not a number');
+
+  t.done();
+}
+
+//=== DNSServiceRefDeallocate =================================================
+
+exports['testing DNSServiceRefDeallocate(...)'] = function(t) {
+  var serviceRef = new dns_sd.DNSServiceRef();
+
+  dns_sd.DNSServiceRegister(serviceRef, 0, 0, null, "_node-mdns-test._tcp",
+      null, null, 4321, null, null, null);
+
+  t.strictEqual(serviceRef.initialized, true);
+
+  dns_sd.DNSServiceRefDeallocate(serviceRef);
+
+  t.strictEqual(serviceRef.initialized, false,
+      "'initialized' must be false after deallocation");
+
+  t.strictEqual(serviceRef.fd, -1,
+      "'fd' must be -1 after deallocation");
+
+  t.throws(function() { dns_sd.DNSServiceRefDeallocate(serviceRef); },
+      "serviceRef is already deallocated");
+
+  t.throws(function() { dns_sd.DNSServiceRefDeallocate(); },
+      "not enough arguments");
+
+  t.throws(function() { dns_sd.DNSServiceRefDeallocate(undefined); },
+      "argument must be DNSServiceRef, not undefined");
+
+  t.throws(function() { dns_sd.DNSServiceRefDeallocate(serviceRef, serviceRef); },
+      "to many arguments");
+
+
+  t.done();
+}
+
+//=== DNSServiceResolve =======================================================
+
+exports['testing DNSServiceResolve(...)'] = function(t) {
+  var serviceRef = new dns_sd.DNSServiceRef();
+
+  t.doesNotThrow(function() {
+    dns_sd.DNSServiceResolve(serviceRef, 0, 0, 'hostname',
+      service_type, 'local.', function() {}, null);
+  });
+
+  t.strictEqual(serviceRef.initialized, true);
+
+  t.throws(function() {
+    dns_sd.DNSServiceResolve();
+  }, "not enough arguments");
+
+  t.throws(function() {
+    var ref = new dns_sd.DNSServiceRef();
+    dns_sd.DNSServiceResolve(ref, "", 0, 'hostname',
+      service_type, 'local.', function() {}, null);
+  }, '"flags" must be a number, not a string');
+
+  t.throws(function() {
+    var ref = new dns_sd.DNSServiceRef();
+    dns_sd.DNSServiceResolve(ref, 0, null, 'hostname',
+      service_type, 'local.', function() {}, null);
+  }, '"interfaceIndex" must be a number, not null');
+
+  t.throws(function() {
+    var ref = new dns_sd.DNSServiceRef();
+    dns_sd.DNSServiceResolve(ref, 0, 0, null,
+      service_type, 'local.', function() {}, null);
+  }, '"name" must be a string, not null');
+
+  t.throws(function() {
+    var ref = new dns_sd.DNSServiceRef();
+    dns_sd.DNSServiceResolve(ref, 0, 0, 'hostname', null,
+      'local.', function() {}, null);
+  }, '"regtype" must be a string, not null');
+
+  t.throws(function() {
+    var ref = new dns_sd.DNSServiceRef();
+    dns_sd.DNSServiceResolve(ref, 0, 0, 'hostname',
+      service_type, null, function() {}, null);
+  }, '"domain" must be a string, not null');
+
+  t.throws(function() {
+    var ref = new dns_sd.DNSServiceRef();
+    dns_sd.DNSServiceResolve(ref, 0, 0, 'hostname',
+      service_type, 'local.', null, null);
+  }, '"callback" must be a function, not null');
+
+  t.done();
+}
+
+//=== DNSServiceEnumerateDomains ==============================================
+
+exports['testing DNSServiceEnumerateDomains(...)'] = function(t) {
+  var serviceRef = new dns_sd.DNSServiceRef();
+
+  t.doesNotThrow( function() {
+    dns_sd.DNSServiceEnumerateDomains(serviceRef,
+      dns_sd.kDNSServiceFlagsBrowseDomains, 0, function() {}, null);
+  });
+
+  t.notEqual(serviceRef.fd, -1);
+  t.strictEqual(serviceRef.initialized, true);
+
+  t.throws(function() {
+    dns_sd.DNSServiceEnumerateDomains(serviceRef,
+      dns_sd.kDNSServiceFlagsBrowseDomains, 0, function() {}, null);
+  }, 'serviceRef already initialized');
+
+  t.throws(function() {
+    var serviceRef = new dns_sd.DNSServiceRef();
+    dns_sd.DNSServiceEnumerateDomains(serviceRef,
+      'flags', 0, function() {}, null);
+  }, '"flags" must be a number, not a string');
+
+  t.throws(function() {
+    var serviceRef = new dns_sd.DNSServiceRef();
+    dns_sd.DNSServiceEnumerateDomains(serviceRef,
+      0, 0, function() {}, null);
+  }, '"flags" must be kDNSServiceFlagsBrowseDomains or ' +
+     'kDNSServiceFlagsRegistrationDomains');
+
+  t.throws(function() {
+    var serviceRef = new dns_sd.DNSServiceRef();
+    dns_sd.DNSServiceEnumerateDomains(serviceRef,
+      dns_sd.kDNSServiceFlagsBrowseDomains, 'interfaceIndex', function() {}, null);
+  }, '"interfaceIndex" must be number, not a string');
+
+  t.throws(function() {
+    var serviceRef = new dns_sd.DNSServiceRef();
+    dns_sd.DNSServiceEnumerateDomains(serviceRef,
+      dns_sd.kDNSServiceFlagsBrowseDomains, 0, 'function', null);
+  }, '"callback" must be function, not a string');
+
+  t.throws(function() {
+    var serviceRef = new dns_sd.DNSServiceRef();
+    dns_sd.DNSServiceEnumerateDomains(serviceRef,
+      dns_sd.kDNSServiceFlagsBrowseDomains, 0, null, null);
+  }, '"callback" must be function, not null');
+
+  t.done();
+}
+
+//=== TXTRecordRef ============================================================
+
+exports['testing TXTRecordRef'] = function(t) {
+  var txtRecord = new dns_sd.TXTRecordRef();
+  dns_sd.TXTRecordCreate(txtRecord, null);
+
+  var txtRecord = new dns_sd.TXTRecordRef();
+  var buffer = new Buffer(256);
+  dns_sd.TXTRecordCreate(txtRecord, buffer);
+  txtRecord.buffer = buffer;
+
+  dns_sd.TXTRecordSetValue(txtRecord, 'foo', 'bar');
+  t.strictEqual(dns_sd.TXTRecordGetLength(txtRecord), 8);
+
+  dns_sd.TXTRecordSetValue(txtRecord, 'foobar', 'foobar');
+  t.strictEqual(dns_sd.TXTRecordGetLength(txtRecord), 22);
+
+  dns_sd.TXTRecordSetValue(txtRecord, 'buffer', new Buffer('raw'));
+  t.strictEqual(dns_sd.TXTRecordGetLength(txtRecord), 33);
+
+  t.throws(function() { dns_sd.TXTRecordCreate() });
+  t.throws(function() { dns_sd.TXTRecordCreate('narf') });
+  t.throws(function() { dns_sd.TXTRecordCreate(txtRecord) });
+
+  t.doesNotThrow(function() { dns_sd.TXTRecordDeallocate( txtRecord ); });
+  t.throws(function() { dns_sd.TXTRecordDeallocate(); });
+  t.throws(function() { dns_sd.TXTRecordDeallocate(null, null); });
 
   t.done();
 }

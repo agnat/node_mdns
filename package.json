@@ -2,7 +2,7 @@
 , "version": "0.0.5-dev"
 , "description": "multicast DNS service discovery"
 , "main": "./lib/mdns.js"
-, "scripts": { "test": "utils/run_tests" }
+, "scripts": { "test": "utils/testrun" }
 , "keywords": ["mdns", "zeroconf", "bonjour", "dns_sd", "mDNSResponder"]
 , "devDependencies": 
   { "ejs":      "*"
@@ -11,6 +11,7 @@
   , "step":     "*"
   , "mkdirp":   "*"
   , "nodeunit": "*"
+  , "nopt":     "*"
   }
 , "repository":
   { "type": "git"

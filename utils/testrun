@@ -1,15 +1,47 @@
 #!/usr/bin/env node
 
-var path = require('path');
-
 try {
-  var reporter = require('nodeunit').reporters.default;
+  var nodeunit = require('nodeunit')
+    , nopt = require('nopt')
+    , path = require('path')
+    , mdns_test = require('../lib/mdns_test')
+    ;
 } catch(e) {
-  console.error("module nodeunit not found. Run 'npm link' to install it.");
+  console.error("dependencies not found. Run 'npm link' to install them.");
   process.exit(1);
 }
 
+nodeunit.reporters.quickfix = mdns_test.quickfix;
+
+var formats = Object.getOwnPropertyNames(nodeunit.reporters)
+  , knownOptions = { 'help'  : Boolean 
+                   , 'format': formats
+                   }
+  , parsed = nopt(knownOptions)
+  ;
+
+process.title = path.basename(__filename);
+if (parsed.help) { printHelp(); process.exit(); }
 process.chdir(path.join(__dirname, '..'));
-reporter.run(['tests_']);
+nodeunit.reporters[parsed.format || 'default'].run(['tests_']);
+
+function printUsage() {
+  console.log('Usage:', process.title,
+      Object.getOwnPropertyNames(knownOptions).map(function(o) {
+        return '[--' + o + ']'
+      }).join(' '));
+}
+
+function printHelp() {
+  printUsage(); console.log(
+'Options:\n\
+   --help          Print this help and exit\n\
+   --format=<fmt>  Use formatter <fmt>\n\
+\n\
+Formats:\n\
+   ' + formats.join(', ') + '\n\
+');
+
+}
 
 // vim: filetype=javascript :
