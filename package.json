@@ -2,18 +2,8 @@
 , "version": "0.0.5-dev"
 , "description": "multicast DNS service discovery"
 , "main": "./lib/mdns.js"
+, "scripts": { "test": "utils/run_tests" }
 , "keywords": ["mdns", "zeroconf", "bonjour", "dns_sd", "mDNSResponder"]
-, "licenses": [
-    { "type": "MIT"
-    , "url": "http://github.com/agnat/node_mdns/raw/master/LICENSE"
-    }
-  ]
-, "bugs": { "url": "http://github.com/agnat/node_mdns/issues" }
-, "repository":
-  { "type": "git"
-  , "url":  "http://github.com/agnat/node_mdns.git"
-  }
-, "homepage": "http://agnat.github.com/node_mdns"
 , "devDependencies": 
   { "ejs":     "*"
   , "less":    "*"
@@ -21,6 +11,17 @@
   , "step":    "*"
   , "mkdirp":  "*"
   }
+, "repository":
+  { "type": "git"
+  , "url":  "http://github.com/agnat/node_mdns.git"
+  }
+, "homepage": "http://agnat.github.com/node_mdns"
+, "bugs": { "url": "http://github.com/agnat/node_mdns/issues" }
+, "licenses": [
+    { "type": "MIT"
+    , "url": "http://github.com/agnat/node_mdns/raw/master/LICENSE"
+    }
+  ]
 , "author": {
     "name":   "David Siegel"
   , "email":  "david@artcom.de"
