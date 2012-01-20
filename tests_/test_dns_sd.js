@@ -1,11 +1,11 @@
 var dns_sd       = require('../lib/mdns').dns_sd
   , service_type = "_mdns_test._tcp"
-  , port         = 4321
+  , test_port    = 4321
   ;
 
 //=== DNSServiceRef ===========================================================
 
-exports['testing DNSServiceRef constructor'] = function(t) {
+exports['testing DNSServiceRef'] = function(t) {
   
   var sr = new dns_sd.DNSServiceRef();
 
@@ -24,14 +24,14 @@ exports['testing DNSServiceRegister(...)'] = function(t) {
   var serviceRef = new dns_sd.DNSServiceRef();
 
   t.doesNotThrow(function() {
-    var // sr = new dns_sd.DNSServiceRef()
+    var /* uses paren scope serviceRef */
         flags  = 0
       , iface  = 0
       , name   = null
       , type   = service_type
       , domain = null
       , host   = null
-      , port   = 4321
+      , port   = test_port
       , txtRec = null
       , cb     = null
       , ctx    = null
@@ -47,14 +47,14 @@ exports['testing DNSServiceRegister(...)'] = function(t) {
       'DNSServiceRef must be initialized');
 
   t.throws(function() {
-    var /* uses parent scope service ref */
+    var /* uses parent scope serviceRef */
         flags  = 0
       , iface  = 0
       , name   = null
       , type   = service_type
       , domain = null
       , host   = null
-      , port   = 4321
+      , port   = test_port
       , txtRec = null
       , cb     = null
       , ctx    = null
@@ -71,7 +71,7 @@ exports['testing DNSServiceRegister(...)'] = function(t) {
       , type   = service_type
       , domain = 'somedomain'
       , host   = 'somehost'
-      , port   = 4321
+      , port   = test_port
       , txtRec = new Buffer('\0')
       , cb     = function() {}
       , ctx    = {anything: true}
@@ -96,7 +96,7 @@ exports['testing DNSServiceRegister(...)'] = function(t) {
       , type   = service_type
       , domain = null
       , host   = null
-      , port   = 4321
+      , port   = test_port
       , txtRec = null
       , cb     = null
       , ctx    = null
@@ -113,7 +113,7 @@ exports['testing DNSServiceRegister(...)'] = function(t) {
       , type   = service_type
       , domain = null
       , host   = null
-      , port   = 4321
+      , port   = test_port
       , txtRec = null
       , cb     = null
       , ctx    = null
@@ -130,7 +130,7 @@ exports['testing DNSServiceRegister(...)'] = function(t) {
       , type   = service_type
       , domain = null
       , host   = null
-      , port   = 4321
+      , port   = test_port
       , txtRec = null
       , cb     = null
       , ctx    = null
@@ -147,7 +147,7 @@ exports['testing DNSServiceRegister(...)'] = function(t) {
       , type   = null /* broken */
       , domain = null
       , host   = null
-      , port   = 4321
+      , port   = test_port
       , txtRec = null
       , cb     = null
       , ctx    = null
@@ -164,7 +164,7 @@ exports['testing DNSServiceRegister(...)'] = function(t) {
       , type   = 1111111111 /* broken */
       , domain = null
       , host   = null
-      , port   = 4321
+      , port   = test_port
       , txtRec = null
       , cb     = null
       , ctx    = null
@@ -181,7 +181,7 @@ exports['testing DNSServiceRegister(...)'] = function(t) {
       , type   = service_type
       , domain = 1111111111 /* broken */
       , host   = null
-      , port   = 4321
+      , port   = test_port
       , txtRec = null
       , cb     = null
       , ctx    = null
@@ -198,7 +198,7 @@ exports['testing DNSServiceRegister(...)'] = function(t) {
       , type   = service_type
       , domain = null
       , host   = 1111111111 /* broken */
-      , port   = 4321
+      , port   = test_port
       , txtRec = null
       , cb     = null
       , ctx    = null
@@ -232,7 +232,7 @@ exports['testing DNSServiceRegister(...)'] = function(t) {
       , type   = service_type
       , domain = null
       , host   = null
-      , port   = 4321
+      , port   = test_port
       , txtRec = 1111111111 /* broken */
       , cb     = null
       , ctx    = null
@@ -249,7 +249,7 @@ exports['testing DNSServiceRegister(...)'] = function(t) {
       , type   = service_type
       , domain = null
       , host   = null
-      , port   = 4321
+      , port   = test_port
       , txtRec = null
       , cb     = '=== KAPUTT ===' /* broken */
       , ctx    = null
@@ -342,7 +342,7 @@ exports['testing DNSServiceProcessResult(...)'] = function(t) {
   }
 
   dns_sd.DNSServiceRegister(serviceRef, 0, 0, null, service_type,
-      null, null, 4321, null, result_callback, "foobar");
+      null, null, test_port, null, result_callback, "foobar");
 
   watcher.set(serviceRef.fd, true, false);
   watcher.start();
@@ -357,7 +357,7 @@ exports['testing DNSServiceRefSockFD(...)'] = function(t) {
       'call with uninitialized serviceRef must throw');
 
   dns_sd.DNSServiceRegister(serviceRef, 0, 0, null, service_type,
-      null, null, port, null, null, null);
+      null, null, test_port, null, null, null);
 
   var fd;
   t.doesNotThrow(function() {fd = dns_sd.DNSServiceRefSockFD(serviceRef)});
@@ -439,7 +439,7 @@ exports['testing DNSServiceRefDeallocate(...)'] = function(t) {
   var serviceRef = new dns_sd.DNSServiceRef();
 
   dns_sd.DNSServiceRegister(serviceRef, 0, 0, null, "_node-mdns-test._tcp",
-      null, null, 4321, null, null, null);
+      null, null, test_port, null, null, null);
 
   t.strictEqual(serviceRef.initialized, true);
 
