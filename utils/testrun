@@ -1,47 +1,249 @@
 #!/usr/bin/env node
 
 try {
-  var nodeunit = require('nodeunit')
+  var path = require('path')
+    , fs = require('fs')
+    , assert = require('assert')
+    , events = require('events')
     , nopt = require('nopt')
-    , path = require('path')
-    , mdns_test = require('../lib/mdns_test')
+    , chain = require('slide').chain
+    , minimatch = require('minimatch')
+    , mkdirp = require('mkdirp')
     ;
 } catch(e) {
-  console.error("dependencies not found. Run 'npm link' to install them.");
+  console.error("Failed to load dependencies. Run 'npm link' to install them.");
+  console.error(e);
   process.exit(1);
 }
 
-nodeunit.reporters.quickfix = mdns_test.quickfix;
+function padding(l) {
+  var p = '', i = 0;
+  for (i = 0; i < l; ++i) { p += ' ' }
+  return p;
+}
 
-var formats = Object.getOwnPropertyNames(nodeunit.reporters)
-  , knownOptions = { 'help'  : Boolean 
-                   , 'format': formats
+var DefaultFormater = function(options) {
+  var self = this
+    , max_length = 0;
+  self.groupStart = function groupStart(name, members) {
+    console.log();
+    console.log(bold(name));
+    max_length = 0;
+    members.forEach(function(m) {
+      if (m.length > max_length) { max_length = m.length }
+    });
+  }
+  this.testcaseEnd = function testcaseEnd(name, assertions, failures) {
+    var pad = padding(max_length - name.length);
+    console.log( failures.length === 0 ? '\u2714' : '\u2718'
+               , name, pad
+               , '[' + (assertions.length - failures.length) + '/' + assertions.length + ']'
+               );
+
+    if (options.verbose) {
+      assertions.forEach(function(a) {
+        console.log(' ', a.error ? '\u2718' : '\u2714', a.message || 'MESSAGE MISSING');
+      });
+    }
+    failures.forEach(function(f) {
+      console.log(f.error.toString());
+      console.log(f.error);
+    });
+  }
+  this.done = function done(total, failed) {
+    console.log()
+    if (failed) {
+      console.log('FAILURES:', failed + '/' + total, 'assertions failed', 
+          options.bark ? String.fromCharCode(7) : '');
+    } else {
+      console.log('OK:', total, 'assertions');
+    }
+  }
+}
+
+var knownOptions = { 'bark'    : Boolean
+                   , 'format'  : ['default']
+                   , 'verbose' : Boolean 
+                   , 'help'    : Boolean 
                    }
   , parsed = nopt(knownOptions)
+  , test_dir = path.join(__dirname, '..', 'tests_')
   ;
+
+if ( ! ('bark' in parsed)) { parsed.bark = true; }
+var formats = { default: new DefaultFormater(parsed) };
 
 process.title = path.basename(__filename);
 if (parsed.help) { printHelp(); process.exit(); }
-process.chdir(path.join(__dirname, '..'));
-nodeunit.reporters[parsed.format || 'default'].run(['tests_']);
+
+function run_tests(files, cb) {
+  var reporter = new AssertRecorder()
+    , format = formats[parsed.format || 'default']
+    ;
+  Object.keys(format).forEach(function(ev) {
+    if (typeof format[ev] === 'function') {
+      reporter.on(ev, format[ev]);
+    }
+  });
+
+  chain( [ [glob, test_dir, 'test_*.js']
+         , [run_modules, chain.last, reporter]
+         , [save_reports, reporter]
+         ]
+         , function() { reporter.allDone(); cb(undefined, reporter.failedCount) }
+       )
+}
+
+function run_modules(/*[file, ...], cb*/) {
+  var files = Array.prototype.slice.call(arguments)
+    , cb = files.pop()
+    , reporter = files.pop();
+    ;
+
+  var module_chain = files.map(function(f) {
+      var name = path.basename(path.basename(f), '.js');
+      return [run_group, require(f), name, reporter];
+  });
+  chain(module_chain, cb);
+}
+
+function run_group(group, name, reporter, cb) {
+  var names = Object.keys(group)
+    , group_chain = names.map(function(test) {
+        return [ typeof group[test] === 'function' ? run_testcase : run_group
+               , group[test], test, reporter];
+      });
+    ;
+    reporter.group_start(name, names);
+    chain(group_chain, function(error) {
+      reporter.group_end(name);
+      cb(error);
+    });
+}
+
+function run_testcase(f, name, reporter, cb) {
+  reporter.testcase_start(name);
+  reporter.done = function done() {
+    reporter.testcase_end(name);
+    cb();
+  };
+  f(reporter);
+}
+
+function save_reports(reporter, cb) {
+  var dir = path.join(__dirname, '..', 'build', 'reports');
+  chain( [ [mkdirp, dir]
+         , [fs.writeFile, path.join(dir, 'tests.json'), JSON.stringify(reporter.results)]
+         ]
+       , cb
+       );
+}
+
+function glob(dir, pattern, cb) {
+  fs.readdir(dir, function(error, files) {
+    cb(error, error ? 
+        undefined
+      : files . filter(function(f) { return minimatch(f, pattern) })
+               . map(function(f) { return path.join(dir, f) }));
+  });
+}
+
+var msg_indices = 
+{ ok: 1
+, equal: 2
+, notEqual: 2
+, deepEqual: 2
+, notDeepEqual: 2
+, strictEqual: 2
+, notStrictEqual: 2
+, throws: 1
+, doesNotThrow: 1
+};
+
+function wrap_assert(name) {
+  var msg_idx = msg_indices[name];
+  return function() {
+    var assertion = {test: name, message: arguments[msg_idx], error: undefined};
+    try {
+      assert[name].apply(null, arguments);
+    } catch (error) {
+      assertion.error = error;
+    }
+    this.back().push(assertion);
+  }
+}
+
+function add_assert_wrappers(t) {
+  var p, msg_idx;
+  for (p in assert) {
+    if (assert[p] !== assert.AssertionError) {
+      t[p] = wrap_assert(p);
+    }
+  }
+}
+
+var AssertRecorder = function AssertRecorder() {
+  events.EventEmitter.call(this);
+  this.results = {};
+  this.stack = [this.results];
+  this.assertionCount = 0;
+  this.failedCount = 0;
+}
+AssertRecorder.prototype = new events.EventEmitter();
+add_assert_wrappers(AssertRecorder.prototype);
+
+AssertRecorder.prototype.group_start = function group_start(name, members) {
+  var group = this.back()[name] = {};
+  this.stack.push(group);
+  this.emit('groupStart', name, members);
+}
+AssertRecorder.prototype.group_end = function group_end(name) {
+  this.stack.pop();
+  this.emit('groupEnd', name);
+}
+AssertRecorder.prototype.testcase_start = function testcase_start(name) {
+  var testcase = this.back()[name] = [];
+  this.stack.push(testcase);
+  this.emit('testcaseStart', name);
+}
+AssertRecorder.prototype.testcase_end = function testcase_end(name) {
+  var assertions = this.stack.pop()
+    , failures = assertions.filter(function(a) { return a.error }) || []
+    ;
+  this.emit('testcaseEnd', name, assertions, failures);
+  this.assertionCount += assertions.length;
+  this.failedCount += failures.length;
+}
+AssertRecorder.prototype.back = function back() {
+  return this.stack[this.stack.length - 1];
+}
+AssertRecorder.prototype.allDone = function() {
+  this.emit('done', this.assertionCount, this.failedCount);
+}
+
+run_tests(parsed.argv.remain, function(error, failed_count) {
+  process.exit(failed_count);
+});
 
 function printUsage() {
   console.log('Usage:', process.title,
-      Object.getOwnPropertyNames(knownOptions).map(function(o) {
+      Object.keys(knownOptions).map(function(o) {
         return '[--' + o + ']'
       }).join(' '));
 }
 
 function printHelp() {
   printUsage(); console.log(
-'Options:\n\
-   --help          Print this help and exit\n\
+"Options:\n\
    --format=<fmt>  Use formatter <fmt>\n\
+   --no-bark       Don't bark on test failures\n\
+   --help          Print this help and exit\n\
 \n\
 Formats:\n\
-   ' + formats.join(', ') + '\n\
-');
+   " + Object.keys(formats).join(', ') + "\n\
+");
 
 }
 
+function bold(s) { return '\033[1m' + s + '\033[22m' };
 // vim: filetype=javascript :
