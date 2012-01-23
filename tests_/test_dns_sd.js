@@ -608,11 +608,12 @@ exports['TXTRecordRef'] = function(t) {
   t.throws(function() { dns_sd.TXTRecordCreate(txtRecord) },
       'duplicate call to TXTRecordCreate() must throw');
 
-  t.doesNotThrow(function() { dns_sd.TXTRecordDeallocate( txtRecord ); });
-  t.throws(function() { dns_sd.TXTRecordDeallocate(); });
-  t.throws(function() { dns_sd.TXTRecordDeallocate(null, null); });
-
-t.ok(false, "'flags' must be a number, not a string");
+  t.doesNotThrow(function() { dns_sd.TXTRecordDeallocate( txtRecord ); },
+      'deallocating a txtRecord must not throw');
+  t.throws(function() { dns_sd.TXTRecordDeallocate(); },
+      'TXTRecordDeallocate() must throw when called without arguments');
+  t.throws(function() { dns_sd.TXTRecordDeallocate(null, null); },
+      'TXTRecordDeallocate() must throw when called with more than one argument');
 
   t.done();
 }
