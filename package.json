@@ -26,8 +26,8 @@
     , "url": "http://github.com/agnat/node_mdns/raw/master/LICENSE"
     }
   ]
-, "author": {
-    "name":   "David Siegel"
+, "author":
+  { "name":   "David Siegel"
   , "email":  "david@artcom.de"
   , "github": "agnat"
   }

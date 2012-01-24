@@ -94,12 +94,7 @@ function run_tests(files, cb) {
        )
 }
 
-function run_modules(/*[file, ...], cb*/) {
-  var files = Array.prototype.slice.call(arguments)
-    , cb = files.pop()
-    , reporter = files.pop();
-    ;
-
+function run_modules(files, reporter, cb) {
   var module_chain = files.map(function(f) {
       var name = path.basename(path.basename(f), '.js');
       return [run_group, require(f), name, reporter];
@@ -143,8 +138,8 @@ function glob(dir, pattern, cb) {
   fs.readdir(dir, function(error, files) {
     cb(error, error ? 
         undefined
-      : files . filter(function(f) { return minimatch(f, pattern) })
-               . map(function(f) { return path.join(dir, f) }));
+      : [ files . filter(function(f) { return minimatch(f, pattern) })
+                . map(function(f) { return path.join(dir, f) })]);
   });
 }
 
