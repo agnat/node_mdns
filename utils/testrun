@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+process.env.AVAHI_COMPAT_NOWARN = 1
+
 try {
   var path = require('path')
     , fs = require('fs')
