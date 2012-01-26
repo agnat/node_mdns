@@ -1,5 +1,4 @@
-import os
-import subprocess
+import os, shutil, subprocess, Scripting
 
 # nice, but requires python 2.6 ... 
 #import json
@@ -33,11 +32,14 @@ def build(ctx):
   ctx.add_subdirs('src')
 
 def distclean(ctx):
+  Scripting.distclean(ctx)
   symlink = os.path.join('lib', 'dns_sd.node') # still not DRY ...
   if os.path.lexists(symlink):
     os.unlink(symlink)
+  if os.path.exists('node_modules'):
+      shutil.rmtree('node_modules')
 
 def test(ctx):
-  subprocess.call(['utils/testrun', '--format=quickfix'])
+  subprocess.call(['utils/testrun'])
 
 # vim: set filetype=python :
