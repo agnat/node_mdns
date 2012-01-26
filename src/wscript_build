@@ -4,12 +4,13 @@ obj = bld.new_task_gen('cxx', 'shlib', 'node_addon')
 obj.target = 'dns_sd'
 obj.uselib = 'DNS_SD'
 obj.includes = ['..']
+obj.cxxflags = ['-Wall']
 # HACK: The current node master builds a i386 binary while older releases used
 # the compilers default x86_64. node-waf still targets x86_64 resulting in an
 # incompatible binary. Building the add-on as a universal binary for both
 # architectures solves this for now ...
 if obj.env.DEST_OS == 'darwin':
-  universal_flags = ['-Wall', '-arch', 'i386', '-arch', 'x86_64']
+  universal_flags = ['-arch', 'i386', '-arch', 'x86_64']
   obj.env.append_value('CXXFLAGS', universal_flags)
   obj.env.append_value('LINKFLAGS_MACBUNDLE', universal_flags)
 obj.source = [ 'dns_sd.cpp'
