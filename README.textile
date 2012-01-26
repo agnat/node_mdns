@@ -37,13 +37,13 @@ mdns is available as a npm package:
 
 bc. npm install mdns
 
-On Linux and other systems using the avahi daemon the avahi dns_sd compat library and its header files are required.  On ubuntu and other debianesque systems the package name is @libavahi-compat-libdnssd-dev@.
+On Linux and other systems using the avahi daemon the avahi dns_sd compat library and its header files are required.  On debianesque systems the package name is @libavahi-compat-libdnssd-dev@.  On other platforms Apples "mDNSResponder":http://opensource.apple.com/tarballs/mDNSResponder/ is recommended. Care should be taken not to install more than one mDNS stack on a system. 
 
 If you want to play with the latest source code, here is a more manual approach:
 
 bc.. git clone http://github.com/agnat/node_mdns
 cd node_mdns
-npm link && utils/run_tests
+npm link && npm test
 
 h2. Documentation
 
