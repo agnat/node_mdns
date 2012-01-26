@@ -26,10 +26,19 @@ function padding(l) {
 
 var DefaultFormater = function(options) {
   var self = this
-    , max_length = 0;
+    , max_length = 0
+    ;
+  self.ok     = options.ascii ? 'OK'     : '\u2714';
+  self.failed = options.ascii ? 'FAILED' : '\u2718';
+  self.tcase_bullet = '*'
+
   self.groupStart = function groupStart(name, members) {
     console.log();
-    console.log(bold(name));
+    if (options.ascii) {
+      console.log('===', name);
+    } else {
+      console.log(bold(name));
+    }
     max_length = 0;
     members.forEach(function(m) {
       if (m.length > max_length) { max_length = m.length }
@@ -37,15 +46,21 @@ var DefaultFormater = function(options) {
   }
   this.testcaseEnd = function testcaseEnd(name, assertions, failures) {
     var pad = padding(max_length - name.length);
-    console.log( failures.length === 0 ? '\u2714' : '\u2718'
-               , name, pad
-               , '[' + (assertions.length - failures.length) + '/' + assertions.length + ']'
-               );
-
     if (options.verbose) {
+      console.log( self.tcase_bullet
+                 , name
+                 , '[' + (assertions.length - failures.length) + '/' + assertions.length + ']'
+                 );
+
       assertions.forEach(function(a) {
-        console.log(' ', a.error ? '\u2718' : '\u2714', a.message || 'MESSAGE MISSING');
+        console.log((options.ascii ? '' : '  ') + (a.error ? self.failed : self.ok), a.message || 'MESSAGE MISSING');
       });
+    } else {
+      console.log( failures.length === 0 ? self.ok : self.failed
+                 , name, pad
+                 , '[' + (assertions.length - failures.length) + '/' + assertions.length + ']'
+                 );
+
     }
     failures.forEach(function(f) {
       console.log(f.error.toString());
@@ -65,6 +80,7 @@ var DefaultFormater = function(options) {
 
 var knownOptions = { 'bark'    : Boolean
                    , 'format'  : ['default']
+                   , 'ascii'   : Boolean 
                    , 'verbose' : Boolean 
                    , 'help'    : Boolean 
                    }
