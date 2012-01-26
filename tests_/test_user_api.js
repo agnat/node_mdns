@@ -5,8 +5,6 @@ var mdns      = require('../lib/mdns')
   , util      = require('util')
   ;
 
-// XXX This test will break if two instances run on the same network
-
 exports['simple browsing'] = function(t) {
   var timeout = 5000
     , port = 4321
@@ -209,4 +207,45 @@ exports['create ads'] = function(t) {
 
 }
 
-// vim: filetype=javascript
+exports['browseThemAll()'] = function(t) {
+  var browser = new mdns.browseThemAll()
+    , up = 0
+    , down = 0
+    , changed = 0
+    , type = mdns_test.suffixedServiceType('node-mdns', 'udp')
+    ;
+
+  browser.on('serviceUp', function(service) {
+    if (type.matches(service.type)) {
+      ++up;
+    }
+  });
+  browser.on('serviceDown', function(service) {
+    if (type.matches(service.type)) {
+      ++down;
+    }
+  });
+  browser.on('serviceChanged', function(service) {
+    if (type.matches(service.type)) {
+      ++changed;
+    }
+  });
+
+  // it takes forever until the service type disappears
+  var cooltime = 10000;
+  var timeoutId = setTimeout(cooltime + 5000, function() {
+    t.ok(false, "test did not finish");
+    t.done();
+  });
+  var ad = mdns_test.runTestAd(type, 1337, 2000, cooltime, function() {
+    t.strictEqual(down, up);
+    t.strictEqual(down + up, changed);
+    browser.stop();
+    clearTimeout(timeoutId);
+    t.done();
+  });
+
+  browser.start();
+}
+
+// vim: filetype=javascript:
