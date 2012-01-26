@@ -28,8 +28,8 @@ var DefaultFormater = function(options) {
   var self = this
     , max_length = 0
     ;
-  self.ok     = options.ascii ? 'OK'     : '\u2714';
-  self.failed = options.ascii ? 'FAILED' : '\u2718';
+  self.ok     = options.ascii ? '[OK]'     : '\u2714';
+  self.failed = options.ascii ? '[FAILED]' : '\u2718';
   self.tcase_bullet = '*'
 
   self.groupStart = function groupStart(name, members) {
