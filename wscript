@@ -1,14 +1,5 @@
 import os, shutil, subprocess, Scripting
 
-# nice, but requires python 2.6 ... 
-#import json
-#package = json.load(open('package.json'))
-#APPNAME = 'node_' + package['name'] # used by 'node-waf dist'
-#VERSION = package['version']        # dito
-
-APPNAME = 'node_mdns'
-VERSION = '0.0.5-dev'
-
 def set_options(opt):
   opt.tool_options('compiler_cxx')
   opt.tool_options('node_addon')
@@ -32,6 +23,7 @@ def build(ctx):
   ctx.add_subdirs('src')
 
 def distclean(ctx):
+  # TODO: find out how to use waf's node class here ...
   Scripting.distclean(ctx)
   symlink = os.path.join('lib', 'dns_sd.node') # still not DRY ...
   if os.path.lexists(symlink):
