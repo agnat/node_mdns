@@ -22,6 +22,7 @@
 	<li><a href="#tutorial">Tutorial</a>
 	<ul>
 		<li><a href="#service_types">On service types</a></li>
+		<li><a href="#txt_records"><span class="caps">TXT</span> Records</a></li>
 		<li><a href="#resolver_sequence">The resolver sequence</a></li>
 	</ul></li>
 	<li><a href="#reference">Reference</a>
@@ -70,7 +71,7 @@ browser.on('serviceDown', function(service) {
 , port: 4321
 , addresses: [ '10.1.1.50', 'fe80::21f:5bff:fecd:ce64' ]
 }</code></pre>
-<p>In fact you might receive more than one event per service instance. That is because dns_sd reports each available network path to a service. Also, note that you might get more (or less) addresses. This depends on the network topology. If you have both a wired and a wireless connection to the same network you will see both addresses on both interfaces (not including IPv6 addresses). The number of IP addresses also depends on the platform and the resolver being used. More on this later.</p>
+<p>In fact you might receive more than one event per service instance. That is because dns_sd reports each available network path to a service. Also, note that you might get more (or less) addresses. This depends on the network topology. While testing you will often run both peers on the same machine. Now, if you have both a wired and a wireless connection to the same network you will see both addresses on both interfaces (not including IPv6 addresses). The number of IP addresses also depends on the platform and the resolver being used. More on this later.</p>
 <p>The <code>name</code> property is not necessarily the host name. It is a user defined string specifically meant to be displayed in the user interface. It only defaults to the host name.</p>
 <h3 id="service_types">On service types</h3>
 <p>Service type identifiers are strings used to match service instances to service queries. A service type always contains the service name and the protocol. Additionally it may contain one or more subtype identifiers. Here are some examples:</p>
@@ -89,6 +90,26 @@ _osc._udp,_api-v1,_api-v2</code></pre>
   , r2 = {name: 'http', protocol: 'tcp', subtypes: ['api-v1']}  // object form
   ;</code></pre>
 <p>In fact all of these are legal constructor arguments for <code>ServiceType</code>. <span class="caps">JSON</span> (de-)serialization works too. And finally there is <code>makeServiceType(...)</code> which turns any representation into a <code>ServiceType</code> object unless it already is one.</p>
+<p>Note: mdns liberally makes up service types for testing purposes and it is probably OK if you do the same for your media art project or something. But if you ship a product you should register your service type with the <a href="http://www.iana.org/form/ports-services"><span class="caps">IANA</span></a>.</p>
+<h3 id="txt_records"><span class="caps">TXT</span> Records</h3>
+<p>Each service has an associated <span class="caps">DNS</span> <span class="caps">TXT</span> record. The application can use it to publish a small amount of metadata. The record contains key-value pairs. The keys must be all printable ascii characters excluding &#8216;=&#8217;. The value may contain any data.</p>
+<p>The <span class="caps">TXT</span> record is passed to the <code>Advertisement</code> as an <code>object</code>:</p>
+<pre><code>var txt_record = {
+    name: 'bacon'
+  , chunky: true
+  , strips: 5
+};
+var ad = mdns.createAdvertisement(mdns.tcp('http'), 4321, {txtRecord: txt_record});</code></pre>
+<p>Non-string values are automatically converted. <code>Buffer</code> objects as values work too.</p>
+<p>The size of the <span class="caps">TXT</span> record is very limited. That is because everything has to fit into a single <span class="caps">DNS</span> message (512 bytes)<sup class="footnote" id="fnr1"><a href="#fn1">1</a></sup>. The documentation mentions a &#8220;typical size&#8221; of 100-200 bytes, whatever that means. There also is a hard limit of 255 bytes for each key-value pair. That&#8217;s why they also recommend <em>short keys</em> (9 bytes max). The bottom line is: Keep it brief.</p>
+<p><span class="caps">DNS</span> distinguishes between keys with no value and keys with an empty value:</p>
+<pre><code>var record = {
+    empty: ''
+  , just_a_flag: null // or undefined
+};</code></pre>
+<p>When browsing for services, the incoming <span class="caps">TXT</span> record is automatically decoded and attached to the <code>txtRecord</code> property of the <code>service</code> object.</p>
+<p>Now, what to put into a <span class="caps">TXT</span> record? Let&#8217;s start with what <em>not</em> to put in there. You should not put anything in the <span class="caps">TXT</span> record that is <em>required</em> to successfully establish a connection to your service. Things like the protocol version should be negotiated <em>in-band</em> whenever possible. Multicast <span class="caps">DNS</span> is pretty much a local thing. If your application relies to much on mDNS it will not work in a wide area network. So, just think twice before depending on the <span class="caps">TXT</span> record. That said, the <span class="caps">TXT</span> record may be used to help with legacy or proprietary protocols. Another application is to convey additional information to the user. Think about a printer dialog. It is very helpful to display the printers location, information about color support &amp;c. <em>before</em> the user makes a choice.</p>
+<p class="footnote" id="fn1"><a href="#fnr1"><sup>1</sup></a> This is not entirely accurate. It is possible to use larger <span class="caps">TXT</span> records. But you should read the relevant sections of the internet draft before doing so.</p>
 <h3 id="resolver_sequence">The resolver sequence</h3>
 <p>The <code>Browser</code> object uses a resolver sequence to collect address and port information. A resolver sequence is basically just an array of functions. The functions are called in order and receive two arguments: a <code>service</code> object to decorate and a <code>next()</code> function. Each function gathers information on the service, often by invoking asynchronous operations. When done the data is stored on the <code>service</code> object and the next function is invoked by calling <code>next()</code>. This is kind of like web server middleware as it happens between service discovery and emitting the events. On the other hand it is just another async function chain thing.</p>
 <p>Resolver sequence tasks (RSTs) are created by calling factory functions:</p>
@@ -99,19 +120,19 @@ _osc._udp,_api-v1,_api-v2</code></pre>
 <p>A browser with a custom sequence is created like this:</p>
 <pre><code>var browser = mdns.createBrowser(mdns.tcp('http'), {resolverSequence: sequence});</code></pre>
 <p>And of course you can write your own tasks:</p>
-<pre><code>var MCHammer = function MCHammer() {
+<pre><code>var MCHammer = function MCHammer(options) {
   return function MCHammer(service, next) {
     console.log('STOP!');
     setTimeout(function() {
         console.log('hammertime...');
         service.hammertime = new Date();
         next();
-    }, 2000);
+    }, options.delay || 1000);
   }
 }</code></pre>
 <p>Although it seems a bit complicated this design solves a number of problems:</p>
 <ol>
-	<li>The default behavior to resolve all services down to the IP is very convenient. But it is very expensive and very time consuming, too. Many applications just don&#8217;t need every port number for every service instance. They just need one. Now it is up to the user to plug together whatever the application requires.</li>
+	<li>The default behavior to resolve all services down to the IP is very convenient. But it is very expensive and very time consuming too. Many applications just don&#8217;t need every port number for every service instance. They just need one. Now it is up to the user to plug together whatever the application requires.</li>
 	<li>Portability was another issue. Not all platforms support all functions required by the (old) default behavior. The resolver sequence provides the necessary abstraction to handle this cleanly.</li>
 	<li>Something with separation of concerns.</li>
 </ol>
@@ -242,6 +263,8 @@ _osc._udp,_api-v1,_api-v2</code></pre>
 <p>This factory function constructs a <code>Browser</code>.</p>
 <h4>mdns.createAdvertisement(serviceType, port, [options], [callback])</h4>
 <p>This factory function constructs an <code>Advertisement</code>.</p>
+<h4>mdns.resolve(service, [sequence], callback)</h4>
+<p>Fill in a <code>service</code> object by running a resolver <code>sequence</code>. If no sequence is given the <code>Browser.defaultResolverSequence</code> is used. The callback has the signature <code>(error, service)</code>.</p>
 <h4>mdns.browseThemAll(options)</h4>
 <p>Creates a browser initialized with the wildcard service type. When started the browser emits events for each <em>service type</em> instead of each service instance. The <code>service</code> objects have no <code>name</code> property. By default the browser has an empty resolver sequence. You still can set one using the <code>options</code> object.</p>
 <h3 id="constants">Constants</h3>
@@ -257,7 +280,9 @@ _osc._udp,_api-v1,_api-v2</code></pre>
 	<li><a href="http://developer.apple.com/library/mac/#documentation/Networking/Reference/DNSServiceDiscovery_CRef/dns_sd_h/">dns_sd <span class="caps">API</span> documentation</a></li>
 	<li><a href="http://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/NetServices/Introduction.html">Bonjour Overview</a></li>
 	<li><a href="http://developer.apple.com/library/mac/#documentation/Networking/Conceptual/dns_discovery_api/Introduction.html"><span class="caps">DNS</span> Service Discovery Programming Guide</a></li>
+	<li><a href="http://files.dns-sd.org/draft-cheshire-dnsext-dns-sd.txt">Internet Draft: <span class="caps">DNS</span>-Based Service Discovery</a></li>
 </ul>
+<p><!-- vim: set linebreak filetype=textile spell spelllang=en_us : --></p>
 
       </div>
       <footer>

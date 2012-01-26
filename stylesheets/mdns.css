@@ -3,7 +3,7 @@ html, body {
 }
 body {
   background-color: white;
-  font-family: Georgia, FreeSerif, Times, serif;
+  font-family: Georgia, Times, serif;
 }
 a {
   color: #00a;
@@ -41,10 +41,27 @@ footer {
   border-top: 1px solid #ccc;
 }
 pre {
-  padding: 1.6em 1.6em 1.6em 1.6em;
+  padding: 1.6em;
   background: #f8f8f8;
   border: 1px solid #e8e8e8;
 }
 dt {
   font-weight: bold;
+}
+h2 {
+  line-height: 1.2em;
+  margin: 0 0 0.5em;
+}
+h3 {
+  margin: 1.5em 0 0.5em;
+}
+h4 {
+  line-height: 1.13em;
+  margin: 2.2em 0 0.5em;
+}
+h5 {
+  line-height: 1.4em;
+}
+h6 {
+  line-height: 1.47;
 }
