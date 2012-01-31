@@ -578,6 +578,42 @@ exports['DNSServiceEnumerateDomains()'] = function(t) {
   t.done();
 }
 
+//=== DNSServiceGetAddrInfo ===================================================
+
+function findInterfaceIndex() {
+  var serviceRef, i;
+  for (var i = 0; i < 100; ++i) {
+    try {
+      serviceRef = new dns_sd.DNSServiceRef();
+      dns_sd.DNSServiceGetAddrInfo(serviceRef, 0, i, 0, 'somehost.local.',
+          function() {}, null);
+      return i;
+
+    } catch (ex) {}
+  }
+}
+
+exports['DNSServiceGetAddrInfo'] = function DNSServiceGetAddrInfo(t) {
+
+  if ( ! dns_sd.DNSServiceGetAddrInfo) {
+    console.log('[SKIPPED] DNSServiceGetAddrInfo() not available');
+    t.done();
+    return;
+  }
+
+  var iface = findInterfaceIndex();
+
+  t.doesNotThrow(function() {
+    var serviceRef = new dns_sd.DNSServiceRef();
+    dns_sd.DNSServiceGetAddrInfo(serviceRef, 0, iface, 0, 'somehost.local.',
+      function() {}, null);
+  }, 'DNSServiceGetAddrInfo() must not throw');
+
+  // TODO add more tests
+
+  t.done();
+}
+
 //=== TXTRecordRef ============================================================
 
 exports['TXTRecordRef'] = function(t) {
