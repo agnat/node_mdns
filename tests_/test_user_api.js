@@ -248,4 +248,89 @@ exports['browseThemAll()'] = function(t) {
   browser.start();
 }
 
-// vim: filetype=javascript:
+exports['resolver sequence'] = function(t) {
+  var type = mdns_test.suffixedServiceType('node-mdns', 'tcp')
+    , browser = new mdns.createBrowser(type, {resolverSequence: []})
+    , rst = mdns.rst
+    ;
+
+  browser.on('serviceUp', function(service) {
+    t.ok( ! ('host' in service),
+        "service must not have a 'host' property");
+    t.ok( ! ('port' in service),
+        "service must not have a 'port' property");
+    t.ok( ! ('fullname' in service),
+        "service must not have a 'fullname' property");
+    t.ok( ! ('addresses' in service),
+        "service must not have an 'addresses' property");
+
+    var result_count = 0;
+    function done() {
+      if (++result_count === 3) {
+        t.done();
+      }
+    }
+    var s1 = clone(service);
+    mdns.resolve(s1, function(error, service) {
+      //console.log('default resolve:', error, service);
+      if (error) throw error;
+      t.ok('host' in service,
+        "service must have a 'host' property");
+      t.ok('port' in service,
+        "service must have a 'port' property");
+      t.ok('fullname' in service,
+        "service must have a 'fullname' property");
+      t.ok('addresses' in service,
+        "service must have an 'addresses' property");
+      done();
+    });
+
+    var s2 = clone(service);
+    var seq2 = [rst.DNSServiceResolve(), rst.getaddrinfo()];
+    mdns.resolve(s2, seq2, function(error, service) {
+      //console.log('getaddrinfo resolve:', error, service);
+      if (error) throw error;
+      t.ok('host' in service,
+        "service must have a 'host' property");
+      t.ok('port' in service,
+        "service must have a 'port' property");
+      t.ok('fullname' in service,
+        "service must have a 'fullname' property");
+      t.ok('addresses' in service,
+        "service must have an 'addresses' property");
+      done();
+    });
+
+    var s3 = clone(service);
+    var seq3 = [rst.DNSServiceResolve()];
+    mdns.resolve(s3, seq3, function(error, service) {
+      //console.log('resolve (no addresses):', error, service);
+      if (error) throw error;
+      t.ok('host' in service,
+        "service must have a 'host' property");
+      t.ok('port' in service,
+        "service must have a 'port' property");
+      t.ok('fullname' in service,
+        "service must have a 'fullname' property");
+      t.ok( ! ('addresses' in service),
+        "service must not have an 'addresses' property");
+      done();
+    });
+
+    browser.stop();
+  });
+
+  var ad = mdns_test.runTestAd(type, 1337, 1000, function() {});
+
+  browser.start();
+
+  function clone(o) {
+    var clone = {}, p;
+    for (p in o) {
+      clone[p] = o[p];
+    }
+    return clone;
+  }
+}
+
+// vim: filetype=javascript :
