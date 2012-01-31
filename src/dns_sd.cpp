@@ -1,5 +1,3 @@
-#include "node_mdns_config.h"
-
 #include <v8.h>
 
 #include "mdns_utils.hpp"

@@ -3,6 +3,8 @@ import os
 obj = bld.new_task_gen('cxx', 'shlib', 'node_addon')
 obj.target = 'dns_sd'
 obj.uselib = 'DNS_SD'
+if bld.env.HAVE_DNSSERVICEGETADDRINFO:
+  obj.defines = ['HAVE_DNSSERVICEGETADDRINFO']
 obj.includes = ['..']
 obj.cxxflags = ['-Wall']
 # HACK: The current node master builds a i386 binary while older releases used
@@ -22,6 +24,7 @@ obj.source = [ 'dns_sd.cpp'
              , 'dns_service_ref_sock_fd.cpp'
              , 'dns_service_register.cpp'
              , 'dns_service_resolve.cpp'
+             , 'dns_service_get_addr_info.cpp'
              , 'mdns_utils.cpp'
              , 'txt_record_ref.cpp'
              , 'txt_record_create.cpp'
@@ -31,8 +34,6 @@ obj.source = [ 'dns_sd.cpp'
              , 'txt_record_get_length.cpp'
              , 'txt_record_buffer_to_object.cpp'
              ]
-if bld.env.HAVE_DNSSERVICEGETADDRINFO:
-  obj.source.append('dns_service_get_addr_info.cpp')
 
 def post_build(ctx):
   target = obj.env['shlib_PATTERN'] % obj.target

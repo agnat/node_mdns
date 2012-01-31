@@ -1,4 +1,5 @@
 build
+out
 dns_sd.node
 .lock-wscript
 README.html

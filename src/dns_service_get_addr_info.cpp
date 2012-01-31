@@ -1,5 +1,3 @@
-#include "node_mdns_config.h"
-
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
@@ -12,6 +10,8 @@ using namespace v8;
 using namespace node;
 
 namespace node_mdns {
+
+#ifdef HAVE_DNSSERVICEGETADDRINFO
 
 void
 OnAddressInfo(DNSServiceRef sdRef, DNSServiceFlags flags, 
@@ -119,5 +119,7 @@ DNSServiceGetAddrInfo(Arguments const& args) {
 
     return Undefined();
 }
+
+#endif // HAVE_DNSSERVICEGETADDRINFO
 
 } // end of namespace node_mdns
