@@ -7,7 +7,6 @@
 , "devDependencies": 
   { "ejs":       "*"
   , "less":      "*"
-  , "express":   "*"
   , "step":      "*"
   , "mkdirp":    "*"
   , "nopt":      "*"

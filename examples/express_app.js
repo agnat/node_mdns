@@ -1,9 +1,14 @@
 #!/usr/bin/env node
-var express = require('express')
-  , mdns    = require('../lib/mdns')
+var mdns    = require('../lib/mdns')
   , app     = express.createServer()
   ;
 
+
+try {
+  var express = require('express');
+} catch (e) {
+  console.log('please install express manualy: npm install express');
+}
 app.get('/', function() { return "Hello World"; });
 
 app.on('listening', function() {
