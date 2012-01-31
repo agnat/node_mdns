@@ -85,7 +85,7 @@ var knownOptions = { 'bark'    : Boolean
                    , 'help'    : Boolean 
                    }
   , parsed = nopt(knownOptions)
-  , test_dir = path.join(__dirname, '..', 'tests_')
+  , test_dir = path.join(__dirname, '..', 'tests')
   ;
 
 if ( ! ('bark' in parsed)) { parsed.bark = true; }
