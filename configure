@@ -1,16 +1,22 @@
 #!/usr/bin/env python
-import os
-import sys
+import os, sys, optparse
+
+parser = optparse.OptionParser()
+
+parser.add_option('--node-tree',
+    action='store',
+    dest='node_tree',
+    help='path to the node build tree')
+
+(options, args) = parser.parse_args()
 
 script_dir = os.path.dirname(__file__)
-# XXX
-node_root  = os.path.normpath(os.path.join(script_dir, os.pardir, 'node'))
+node_root  = options.node_tree
 
 sys.path.insert(0, os.path.join(node_root, 'tools', 'gyp', 'pylib'))
 import gyp
 
 if __name__ == '__main__':
-  args = sys.argv[1:]
   addon_gypi = os.path.join(node_root, 'tools', 'addon.gypi')
   common_gypi = os.path.join(node_root, 'common.gypi')
   args.extend(['-I', addon_gypi])
