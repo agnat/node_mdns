@@ -3,6 +3,7 @@
     , 'sources': [ 'src/dns_sd.cpp'
                  , 'src/dns_service_browse.cpp'
                  , 'src/dns_service_enumerate_domains.cpp'
+                 , 'src/dns_service_get_addr_info.cpp'
                  , 'src/dns_service_process_result.cpp'
                  , 'src/dns_service_ref.cpp'
                  , 'src/dns_service_ref_deallocate.cpp'
@@ -22,4 +23,4 @@
   ]
 }
 
-# vim: filetype=python :
+# vim: filetype=python shiftwidth=2 softtabstop=2 :
