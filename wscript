@@ -1,5 +1,7 @@
 import os, shutil, subprocess, Scripting, Options
 
+out = 'out'
+
 def set_options(opt):
   opt.tool_options('compiler_cxx')
   opt.tool_options('node_addon')

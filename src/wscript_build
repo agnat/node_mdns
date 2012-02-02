@@ -32,7 +32,7 @@ def post_build(ctx):
   symlink_path = os.path.join('lib', target)
   if os.path.lexists(symlink_path):
     os.unlink(symlink_path)
-  path_to_addon = os.path.join('..', 'build', ctx.path.bld_dir(ctx.env), 'src',
+  path_to_addon = os.path.join('..', 'out', ctx.path.bld_dir(ctx.env), 'src',
           target)
   os.symlink(path_to_addon, symlink_path)
 
