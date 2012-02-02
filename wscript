@@ -1,4 +1,4 @@
-import os, shutil, subprocess, Scripting
+import os, shutil, subprocess, Scripting, Options
 
 def set_options(opt):
   opt.tool_options('compiler_cxx')
@@ -14,6 +14,15 @@ def configure(conf):
     conf.check(function_name='DNSServiceGetAddrInfo',
                header_name="dns_sd.h",
                uselib='DNS_SD')
+
+  # HACK: The current node master builds a i386 binary while older releases used
+  # the compilers default x86_64. node-waf still targets x86_64 resulting in an
+  # incompatible binary. Building the add-on as a universal binary for both
+  # architectures solves this for now ...
+  if conf.env.DEST_OS == 'darwin':
+    universal_flags = ['-arch', 'i386', '-arch', 'x86_64']
+    conf.env.append_value('CXXFLAGS', universal_flags)
+    conf.env.append_value('LINKFLAGS_MACBUNDLE', universal_flags)
 
 def build(ctx):
   ctx.add_subdirs('src')
