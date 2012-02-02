@@ -15,8 +15,6 @@ OnServiceChanged(DNSServiceRef sdRef, DNSServiceFlags flags,
         const char * serviceName, const char * serviceType,
         const char * replyDomain, void * context)
 {
-    if ( ! context) return;
-
     HandleScope scope;
     ServiceRef * serviceRef = static_cast<ServiceRef*>(context);
     Handle<Function> callback = serviceRef->GetCallback();
