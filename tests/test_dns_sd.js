@@ -431,6 +431,20 @@ exports['DNSServiceBrowse()'] = function(t) {
     dns_sd.DNSServiceBrowse(ref, 0, 0, service_type, null, 0, null);
   }, "'callback' must be a function, not a number");
 
+  // coverage: take domain branch
+  t.doesNotThrow(function() {
+    var ref = new dns_sd.DNSServiceRef();
+    dns_sd.DNSServiceBrowse(ref, 0, 0, service_type, 'somedomain',
+      function() {}, null);
+  }, "DNSServiceBrowse() must not throw");
+
+  // coverage: take domain undefined branch
+  t.doesNotThrow(function() {
+    var ref = new dns_sd.DNSServiceRef();
+    dns_sd.DNSServiceBrowse(ref, 0, 0, service_type, undefined,
+      function() {}, null);
+  }, "DNSServiceBrowse() must not throw");
+
   t.done();
 }
 
@@ -650,6 +664,29 @@ exports['TXTRecordRef'] = function(t) {
       'TXTRecordDeallocate() must throw when called without arguments');
   t.throws(function() { dns_sd.TXTRecordDeallocate(null, null); },
       'TXTRecordDeallocate() must throw when called with more than one argument');
+
+  t.done();
+}
+
+//=== buildException ==========================================================
+
+exports['buildException()'] = function(t) {
+  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_BadParam) instanceof Error,
+      'buildException() must return an Error object');
+  t.throws(function() { dns_sd.buildException() },
+    'not enough arguments');
+  t.throws(function() { dns_sd.buildException('foobar') },
+    'argument must be a string');
+  t.done();
+}
+
+exports['exportConstants()'] = function(t) {
+  var o = {}
+  dns_sd.exportConstants(o);
+  t.ok(o.kDNSServiceErr_BadParam);
+
+  t.throws(function() { dns_sd.exportConstants() });
+  t.throws(function() { dns_sd.exportConstants(5) });
 
   t.done();
 }
