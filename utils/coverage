@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+
+var input = '';
+
+process.stdin.on('data', function(chunk) {
+  input += chunk;
+})
+
+function p() { return Array.prototype.join.call(arguments, '.') }
+
+process.stdin.on('end', function() {
+  input.split('\n').forEach(function(l) {
+    var match = l.match(/^\s+([^.]+)\.+: ([0-9.]+)% \(([0-9]+) of ([0-9]+) .*$/);
+    if (match) {  
+      var what    = match[1]
+        , percent = match[2]
+        , hit     = match[3]
+        , total   = match[4]
+        ;
+      console.log(p(what, 'percent'), '=', percent);
+      console.log(p(what, 'hit'), '=', hit);
+      console.log(p(what, 'total'), '=', total);
+    }
+  })
+});
+
+process.stdin.resume();
