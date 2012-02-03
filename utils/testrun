@@ -146,7 +146,7 @@ function run_testcase(f, name, reporter, cb) {
 function save_reports(reporter, cb) {
   var dir = path.join(__dirname, '..', 'out', 'reports');
   chain( [ [mkdirp, dir]
-         , [fs.writeFile, path.join(dir, 'tests.json'), JSON.stringify(reporter.results)]
+         , [fs.writeFile, path.join(dir, 'tests.json'), JSON.stringify(reporter.results, null, 2)]
          ]
        , cb
        );
