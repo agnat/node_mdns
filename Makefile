@@ -28,6 +28,8 @@ coverage: gcov_build
 			$(GCOV_OUT)/testrun.info
 	tail -n 3 $(GCOV_OUT)/lcov.log | utils/coverage > $(GCOV_OUT)/coverage.properties
 
+website:
+	utils/docpack
 
-.PHONY: test coverage gcov_build
+.PHONY: test coverage gcov_build website
 
