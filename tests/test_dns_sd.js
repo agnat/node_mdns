@@ -1,4 +1,4 @@
-var dns_sd       = require('../lib/mdns').dns_sd
+var dns_sd       = require('../lib/dns_sd')
   , service_type = "_mdns_test._tcp"
   , test_port    = 4321
   ;
@@ -443,6 +443,13 @@ exports['DNSServiceBrowse()'] = function(t) {
     var ref = new dns_sd.DNSServiceRef();
     dns_sd.DNSServiceBrowse(ref, 0, 0, service_type, undefined,
       function() {}, null);
+  }, "DNSServiceBrowse() must not throw");
+
+  // coverage: take domain undefined branch
+  t.doesNotThrow(function() {
+    var ref = new dns_sd.DNSServiceRef();
+    dns_sd.DNSServiceBrowse(ref, 0, 0, service_type, undefined,
+      function() {}, undefined);
   }, "DNSServiceBrowse() must not throw");
 
   t.done();
