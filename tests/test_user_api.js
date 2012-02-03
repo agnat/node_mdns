@@ -232,7 +232,7 @@ exports['browseThemAll()'] = function(t) {
   });
 
   // it takes forever until the service type disappears
-  var cooltime = 10000;
+  var cooltime = 15000;
   var timeoutId = setTimeout(cooltime + 5000, function() {
     t.ok(false, "test did not finish");
     t.done();
