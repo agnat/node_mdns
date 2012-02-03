@@ -23,14 +23,14 @@ var rootd = path.dirname(process.argv[1]) + '/..'
   , layout = fs.readFileSync(docd + '/layout.ejs').toString()
   ;
 
-var ejs2textile = compilerSync(render_ejs)
-  , ejs2html    = compiler(render_page)
-  , less2css    = compiler(less.render)
+var ejs2textile = compilerSync(render_ejs, 'ejs')
+  , ejs2html    = compiler(render_page, 'redcloth')
+  , less2css    = compiler(less.render, 'less')
   ;
 
 var prepare = [ [ mkdirp, outd + '/pages']
               ]
-  , tasks   = [ [ ejs2textile, docd + '/README.ejs', rootd + '/README.ttt']
+  , tasks   = [ [ ejs2textile, docd + '/README.ejs', rootd + '/README.textile']
               , [ render_pages, docd + '/pages/*.ejs']
               , [ render_stylesheets, docd + '/pages/stylesheets/*.less']
               , [ ncp, docd + '/pages/images', outd + '/pages/images']
@@ -41,7 +41,7 @@ var prepare = [ [ mkdirp, outd + '/pages']
 chain( [ [ run_all, prepare]
        , [ run_all, tasks]
        ]
-     , function(error) { console.log('========= done =========') }
+     , function(error) { if (error) console.log(error) }
      );
 
 
@@ -110,8 +110,9 @@ function piped_comand(comand, input, args, cb) {
   
 }
 
-function compilerSync(f) {
+function compilerSync(f, name) {
   return function(src, dst, cb) {
+    console.log('[' + name + ']', dst)
     fs.readFile(src, function(error, data) {
       if (error) return cb(error);
       var result = f('' + data);
@@ -120,8 +121,9 @@ function compilerSync(f) {
   }
 }
 
-function compiler(f) {
+function compiler(f, name) {
   return function(src, dst, cb) {
+    console.log('[' + name + ']', dst)
     fs.readFile(src, function(error, data) {
       if (error) return cb(error);
       f('' + data, function(error, result) {
