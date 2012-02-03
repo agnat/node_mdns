@@ -16,7 +16,7 @@ exports['simple browsing'] = function(t) {
     t.done();
   }, timeout)
 
-  var browser = mdns.createBrowser(service_type);
+  var browser = mdns.createBrowser(service_type, {context: {some: 'context'}});
 
   function stopBrowserIfDone() {
     if (upCount > 0 &&
@@ -31,7 +31,7 @@ exports['simple browsing'] = function(t) {
   }
 
   var changedCount = 0;
-  browser.on('serviceChanged', function(service, flags) {
+  browser.on('serviceChanged', function(service, ctx) {
     //console.log("changed:", service);
     t.strictEqual(typeof service.flags, 'number',
         "'flags' must be a number");
@@ -67,12 +67,15 @@ exports['simple browsing'] = function(t) {
     t.strictEqual(service.replyDomain, 'local.',
         "'replyDomain' must match 'local.'");
 
+    t.ok(ctx, 'must have context');
+    t.strictEqual(ctx.some, 'context', 'property must match input');
+
     changedCount += 1;
     stopBrowserIfDone();
   });
 
   var upCount = 0;
-  browser.on('serviceUp', function(service) {
+  browser.on('serviceUp', function(service, ctx) {
     //console.log("up:", service);
     t.strictEqual(typeof service.flags, 'number',
         "'flags' must be a number");
@@ -117,12 +120,15 @@ exports['simple browsing'] = function(t) {
           "property " + p + " in txtRecord must match");
     }
     
+    t.ok(ctx, 'must have context');
+    t.strictEqual(ctx.some, 'context', 'property must match input');
+
     upCount += 1;
     stopBrowserIfDone();
   });
 
   var downCount = 0;
-  browser.on('serviceDown', function(service) {
+  browser.on('serviceDown', function(service, ctx) {
     t.strictEqual(typeof service.flags, 'number',
         "'flags' must be a number");
     t.strictEqual(typeof service.interfaceIndex, 'number',
@@ -137,6 +143,9 @@ exports['simple browsing'] = function(t) {
         "'replyDomain' must be a string");
     t.strictEqual(service.replyDomain, 'local.',
         "'replyDomain' must match 'local.'");
+
+    t.ok(ctx, 'must have context');
+    t.strictEqual(ctx.some, 'context', 'property must match input');
 
     downCount += 1;
     stopBrowserIfDone();
