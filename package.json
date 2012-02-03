@@ -5,13 +5,13 @@
 , "scripts": { "test": "utils/testrun" }
 , "keywords": ["mdns", "zeroconf", "bonjour", "dns_sd", "mDNSResponder"]
 , "devDependencies": 
-  { "ejs":       "*"
-  , "less":      "*"
-  , "step":      "*"
-  , "mkdirp":    "*"
-  , "nopt":      "*"
-  , "slide":     "*"
-  , "minimatch": "*"
+  { "ejs":    "*"
+  , "less":   "*"
+  , "mkdirp": "*"
+  , "nopt":   "*"
+  , "slide":  "*"
+  , "glob":   "*"
+  , "ncp":    "*"
 
   }
 , "repository":
