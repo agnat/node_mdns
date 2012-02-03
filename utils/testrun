@@ -9,7 +9,7 @@ try {
     , events = require('events')
     , nopt = require('nopt')
     , chain = require('slide').chain
-    , minimatch = require('minimatch')
+    , glob = require('glob')
     , mkdirp = require('mkdirp')
     ;
 } catch(e) {
@@ -104,7 +104,7 @@ function run_tests(files, cb) {
     }
   });
 
-  chain( [ [glob, test_dir, 'test_*.js']
+  chain( [ [glob_list, test_dir + '/test_*.js']
          , [run_modules, chain.last, reporter]
          , [save_reports, reporter]
          ]
@@ -112,10 +112,16 @@ function run_tests(files, cb) {
        )
 }
 
+function glob_list(pattern, cb) {
+  glob(pattern, function(error, files) {
+    cb(error, [files])
+  });
+}
+
 function run_modules(files, reporter, cb) {
   var module_chain = files.map(function(f) {
       var name = path.basename(path.basename(f), '.js');
-      return [run_group, require(f), name, reporter];
+      return [run_group, require('../' + f), name, reporter];
   });
   chain(module_chain, cb);
 }
@@ -150,15 +156,6 @@ function save_reports(reporter, cb) {
          ]
        , cb
        );
-}
-
-function glob(dir, pattern, cb) {
-  fs.readdir(dir, function(error, files) {
-    cb(error, error ? 
-        undefined
-      : [ files . filter(function(f) { return minimatch(f, pattern) })
-                . map(function(f) { return path.join(dir, f) })]);
-  });
 }
 
 var msg_indices = 
