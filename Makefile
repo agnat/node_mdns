@@ -10,7 +10,7 @@ gcov_build:
 	$(MAKE) -C out CXXFLAGS='$(GCOV_FLAGS)' LDFLAGS='$(GCOV_FLAGS)' BUILDTYPE=$(BUILDTYPE)
 
 test:
-	utils/testrun
+	utils/testrun $(TEST_FLAGS)
 
 coverage: gcov_build
 	lcov -d out/$(BUILDTYPE)/obj.target/dns_sd/src --zerocounters
