@@ -10,7 +10,10 @@ gcov_build:
 	$(MAKE) -C out CXXFLAGS='$(GCOV_FLAGS)' LDFLAGS='$(GCOV_FLAGS)' BUILDTYPE=$(BUILDTYPE)
 
 test:
-	utils/testrun $(TEST_FLAGS)
+	utils/testrun
+
+citest:
+	utils/testrun --ascii --verbose
 
 coverage: gcov_build
 	lcov -d out/$(BUILDTYPE)/obj.target/dns_sd/src --zerocounters
@@ -31,5 +34,5 @@ coverage: gcov_build
 website:
 	utils/docpack
 
-.PHONY: test coverage gcov_build website
+.PHONY: test citest coverage gcov_build website
 
