@@ -25,7 +25,7 @@ coverage: gcov_build
 		 --capture
 	lcov --output-file    $(GCOV_OUT)/testrun.info \
 		 --extract \
-		 $(GCOV_OUT)/testrun_all.info "*/node_mdns/src/*" \
+		 $(GCOV_OUT)/testrun_all.info "$(PWD)/*" \
 	   | tee $(GCOV_OUT)/lcov.log 
 	genhtml --output-directory $(GCOV_OUT)/html \
 			$(GCOV_OUT)/testrun.info
