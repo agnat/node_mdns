@@ -14,11 +14,13 @@ process.stdin.on('end', function() {
     if (match) {  
       var what    = match[1]
         , percent = match[2]
-        , hit     = match[3]
+        , covered = match[3]
         , total   = match[4]
         ;
-      console.log(p(what, 'percent'), '=', percent);
-      console.log(p(what, 'hit'), '=', hit);
+      console.log(p(what, 'percent', 'covered'), '=', percent);
+      console.log(p(what, 'percent', 'missed'), '=', 100 - percent);
+      console.log(p(what, 'covered'), '=', covered);
+      console.log(p(what, 'missed'), '=', total - covered);
       console.log(p(what, 'total'), '=', total);
     }
   })
