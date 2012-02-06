@@ -28,6 +28,7 @@ coverage: gcov_build
 		 $(GCOV_OUT)/testrun_all.info "$(abspath .)/*" \
 	   | tee $(GCOV_OUT)/lcov.log 
 	genhtml --output-directory $(GCOV_OUT)/html \
+	        --demangle-cpp \
 			$(GCOV_OUT)/testrun.info
 	tail -n 3 $(GCOV_OUT)/lcov.log | utils/coverage > $(GCOV_OUT)/coverage.properties
 
