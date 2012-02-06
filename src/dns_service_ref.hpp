@@ -16,46 +16,24 @@ class ServiceRef : public node::ObjectWrap {
         static void Initialize(v8::Handle<v8::Object> target);
         static v8::Handle<v8::Value> New(const v8::Arguments & args);
 
-        inline bool IsInitialized() const { return ref_ != NULL; }
+        bool IsInitialized() const;
 
-        static inline bool HasInstance(v8::Handle<v8::Value> value) {
-            if ( ! value->IsObject() ) return false;
-            v8::Local<v8::Object> object = value->ToObject();
-            return constructor_template->HasInstance( object );
-        }
+        static bool HasInstance(v8::Handle<v8::Value> value);
 
-        inline void SetCallback(v8::Handle<v8::Function> callback) {
-            if ( ! callback_.IsEmpty()) {
-                callback_.Dispose();
-            }
-            callback_ = v8::Persistent<v8::Function>::New(callback);
-        }
-        inline v8::Handle<v8::Function> GetCallback() const { return callback_; }
+        void SetCallback(v8::Handle<v8::Function> callback);
+        v8::Handle<v8::Function> GetCallback() const;
 
 
-        DNSServiceRef & GetServiceRef() { return ref_; }
-        void SetServiceRef(DNSServiceRef ref) { ref_ = ref; }
+        DNSServiceRef & GetServiceRef();
+        void SetServiceRef(DNSServiceRef ref);
 
-        inline v8::Handle<v8::Value> GetContext() { return context_; }
-        inline void SetContext(v8::Handle<v8::Value> context) {
-            if ( ! context_.IsEmpty()) {
-                context_.Dispose();
-            }
-            context_ = v8::Persistent<v8::Value>::New(context);
-        }
+        v8::Handle<v8::Value> GetContext();
+        void SetContext(v8::Handle<v8::Value> context);
 
-        inline v8::Handle<v8::Object> GetThis() { return this_; }
-        inline void SetThis(v8::Local<v8::Object> This) { this_ = This; }
+        v8::Handle<v8::Object> GetThis();
+        void SetThis(v8::Local<v8::Object> This);
 
-        inline
-        bool
-        SetSocketFlags() {
-            int fd = DNSServiceRefSockFD(ref_);
-            if (fd == -1) return false;
-            return fcntl(fd, F_SETFD, FD_CLOEXEC) != -1 &&
-                fcntl(fd, F_SETFL, O_NONBLOCK) != -1;
-        }
-
+        bool SetSocketFlags();
 
     private:
         static v8::Handle<v8::Value> fd_getter(v8::Local<v8::String> property,

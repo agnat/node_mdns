@@ -10,6 +10,7 @@ static Persistent<String> fd_symbol;
 static Persistent<String> initialized_symbol;
 
 ServiceRef::ServiceRef() : ref_(), callback_(), context_() {}
+
 ServiceRef::~ServiceRef() {
     // First, dispose the serice ref. This cancels all asynchronous operations.
     if (ref_) {
@@ -47,6 +48,57 @@ ServiceRef::New(const Arguments & args) {
     return args.This();
 }
 
+bool
+ServiceRef::IsInitialized() const { return ref_ != NULL; }
+
+bool
+ServiceRef::HasInstance(v8::Handle<v8::Value> value) {
+  if ( ! value->IsObject() ) return false;
+  v8::Local<v8::Object> object = value->ToObject();
+  return constructor_template->HasInstance( object );
+}
+
+void
+ServiceRef::SetCallback(v8::Handle<v8::Function> callback) {
+  if ( ! callback_.IsEmpty()) {
+    callback_.Dispose();
+  }
+  callback_ = v8::Persistent<v8::Function>::New(callback);
+}
+
+v8::Handle<v8::Function>
+ServiceRef::GetCallback() const { return callback_; }
+
+DNSServiceRef &
+ServiceRef::GetServiceRef() { return ref_; }
+
+void
+ServiceRef::SetServiceRef(DNSServiceRef ref) { ref_ = ref; }
+
+v8::Handle<v8::Value>
+ServiceRef::GetContext() { return context_; }
+
+void
+ServiceRef::SetContext(v8::Handle<v8::Value> context) {
+  if ( ! context_.IsEmpty()) {
+    context_.Dispose();
+  }
+  context_ = v8::Persistent<v8::Value>::New(context);
+}
+
+v8::Handle<v8::Object>
+ServiceRef::GetThis() { return this_; }
+
+void
+ServiceRef::SetThis(v8::Local<v8::Object> This) { this_ = This; }
+
+bool
+ServiceRef::SetSocketFlags() {
+  int fd = DNSServiceRefSockFD(ref_);
+  if (fd == -1) return false;
+  return fcntl(fd, F_SETFD, FD_CLOEXEC) != -1 &&
+    fcntl(fd, F_SETFL, O_NONBLOCK) != -1;
+}
 
 Handle<Value>
 ServiceRef::fd_getter(Local<String> property, AccessorInfo const& info) {
