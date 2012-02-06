@@ -22,7 +22,7 @@ Handle<Value> DNSServiceGetAddrInfo(Arguments const& args);
 #endif
 Handle<Value> TXTRecordCreate(Arguments const& args); 
 Handle<Value> TXTRecordDeallocate(Arguments const& args); 
-Handle<Value> TXTRecordGetCount(Arguments const& args); 
+//Handle<Value> TXTRecordGetCount(Arguments const& args); 
 Handle<Value> TXTRecordSetValue(Arguments const& args); 
 Handle<Value> TXTRecordGetLength(Arguments const& args); 
 
@@ -54,7 +54,7 @@ init(Handle<Object> target) {
 #endif
     defineFunction(target, "TXTRecordCreate", TXTRecordCreate);
     defineFunction(target, "TXTRecordDeallocate", TXTRecordDeallocate);
-    defineFunction(target, "TXTRecordGetCount", TXTRecordGetCount);
+    //defineFunction(target, "TXTRecordGetCount", TXTRecordGetCount);
     defineFunction(target, "TXTRecordSetValue", TXTRecordSetValue);
     defineFunction(target, "TXTRecordGetLength", TXTRecordGetLength);
 
