@@ -15,8 +15,6 @@ void
 OnEnumeration(DNSServiceRef sdRef, DNSServiceFlags flags, uint32_t interfaceIndex,
         DNSServiceErrorType errorCode, const char * replyDomain, void * context)
 {
-    if ( ! context) return;
-
     HandleScope scope;
     ServiceRef * serviceRef = static_cast<ServiceRef*>(context);
     Handle<Function> callback = serviceRef->GetCallback();
@@ -29,11 +27,7 @@ OnEnumeration(DNSServiceRef sdRef, DNSServiceFlags flags, uint32_t interfaceInde
     args[2] = Integer::New(interfaceIndex);
     args[3] = Integer::New(errorCode);
     args[4] = String::New(replyDomain);
-    if (serviceRef->GetContext().IsEmpty()) {
-        args[5] = Local<Value>::New(Null());
-    } else {
-        args[5] = Local<Value>::New(serviceRef->GetContext());
-    }
+    args[5] = Local<Value>::New(serviceRef->GetContext());
     callback->Call(this_, argc, args);
 }
 
@@ -67,9 +61,7 @@ DNSServiceEnumerateDomains(Arguments const& args) {
     }
     serviceRef->SetCallback(Local<Function>::Cast(args[3]));
 
-    if ( ! args[4]->IsNull() && ! args[4]->IsUndefined()) {
-        serviceRef->SetContext(args[4]);
-    }
+    serviceRef->SetContext(args[4]);
 
     DNSServiceErrorType error = DNSServiceEnumerateDomains( & serviceRef->GetServiceRef(),
             flags, interfaceIndex, OnEnumeration, serviceRef);
