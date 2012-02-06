@@ -713,7 +713,9 @@ exports['DNSServiceGetAddrInfo'] = function DNSServiceGetAddrInfo(t) {
 //=== TXTRecordRef ============================================================
 
 exports['TXTRecordRef'] = function(t) {
-  var txtRecord = new dns_sd.TXTRecordRef();
+  var txtRecord = new dns_sd.TXTRecordRef()
+    , uninitialized_txt_record = new dns_sd.TXTRecordRef()
+    ;
   dns_sd.TXTRecordCreate(txtRecord, null);
 
   var txtRecord = new dns_sd.TXTRecordRef();
@@ -768,6 +770,38 @@ exports['TXTRecordRef'] = function(t) {
   t.throws(function() { 
     dns_sd.TXTRecordDeallocate(5)
   }, 'illegal argument must throw');
+
+  t.throws(function() { dns_sd.TXTRecordSetValue()},
+    'TXTRecordSetValue() must throw when called without arguments');
+  t.throws(function() { dns_sd.TXTRecordSetValue(5, null, null)},
+    'TXTRecordSetValue() must throw when called with non TXTRecordRef object');
+  t.throws(function() { dns_sd.TXTRecordSetValue({not_a_txt_record: true}, null, null)},
+    'TXTRecordSetValue() must throw when called with non TXTRecordRef object');
+  t.throws(function() {
+      dns_sd.TXTRecordSetValue(new dns_sd.TXTRecordRef(), {not_a_string: true}, null)
+  }, 'TXTRecordSetValue() must throw when called with non TXTRecordRef object');
+  t.doesNotThrow(function() {
+      dns_sd.TXTRecordSetValue(new dns_sd.TXTRecordRef(), 'foo', null)
+  }, 'TXTRecordSetValue() must not throw when called with null value');
+  t.doesNotThrow(function() {
+      dns_sd.TXTRecordSetValue(new dns_sd.TXTRecordRef(), 'foo', undefined)
+  }, 'TXTRecordSetValue() must not throw when called with undefined value');
+  t.throws(function() {
+      dns_sd.TXTRecordSetValue(new dns_sd.TXTRecordRef(), 5, undefined)
+  }, 'TXTRecordSetValue() must throw when called with non string key');
+  t.throws(function() {
+      dns_sd.TXTRecordSetValue(new dns_sd.TXTRecordRef(), 'foo', 5)
+  }, 'TXTRecordSetValue() must throw when called with strange value');
+  t.throws(function() {
+      dns_sd.TXTRecordSetValue(new dns_sd.TXTRecordRef(), 'illeagal=key', 'bar')
+  }, 'TXTRecordSetValue() must throw when called with strange value');
+
+  t.throws(function() { dns_sd.TXTRecordGetLength() },
+      'not enough arguments must throw');
+  t.throws(function() { dns_sd.TXTRecordGetLength(5) },
+      'illegal arguments must throw');
+  t.throws(function() { dns_sd.TXTRecordGetLength({not_a_buffer: true}) },
+      'illegal arguments must throw');
 
   t.doesNotThrow(function() { dns_sd.TXTRecordDeallocate( txtRecord ); },
       'deallocating a txtRecord must not throw');
