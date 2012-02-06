@@ -739,6 +739,35 @@ exports['TXTRecordRef'] = function(t) {
       'TXTRecordCreate() must throw when called with a string');
   t.throws(function() { dns_sd.TXTRecordCreate(txtRecord) },
       'duplicate call to TXTRecordCreate() must throw');
+  t.throws(function() {
+    var b = new Buffer(256);
+    dns_sd.TXTRecordCreate({not_a_txt_record: true}, b);
+  }, 'txtRecord must be a TXTRecordRef object');
+  t.throws(function() {
+    var b = new Buffer(256);
+    dns_sd.TXTRecordCreate(5, b);
+  }, 'txtRecord must be a TXTRecordRef object');
+  t.doesNotThrow(function() {
+    var tref = new dns_sd.TXTRecordRef();
+    dns_sd.TXTRecordCreate(tref, undefined);
+  },'TXTRecordCreate() with undefined buffer must succeed');
+  t.throws(function() {
+    var tref = new dns_sd.TXTRecordRef();
+    dns_sd.TXTRecordCreate(tref, {not_a_buffer: true});
+  }, 'illegal buffer argument must throw');
+  t.throws(function() {
+    var tref = new dns_sd.TXTRecordRef();
+    dns_sd.TXTRecordCreate(tref, 5);
+  }, 'illegal buffer argument must throw');
+
+
+  t.throws(function() { 
+    dns_sd.TXTRecordDeallocate({not_a_txt_record_ref: true})
+  }, 'illegal argument must throw');
+
+  t.throws(function() { 
+    dns_sd.TXTRecordDeallocate(5)
+  }, 'illegal argument must throw');
 
   t.doesNotThrow(function() { dns_sd.TXTRecordDeallocate( txtRecord ); },
       'deallocating a txtRecord must not throw');
