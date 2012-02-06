@@ -1,6 +1,7 @@
 import os, shutil, subprocess, Scripting, Options
 
-out = 'out'
+out  = 'out'
+name = 'dns_sd'
 
 def set_options(opt):
   opt.tool_options('compiler_cxx')
@@ -26,8 +27,44 @@ def configure(conf):
     conf.env.append_value('CXXFLAGS', universal_flags)
     conf.env.append_value('LINKFLAGS_MACBUNDLE', universal_flags)
 
-def build(ctx):
-  ctx.add_subdirs('src')
+def build(bld):
+  obj = bld.new_task_gen('cxx', 'shlib', 'node_addon')
+  obj.target = name
+  obj.uselib = 'DNS_SD'
+  if bld.env.HAVE_DNSSERVICEGETADDRINFO:
+    obj.defines = ['HAVE_DNSSERVICEGETADDRINFO']
+  obj.includes = ['..']
+  obj.cxxflags = ['-Wall']
+  obj.source = [ 'src/dns_sd.cpp'
+               , 'src/dns_service_browse.cpp'
+               , 'src/dns_service_enumerate_domains.cpp'
+               , 'src/dns_service_process_result.cpp'
+               , 'src/dns_service_ref.cpp'
+               , 'src/dns_service_ref_deallocate.cpp'
+               , 'src/dns_service_ref_sock_fd.cpp'
+               , 'src/dns_service_register.cpp'
+               , 'src/dns_service_resolve.cpp'
+               , 'src/dns_service_get_addr_info.cpp'
+               , 'src/mdns_utils.cpp'
+               , 'src/txt_record_ref.cpp'
+               , 'src/txt_record_create.cpp'
+               , 'src/txt_record_deallocate.cpp'
+               , 'src/txt_record_get_count.cpp'
+               , 'src/txt_record_set_value.cpp'
+               , 'src/txt_record_get_length.cpp'
+               , 'src/txt_record_buffer_to_object.cpp'
+               ]
+  bld.add_post_fun(post_build)
+
+def post_build(ctx):
+  target = name + '.node'
+  symlink_path = os.path.join('lib', target)
+  if os.path.lexists(symlink_path):
+    os.unlink(symlink_path)
+  path_to_addon = os.path.join('..', 'out', ctx.path.bld_dir(ctx.env),
+          target)
+  os.symlink(path_to_addon, symlink_path)
+
 
 def distclean(ctx):
   # TODO: find out how to use waf's node class here ...
@@ -41,4 +78,6 @@ def distclean(ctx):
 def test(ctx):
   subprocess.call(['utils/testrun'])
 
-# vim: set filetype=python :
+
+
+# vim: set filetype=python shiftwidth=2 softtabstop=2 :
