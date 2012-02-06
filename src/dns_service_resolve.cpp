@@ -18,7 +18,6 @@ OnResolve(DNSServiceRef sdRef, DNSServiceFlags flags,
         const char * fullname, const char * hosttarget, uint16_t port,
         uint16_t txtLen, const unsigned char * txtRecord, void * context)
 {
-    if ( ! context) return;
 
     HandleScope scope;
     ServiceRef * serviceRef = static_cast<ServiceRef*>(context);
@@ -34,15 +33,11 @@ OnResolve(DNSServiceRef sdRef, DNSServiceFlags flags,
     args[4] = String::New(fullname);
     args[5] = String::New(hosttarget);
     args[6] = Integer::New( ntohs(port) );
-    if (txtRecord && txtLen) {
-        Buffer * buffer = Buffer::New(txtLen);
-        memcpy(Buffer::Data(buffer->handle_), txtRecord, txtLen);
-        args[7] = Local<Value>::New(buffer->handle_);
-    } else {
-        args[7] = Local<Value>::New(Null());
-    }
+    Buffer * buffer = Buffer::New(txtLen);
+    memcpy(Buffer::Data(buffer->handle_), txtRecord, txtLen);
+    args[7] = Local<Value>::New(buffer->handle_);
     if (serviceRef->GetContext().IsEmpty()) {
-        args[8] = Local<Value>::New(Null());
+        args[8] = Local<Value>::New(Undefined());
     } else {
         args[8] = Local<Value>::New(serviceRef->GetContext());
     }

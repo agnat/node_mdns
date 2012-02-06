@@ -55,7 +55,7 @@ OnAddressInfo(DNSServiceRef sdRef, DNSServiceFlags flags,
     args[6] = Integer::New(ttl);
 
     if (serviceRef->GetContext().IsEmpty()) {
-        args[7] = Local<Value>::New(Null());
+        args[7] = Local<Value>::New(Undefined());
     } else {
         args[7] = Local<Value>::New(serviceRef->GetContext());
     }

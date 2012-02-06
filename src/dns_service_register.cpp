@@ -38,7 +38,7 @@ OnServiceRegistered(DNSServiceRef sdRef, DNSServiceFlags flags,
         args[4] = String::New(serviceType);
         args[5] = String::New(domain);
         if (serviceRef->GetContext().IsEmpty()) {
-            args[6] = Local<Value>::New(Null());
+            args[6] = Local<Value>::New(Undefined());
         } else {
             args[6] = Local<Value>::New(serviceRef->GetContext());
         }

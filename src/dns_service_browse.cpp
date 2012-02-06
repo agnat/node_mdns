@@ -30,7 +30,7 @@ OnServiceChanged(DNSServiceRef sdRef, DNSServiceFlags flags,
     args[5] = String::New(serviceType);
     args[6] = String::New(replyDomain);
     if (serviceRef->GetContext().IsEmpty()) {
-        args[7] = Local<Value>::New(Null());
+        args[7] = Local<Value>::New(Undefined());
     } else {
         args[7] = Local<Value>::New(serviceRef->GetContext());
     }

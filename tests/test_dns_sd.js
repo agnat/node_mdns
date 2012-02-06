@@ -10,6 +10,9 @@ exports['DNSServiceRef'] = function(t) {
   
   var sr = new dns_sd.DNSServiceRef();
 
+  // coverage: uninitialized serviceRef to cover more destructor branches
+  var uninitialized_ref = new dns_sd.DNSServiceRef();
+
   t.ok(sr,
       'DNSServiceRef must be truthy');
   t.strictEqual(sr.fd, -1,
@@ -543,8 +546,18 @@ exports['DNSServiceResolve()'] = function(t) {
       "'initialized' must be true after inititalization");
 
   t.throws(function() {
+    dns_sd.DNSServiceResolve(serviceRef, 0, 0, undefined,
+      service_type, 'local.', function() {}, null);
+  }, 'duplicate initialization must throw');
+
+  t.throws(function() {
     dns_sd.DNSServiceResolve();
   }, "not enough arguments");
+
+  t.throws(function() {
+    dns_sd.DNSServiceResolve({not_a_service_re: true}, 0, 0, 'hostname',
+      service_type, 'local.', function() {}, null);
+  }, 'serviceRef must be DNSServiceRef object');
 
   t.throws(function() {
     var ref = new dns_sd.DNSServiceRef();
@@ -733,6 +746,15 @@ exports['TXTRecordRef'] = function(t) {
       'TXTRecordDeallocate() must throw when called without arguments');
   t.throws(function() { dns_sd.TXTRecordDeallocate(null, null); },
       'TXTRecordDeallocate() must throw when called with more than one argument');
+
+  t.throws(function() { dns_sd.txtRecordBufferToObject(); },
+      'txtRecordBufferToObject() must throw when called with no arguments');
+
+  t.throws(function() { dns_sd.txtRecordBufferToObject(5); },
+      'txtRecordBufferToObject() must throw when called with a non-object');
+
+  t.throws(function() { dns_sd.txtRecordBufferToObject({not_a_txt_record_ref: true}); },
+      'txtRecordBufferToObject() must throw when called with strange objects');
 
   t.done();
 }
