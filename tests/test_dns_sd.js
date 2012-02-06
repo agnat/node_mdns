@@ -1,4 +1,5 @@
 var dns_sd       = require('../lib/dns_sd')
+  , mdns_test    = require('../lib/mdns_test')
   , service_type = "_mdns_test._tcp"
   , test_port    = 4321
   ;
@@ -87,6 +88,23 @@ exports['DNSServiceRegister()'] = function(t) {
     var a1, a2, a3, a4, a5, a6, a7, a8;
     dns_sd.DNSServiceRegister(a1, a2, a3, a4, a5, a6, a7, a7);
   },  'Call with eight arguments must throw.');
+
+  t.throws(function() {
+    var ref    = { not_a_service_ref: true } /* broken */
+      , flags  = 0 
+      , iface  = 0
+      , name   = null
+      , type   = service_type
+      , domain = null
+      , host   = null
+      , port   = test_port
+      , txtRec = null
+      , cb     = null
+      , ctx    = null
+      ;
+    dns_sd.DNSServiceRegister(ref, flags, iface, name, type, domain,
+      host, port, txtRec, cb, ctx);
+  },  "'flags' must be a number, not a string.");
 
   t.throws(function() {
     var ref    = new dns_sd.DNSServiceRef()
@@ -309,6 +327,22 @@ exports['DNSServiceProcessResult()'] = function(t) {
       }
       , timeout);
 
+  t.throws(function() {
+    dns_sd.DNSServiceProcessResult();
+  });
+
+  t.throws(function() {
+    dns_sd.DNSServiceProcessResult('flip', 'flap', 'flop');
+  });
+
+  t.throws(function() {
+    dns_sd.DNSServiceProcessResult(new dns_sd.DNSServiceRef());
+  });
+
+  t.throws(function() {
+    dns_sd.DNSServiceProcessResult(5);
+  });
+
   watcher.callback = function() {
     dns_sd.DNSServiceProcessResult(serviceRef);
   }
@@ -370,6 +404,9 @@ exports['DNSServiceRefSockFD()'] = function(t) {
 
   t.throws(function() { dns_sd.DNSServiceRefSockFD("narf"); },
       'argument must be a DNSServiceRef');
+
+  t.throws(function() { dns_sd.DNSServiceRefSockFD(); },
+      'must throw when called with not enough arguments');
 
   t.done();
 }
@@ -486,6 +523,9 @@ exports['DNSServiceRefDeallocate()'] = function(t) {
   t.throws(function() { dns_sd.DNSServiceRefDeallocate(serviceRef, serviceRef); },
       "to many arguments");
 
+  t.throws(function() { dns_sd.DNSServiceRefDeallocate({foo: 'bar'}); },
+      "call with non serviceRef object must throw");
+
   t.done();
 }
 
@@ -560,6 +600,18 @@ exports['DNSServiceEnumerateDomains()'] = function(t) {
   t.strictEqual(serviceRef.initialized, true,
       "'initialized' must be true after inititalization");
 
+  t.doesNotThrow( function() {
+    var serviceRef = new dns_sd.DNSServiceRef();
+    dns_sd.DNSServiceEnumerateDomains(serviceRef,
+      dns_sd.kDNSServiceFlagsBrowseDomains, 0, function() {}, undefined);
+  }, 'DNSServiceEnumerateDomains() must not throw');
+
+  t.doesNotThrow( function() {
+    var serviceRef = new dns_sd.DNSServiceRef();
+    dns_sd.DNSServiceEnumerateDomains(serviceRef,
+      dns_sd.kDNSServiceFlagsBrowseDomains, 0, function() {}, {some: 'context'});
+  }, 'DNSServiceEnumerateDomains() must not throw');
+
   t.throws(function() {
     dns_sd.DNSServiceEnumerateDomains(serviceRef,
       dns_sd.kDNSServiceFlagsBrowseDomains, 0, function() {}, null);
@@ -595,6 +647,16 @@ exports['DNSServiceEnumerateDomains()'] = function(t) {
     dns_sd.DNSServiceEnumerateDomains(serviceRef,
       dns_sd.kDNSServiceFlagsBrowseDomains, 0, null, null);
   }, "'callback' must be function, not null");
+
+  t.throws(function() {
+    var serviceRef = new dns_sd.DNSServiceRef();
+    dns_sd.DNSServiceEnumerateDomains();
+  }, "not enough arguments");
+
+  t.throws(function() {
+    dns_sd.DNSServiceEnumerateDomains('not a serviceRef',
+      0, 0, function() {}, null);
+  }, "serviceRef must be a DNSServiceRef object");
 
   t.done();
 }
@@ -678,8 +740,77 @@ exports['TXTRecordRef'] = function(t) {
 //=== buildException ==========================================================
 
 exports['buildException()'] = function(t) {
+  t.strictEqual(dns_sd.buildException(dns_sd.kDNSServiceErr_NoError), undefined,
+      'buildException(kDNSServiceErr_NoError) must return undefined');
+
+  /*
+  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_Unknwon) instanceof Error,
+      'buildException(kDNSServiceErr_Unknwon) must return an Error object');
+  */
+
+  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_NoSuchName) instanceof Error,
+      'buildException(kDNSServiceErr_NoSuchName) must return an Error object');
+
+  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_NoMemory) instanceof Error,
+      'buildException(kDNSServiceErr_NoMemory) must return an Error object');
+
   t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_BadParam) instanceof Error,
       'buildException() must return an Error object');
+
+  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_BadReference) instanceof Error,
+      'buildException(kDNSServiceErr_BadReference) must return an Error object');
+
+  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_BadState) instanceof Error,
+      'buildException(kDNSServiceErr_BadState) must return an Error object');
+
+  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_BadFlags) instanceof Error,
+      'buildException(kDNSServiceErr_BadFlags) must return an Error object');
+
+  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_Unsupported) instanceof Error,
+      'buildException(kDNSServiceErr_Unsupported) must return an Error object');
+
+  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_NotInitialized) instanceof Error,
+      'buildException(kDNSServiceErr_NotInitialized) must return an Error object');
+
+  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_AlreadyRegistered) instanceof Error,
+      'buildException(kDNSServiceErr_AlreadyRegistered) must return an Error object');
+
+  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_NameConflict) instanceof Error,
+      'buildException(kDNSServiceErr_NameConflict) must return an Error object');
+
+  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_Invalid) instanceof Error,
+      'buildException(kDNSServiceErr_Invalid) must return an Error object');
+
+  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_Firewall) instanceof Error,
+      'buildException(kDNSServiceErr_Firewall) must return an Error object');
+
+  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_Incompatible) instanceof Error,
+      'buildException(kDNSServiceErr_Incompatible) must return an Error object');
+
+  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_BadInterfaceIndex) instanceof Error,
+      'buildException(kDNSServiceErr_BadInterfaceIndex) must return an Error object');
+
+  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_Refused) instanceof Error,
+      'buildException(kDNSServiceErr_Refused) must return an Error object');
+
+  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_NoSuchRecord) instanceof Error,
+      'buildException(kDNSServiceErr_NoSuchRecord) must return an Error object');
+
+  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_NoAuth) instanceof Error,
+      'buildException(kDNSServiceErr_NoAuth) must return an Error object');
+
+  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_NoSuchKey) instanceof Error,
+      'buildException(kDNSServiceErr_NoSuchKey) must return an Error object');
+
+  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_NATTraversal) instanceof Error,
+      'buildException(kDNSServiceErr_NATTraversal) must return an Error object');
+
+  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_DoubleNAT) instanceof Error,
+      'buildException(kDNSServiceErr_DoubleNAT) must return an Error object');
+
+  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_BadTime) instanceof Error,
+      'buildException(kDNSServiceErr_BadTime) must return an Error object');
+
   t.throws(function() { dns_sd.buildException() },
     'not enough arguments');
   t.throws(function() { dns_sd.buildException('foobar') },
