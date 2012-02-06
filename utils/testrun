@@ -140,9 +140,17 @@ function run_group(group, name, reporter, cb) {
     });
 }
 
+var maybe_gc;
+try {
+  maybe_gc = gc;
+} catch (ex) {
+  maybe_gc = function() {}
+}
+
 function run_testcase(f, name, reporter, cb) {
   reporter.testcase_start(name);
   reporter.done = function done() {
+    maybe_gc();
     reporter.testcase_end(name);
     cb();
   };

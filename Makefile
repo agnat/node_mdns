@@ -18,7 +18,7 @@ citest:
 coverage: gcov_build
 	lcov -d out/$(BUILDTYPE)/obj.target/dns_sd/src --zerocounters
 	mkdir -p $(GCOV_OUT)/html; 
-	utils/testrun
+	node --expose_gc utils/testrun
 	lcov --base-directory out \
 		 --directory      out/$(BUILDTYPE)/obj.target/dns_sd/src \
 		 --output-file    $(GCOV_OUT)/testrun_all.info \
