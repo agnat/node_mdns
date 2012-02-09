@@ -1,0 +1,60 @@
+#!/usr/bin/env node
+
+var properties =
+    { 'id'          : 'build.number'
+    , 'revision'    : 'build.revision'
+    , 'status'      : 'status'
+    , 'testSummary' : 'test.summary'
+    }
+  , stage_props =
+    [ 'dir'
+    , 'recipe'
+    , 'status'
+    , 'agent'
+    , 'os'
+    ]
+  , stages =
+    [ 'node_current-macosx-gyp'
+    , 'node_v0_7-macosx-waf'
+    , 'node_v0_6-macosx-waf'
+    , 'node_v0_4-macosx-waf'
+    , 'node_v0_7-linux-waf'
+    , 'node_v0_6-linux-waf'
+    , 'node_v0_4-linux-waf'
+    , 'node_v0_4-freebsd-waf'
+    ]
+  ;
+
+if (process.argv.length === 2) {
+  var args = [];
+  for (var p in properties) {
+    args.push(p + '=${' + properties[p] + '}')
+  }
+  stages.forEach(function(s) {
+    stage_props.forEach(function(p) {
+      var name = 'stage.' + s + '.' + p;
+      args.push(name + '=${' + name + '}');
+    });
+  });
+  console.log(args.join(' '));
+} else {
+  var result = {stages: {}};
+  process.argv.slice(2).forEach(function(arg) {
+    var kv = arg.split('=')
+      , key = kv.shift()
+      , value = kv.shift()
+      ;
+    if (/^stage\./.test(key)) {
+      var tokens = key.split('.');
+      tokens.shift();
+      var stage = tokens[0], prop = tokens[1];
+      result.stages[stage] = result.stages[stage] || {};
+      result.stages[stage][prop] = value;
+    } else {
+      result[key] = value;
+    }
+  });
+  process.stdout.write(JSON.stringify(result, null, 2));
+}
+
+// vim: filetype=javascript :
