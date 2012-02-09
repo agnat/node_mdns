@@ -89,21 +89,21 @@ if (parsedOptions.cmd) {
       build[key] = value;
     }
   });
-  process_results(build, done);
+  process_results(build);
 }
 
-function done() { console.log(recentBuilds) }
 
 function process_results(build, cb) {
   var rootd = path.resolve(__dirname, '..')
     , recentBuilds = {}
-    , build_dir = rootd + '/builds/'
+    , build_dir = rootd + '/builds'
     , build_file = build_dir + '/build_' + build.id + '.json'
     ;
   if (! build.id) {
     cb(new Error('no build id'))
     return;
   }
+  function done() { console.log(recentBuilds) }
   recentBuilds[build.id] = build
   chain( [ [cmd, 'git', ['pull', 'origin', config.branch], {cwd: rootd}]
          , [load_recents, rootd + '/builds/build_*.json', recentBuilds]
@@ -114,7 +114,7 @@ function process_results(build, cb) {
          , [cmd, 'git', ['commit', '-m', '[ci] added result of build ' + build.id], {cwd: rootd}]
          , [cmd, 'git', ['push', 'origin', config.branch], {cwd: rootd}]
          ]
-       , cb
+       , done
        );
 }
 
@@ -133,9 +133,16 @@ function load_recents(pattern, builds, cb) {
 }
 
 function clean_up(builds, dir, cb) {
-  var ids = Object.keys(builds).sort().slice(config.recentBuilds);
-  console.log(ids);
-  cb();
+  var ids = Object.keys(builds).sort(function(a,b) {return a - b})
+  if (ids.length > config.recentBuilds) {
+    var remove = ids.slice(0, ids.length - config.recentBuilds)
+      , removers = remove.map( function(id) {
+      return [cmd, 'git', ['rm', dir + '/build_' + id + '.json'], {cwd: dir}]
+    });
+    bunch(removers, cb);
+  } else {
+    cb();
+  }
 }
 
 function saveJSON(file, obj, cb) {
@@ -155,6 +162,18 @@ function cmd(executable, args, options, cb) {
       cb();
     }
   });
+}
+
+function bunch(tasks, cb) {
+  var count = 0, has_error;
+  function done(error) {
+    if (error) {
+      has_error = error;
+      cb(error);
+    }
+    if (++count === tasks.length && ! has_error) cb();
+  }
+  tasks.forEach(function(t) { t[0].apply(null, t.slice(1).concat([done])) });
 }
 
 // vim: filetype=javascript :
