@@ -15,7 +15,7 @@ def configure(conf):
              ]
   if conf.check( header_name='dns_sd.h'
                , includes=includes
-               , uselib='DNS_SD'
+               , uselib_store='DNS_SD'
                , mandatory=True):
     conf.check(lib='dns_sd', uselib_store='DNS_SD')
  
