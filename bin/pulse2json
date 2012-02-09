@@ -76,7 +76,6 @@ if (parsedOptions.cmd) {
     if (/^stage\./.test(key)) {
       var tokens = key.split('.');
       tokens.shift();
-      console.log('key:', key, 'tokens:', tokens.length);
       var stage = tokens[0], prop = tokens[1];
       build.stages[stage] = build.stages[stage] || {};
       if (prop === 'command') {
@@ -107,12 +106,12 @@ function process_results(build, cb) {
   }
   recentBuilds[build.id] = build
   chain( [ [cmd, 'git', ['pull', 'origin', config.branch], {cwd: rootd}]
-         , [load_recents, rootd + '/builds/**/build.json', recentBuilds]
+         , [load_recents, rootd + '/builds/build_*.json', recentBuilds]
          , [mkdirp, build_dir]
          , [saveJSON, build_file, build]
-         , [cmd, 'git', ['add', build_file], {cwd: rootd}
-         , [cmd, 'git', ['commit', '-m', '[ci] added result of build ' + build.id], {cwd: rootd}
-         , [cmd, 'git', ['push', 'origin', config.branch], {cwd: rootd}
+         , [cmd, 'git', ['add', build_file], {cwd: rootd}]
+         , [cmd, 'git', ['commit', '-m', '[ci] added result of build ' + build.id], {cwd: rootd}]
+         , [cmd, 'git', ['push', 'origin', config.branch], {cwd: rootd}]
          ]
        , cb
        );
