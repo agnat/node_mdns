@@ -1,21 +1,41 @@
 #!/usr/bin/env node
 
 var path = require('path')
+  , fs = require('fs')
   , child_process = require('child_process')
   , slide = require('slide')
   , glob = require('glob')
+  , mkdirp = require('mkdirp')
+  , nopt = require('nopt')
   , chain = slide.chain
+  , asyncMap = slide.asyncMap
   ;
 
-var config =
+var knownOptions =
+    { 'cmd' : Boolean
+    }
+  , config =
     { recentBuilds: 10
     , branch: 'ci-build'
+    , stages:
+      { 'node_current-macosx-gyp': ['make_coverage']
+      , 'node_v0_7-macosx-waf': null
+      , 'node_v0_6-macosx-waf': null
+      , 'node_v0_4-macosx-waf': null
+      , 'node_v0_7-linux-waf': null
+      , 'node_v0_6-linux-waf': null
+      , 'node_v0_4-linux-waf': null
+      , 'node_v0_4-freebsd-waf': null
+      }
     }
   , properties =
     { id          : 'build.number'
     , revision    : 'build.revision'
     , status      : 'status'
     , testSummary : 'test.summary'
+    , repository  : 'git.repository'
+    , branch      : 'git.branch'
+    , timestamp   : 'build.timestamp.millis'
     }
   , stage_props =
     [ 'dir'
@@ -24,40 +44,48 @@ var config =
     , 'agent'
     , 'os'
     ]
-  , stages =
-    [ 'node_current-macosx-gyp'
-    , 'node_v0_7-macosx-waf'
-    , 'node_v0_6-macosx-waf'
-    , 'node_v0_4-macosx-waf'
-    , 'node_v0_7-linux-waf'
-    , 'node_v0_6-linux-waf'
-    , 'node_v0_4-linux-waf'
-    , 'node_v0_4-freebsd-waf'
-    ]
+  , parsedOptions = nopt(knownOptions)
   ;
 
-if (process.argv.length === 2) {
+if (parsedOptions.cmd) {
   var args = [];
   for (var p in properties) {
     args.push(p + '=${' + properties[p] + '}')
   }
-  stages.forEach(function(s) {
+  var stage_names = Object.keys(config.stages);
+  stage_names.forEach(function(s) {
     stage_props.forEach(function(p) {
       var name = ['stage', s, p].join('.');
       args.push(name + '=${' + name + '}');
     });
+    if (config.stages[s]) {
+      config.stages[s].forEach(function(cmd) {
+        var name = ['stage', s, 'command', cmd, 'dir'].join('.')
+        args.push(name + '=${' + name + '}');
+
+        name = ['stage', s, 'command', cmd, 'status'].join('.')
+        args.push(name + '=${' + name + '}');
+      })
+    }
   });
   console.log(args.join(' '));
 } else {
   var build = {stages: {}};
-  process.argv.slice(2).forEach(function(arg) {
+  parsedOptions.argv.remain.forEach(function(arg) {
     var kv = arg.split('=') , key = kv.shift() , value = kv.shift();
     if (/^stage\./.test(key)) {
       var tokens = key.split('.');
       tokens.shift();
+      console.log('key:', key, 'tokens:', tokens.length);
       var stage = tokens[0], prop = tokens[1];
       build.stages[stage] = build.stages[stage] || {};
-      build.stages[stage][prop] = value;
+      if (prop === 'command') {
+        build.stages[stage].commands = build.stages[stage].commands || {};
+        build.stages[stage].commands[tokens[2]] = build.stages[stage].commands[tokens[2]] || {};
+        build.stages[stage].commands[tokens[2]][tokens[3]] = value;
+      } else {
+        build.stages[stage][prop] = value;
+      }
     } else {
       build[key] = value;
     }
@@ -70,20 +98,45 @@ function done() { console.log(arguments) }
 function process_results(build, cb) {
   var rootd = path.resolve(__dirname, '..')
     , recentBuilds = {}
+    , build_dir = rootd + '/builds/'
+    , build_file = build_dir + '/build_' + build.id + '.json'
     ;
+  if (! build.id) {
+    cb(new Error('no build id'))
+    return;
+  }
+  recentBuilds[build.id] = build
   chain( [ [cmd, 'git', ['pull', 'origin', config.branch], {cwd: rootd}]
          , [load_recents, rootd + '/builds/**/build.json', recentBuilds]
+         , [mkdirp, build_dir]
+         , [saveJSON, build_file, build]
+         , [cmd, 'git', ['add', build_file], {cwd: rootd}
+         , [cmd, 'git', ['commit', '-m', '[ci] added result of build ' + build.id], {cwd: rootd}
+         , [cmd, 'git', ['push', 'origin', config.branch], {cwd: rootd}
          ]
        , cb
        );
 }
 
 function load_recents(pattern, builds, cb) {
+  function loadJSON(file, cb) {
+    fs.readFile(file, function(error, data) {
+      if (error) { cb(error); return; }
+      var b = JSON.parse(data);
+      builds[b.id] = b;
+      cb(undefined, builds)
+    });
+  }
   glob(pattern, function(error, files) {
     console.log(error, files);
-    cb(error, files);
+    asyncMap(files, loadJSON, cb);
   });
 }
+
+function saveJSON(file, obj, cb) {
+  fs.writeFile(file, JSON.stringify(obj, null, 2), cb);
+}
+
 
 function cmd(executable, args, options, cb) {
   console.log(executable, args.join(' '), options);
