@@ -1,6 +1,8 @@
 { "name"         : "pulse2json"
 , "version"      : "0.0.0-dev"
-, "bin": { "pulse2json": "./pulse2json" }
+, "bin": { "pulse2json": "./bin/pulse2json" }
 , "dependencies":
-  { }
+  { "slide" : "*"
+  , "glob" : "*"
+  }
 }

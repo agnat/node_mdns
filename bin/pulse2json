@@ -1,10 +1,21 @@
 #!/usr/bin/env node
 
-var properties =
-    { 'id'          : 'build.number'
-    , 'revision'    : 'build.revision'
-    , 'status'      : 'status'
-    , 'testSummary' : 'test.summary'
+var path = require('path')
+  , child_process = require('child_process')
+  , slide = require('slide')
+  , glob = require('glob')
+  , chain = slide.chain
+  ;
+
+var config =
+    { recentBuilds: 10
+    , branch: 'ci-build'
+    }
+  , properties =
+    { id          : 'build.number'
+    , revision    : 'build.revision'
+    , status      : 'status'
+    , testSummary : 'test.summary'
     }
   , stage_props =
     [ 'dir'
@@ -32,29 +43,60 @@ if (process.argv.length === 2) {
   }
   stages.forEach(function(s) {
     stage_props.forEach(function(p) {
-      var name = 'stage.' + s + '.' + p;
+      var name = ['stage', s, p].join('.');
       args.push(name + '=${' + name + '}');
     });
   });
   console.log(args.join(' '));
 } else {
-  var result = {stages: {}};
+  var build = {stages: {}};
   process.argv.slice(2).forEach(function(arg) {
-    var kv = arg.split('=')
-      , key = kv.shift()
-      , value = kv.shift()
-      ;
+    var kv = arg.split('=') , key = kv.shift() , value = kv.shift();
     if (/^stage\./.test(key)) {
       var tokens = key.split('.');
       tokens.shift();
       var stage = tokens[0], prop = tokens[1];
-      result.stages[stage] = result.stages[stage] || {};
-      result.stages[stage][prop] = value;
+      build.stages[stage] = build.stages[stage] || {};
+      build.stages[stage][prop] = value;
     } else {
-      result[key] = value;
+      build[key] = value;
     }
   });
-  process.stdout.write(JSON.stringify(result, null, 2));
+  process_results(build, done);
+}
+
+function done() { console.log(arguments) }
+
+function process_results(build, cb) {
+  var rootd = path.resolve(__dirname, '..')
+    , recentBuilds = {}
+    ;
+  chain( [ [cmd, 'git', ['pull', 'origin', config.branch], {cwd: rootd}]
+         , [load_recents, rootd + '/builds/**/build.json', recentBuilds]
+         ]
+       , cb
+       );
+}
+
+function load_recents(pattern, builds, cb) {
+  glob(pattern, function(error, files) {
+    console.log(error, files);
+    cb(error, files);
+  });
+}
+
+function cmd(executable, args, options, cb) {
+  console.log(executable, args.join(' '), options);
+  var c = child_process.spawn(executable, args, options);
+  c.stdout.on('data', function(d) { console.log(d.toString())});
+  c.stderr.on('data', function(d) { console.log(d.toString())});
+  c.on('exit', function(code) {
+    if (code) {
+      cb(new Error(executable + ' exit code ' + code));
+    } else {
+      cb();
+    }
+  });
 }
 
 // vim: filetype=javascript :
