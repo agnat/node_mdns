@@ -1,0 +1,73 @@
+{
+  "stages": {
+    "node_current-macosx-gyp": {
+      "dir": "/Users/david/.pulse2/data/projects/163840/00000101/4751480",
+      "recipe": "gyp",
+      "status": "success",
+      "agent": "macosx",
+      "os": "macosx",
+      "commands": {
+        "make_coverage": {
+          "dir": "/Users/david/.pulse2/data/projects/163840/00000101/4751480/output/00000009-make_coverage",
+          "status": "success"
+        }
+      }
+    },
+    "node_v0_7-macosx-waf": {
+      "dir": "/Users/david/.pulse2/data/projects/163840/00000101/4751481",
+      "recipe": "waf",
+      "status": "success",
+      "agent": "macosx",
+      "os": "macosx"
+    },
+    "node_v0_6-macosx-waf": {
+      "dir": "/Users/david/.pulse2/data/projects/163840/00000101/4751482",
+      "recipe": "waf",
+      "status": "success",
+      "agent": "macosx",
+      "os": "macosx"
+    },
+    "node_v0_4-macosx-waf": {
+      "dir": "/Users/david/.pulse2/data/projects/163840/00000101/4751483",
+      "recipe": "waf",
+      "status": "success",
+      "agent": "macosx",
+      "os": "macosx"
+    },
+    "node_v0_7-linux-waf": {
+      "dir": "/Users/david/.pulse2/data/projects/163840/00000101/4751484",
+      "recipe": "waf",
+      "status": "success",
+      "agent": "ubuntu",
+      "os": "linux"
+    },
+    "node_v0_6-linux-waf": {
+      "dir": "/Users/david/.pulse2/data/projects/163840/00000101/4751485",
+      "recipe": "waf",
+      "status": "success",
+      "agent": "ubuntu",
+      "os": "linux"
+    },
+    "node_v0_4-linux-waf": {
+      "dir": "/Users/david/.pulse2/data/projects/163840/00000101/4751486",
+      "recipe": "waf",
+      "status": "success",
+      "agent": "ubuntu",
+      "os": "linux"
+    },
+    "node_v0_4-freebsd-waf": {
+      "dir": "/Users/david/.pulse2/data/projects/163840/00000101/4751487",
+      "recipe": "waf",
+      "status": "success",
+      "agent": "freebsd",
+      "os": "freebsd"
+    }
+  },
+  "id": "101",
+  "revision": "e7ddc71863d3d589309e192fa296bf3702b2702f",
+  "status": "success",
+  "testSummary": "1,448 tests passed (21 skipped)",
+  "repository": "git://github.com/agnat/node_mdns.git",
+  "branch": "master",
+  "timestamp": "1328826395149"
+}

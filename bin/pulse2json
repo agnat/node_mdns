@@ -92,7 +92,7 @@ if (parsedOptions.cmd) {
   process_results(build, done);
 }
 
-function done() { console.log(arguments) }
+function done() { console.log(recentBuilds) }
 
 function process_results(build, cb) {
   var rootd = path.resolve(__dirname, '..')
@@ -109,6 +109,7 @@ function process_results(build, cb) {
          , [load_recents, rootd + '/builds/build_*.json', recentBuilds]
          , [mkdirp, build_dir]
          , [saveJSON, build_file, build]
+         , [clean_up, recentBuilds, build_dir]
          , [cmd, 'git', ['add', build_file], {cwd: rootd}]
          , [cmd, 'git', ['commit', '-m', '[ci] added result of build ' + build.id], {cwd: rootd}]
          , [cmd, 'git', ['push', 'origin', config.branch], {cwd: rootd}]
@@ -127,9 +128,14 @@ function load_recents(pattern, builds, cb) {
     });
   }
   glob(pattern, function(error, files) {
-    console.log(error, files);
     asyncMap(files, loadJSON, cb);
   });
+}
+
+function clean_up(builds, dir, cb) {
+  var ids = Object.keys(builds).sort().slice(config.recentBuilds);
+  console.log(ids);
+  cb();
 }
 
 function saveJSON(file, obj, cb) {
