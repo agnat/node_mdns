@@ -11,7 +11,12 @@ def configure(conf):
   conf.check_tool('compiler_cxx')
   conf.check_tool('node_addon')
 
-  if conf.check(header_name='dns_sd.h', mandatory=True):
+  includes = [ '/usr/local/include' # help freebsd
+             ]
+  if conf.check( header_name='dns_sd.h'
+               , includes=includes
+               , uselib='DNS_SD'
+               , mandatory=True):
     conf.check(lib='dns_sd', uselib_store='DNS_SD')
  
     conf.check(function_name='DNSServiceGetAddrInfo',
