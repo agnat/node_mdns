@@ -22,6 +22,7 @@ var knownOptions =
       , 'node_v0_7-macosx-waf': null
       , 'node_v0_6-macosx-waf': null
       , 'node_v0_4-macosx-waf': null
+      , 'node_head-linux-gyp': null
       , 'node_v0_7-linux-waf': null
       , 'node_v0_6-linux-waf': null
       , 'node_v0_4-linux-waf': null
