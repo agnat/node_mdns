@@ -59,30 +59,41 @@ def build(bld):
                , 'src/txt_record_get_length.cpp'
                , 'src/txt_record_buffer_to_object.cpp'
                ]
+
+  obj = bld.new_task_gen('cxx', 'shlib', 'node_addon')
+  obj.target = 'demangle'
+  obj.cxxflags = ['-Wall']
+  obj.source = [ 'src/demangle.cpp' ]
+
   bld.add_post_fun(post_build)
 
-def post_build(ctx):
-  target = name + '.node'
-  symlink_path = os.path.join('lib', target)
-  if os.path.lexists(symlink_path):
-    os.unlink(symlink_path)
-  path_to_addon = os.path.join('..', 'out', ctx.path.bld_dir(ctx.env),
-          target)
+
+def update_addon_symlink(ctx, directory, target):
+  symlink_path = os.path.join(directory, target)
+  remove_symlink(symlink_path)
+  path_to_addon = os.path.join('..', 'out', ctx.path.bld_dir(ctx.env), target)
   os.symlink(path_to_addon, symlink_path)
 
+def post_build(ctx):
+  update_addon_symlink(ctx, 'lib', name + '.node')
+  update_addon_symlink(ctx, 'utils/lib', 'demangle.node')
 
-def distclean(ctx):
-  # TODO: find out how to use waf's node class here ...
-  Scripting.distclean(ctx)
-  symlink = os.path.join('lib', 'dns_sd.node')
+
+def remove_symlink(symlink):
   if os.path.lexists(symlink):
     os.unlink(symlink)
+
+def distclean(ctx):
+  Scripting.distclean(ctx)
+
+  remove_symlink(os.path.join('lib', name + '.node'))
+  remove_symlink(os.path.join('utils/lib', 'demangle.node'))
+
   if os.path.exists('node_modules'):
       shutil.rmtree('node_modules')
 
 def test(ctx):
   subprocess.call(['utils/testrun'])
-
 
 
 # vim: set filetype=python shiftwidth=2 softtabstop=2 :

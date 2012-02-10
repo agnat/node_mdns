@@ -5,14 +5,14 @@
 , "scripts": { "test": "utils/testrun" }
 , "keywords": ["mdns", "zeroconf", "bonjour", "dns_sd", "mDNSResponder"]
 , "devDependencies": 
-  { "ejs":    "*"
-  , "less":   "*"
-  , "mkdirp": "*"
-  , "nopt":   "*"
-  , "slide":  "*"
-  , "glob":   "*"
-  , "ncp":    "*"
-
+  { "ejs":       "*"
+  , "less":      "*"
+  , "mkdirp":    "*"
+  , "nopt":      "*"
+  , "slide":     "*"
+  , "glob":      "*"
+  , "ncp":       "*"
+  , "minimatch": "*"
   }
 , "repository":
   { "type": "git"

@@ -1,0 +1,199 @@
+.rounded-corners (@radius: 5px) {
+  border-radius: @radius;
+  -webkit-border-radius: @radius;
+  -moz-border-radius: @radius;
+}
+
+.build_status hgroup {
+}
+
+.build_status hgroup h1 {
+  margin: 0.3em 0;
+}
+
+.build_status hgroup h2 {
+  color: #bbb;
+  font-weight: normal;
+  font-size: 100%;
+  margin: 0.3em 0;
+}
+
+.status_table {
+  margin: 3em 0;
+  border-spacing: 0.8em;
+}
+
+.status_table td {
+  text-align: center;
+}
+
+.status_table .success {
+  background-color: #0AD341;
+  text-shadow: 1px 1px #8e8;
+}
+
+.status_table .failed {
+  background-color: #FF544B;
+  text-shadow: 1px 1px #e88;
+}
+
+.status_table .warning {
+  background-color: #FFEB00;
+  text-shadow: 1px 1px #fff;
+  font-family: Times, serif;
+  font-weight: bold;
+}
+
+.status_table .not_run {
+  text-shadow: none;
+}
+
+.node_config span {
+  font-weight: normal;
+  font-size: 0.9em;
+}
+
+.build_badge_base {
+  width: 26px;
+  height: 26px;
+  margin: auto;
+  .rounded-corners(13px);
+}
+
+.build_badge {
+  .build_badge_base;
+  color: #222;
+  text-shadow: 1px 1px #7e7;
+  .box-shadow(1px 1px 4px , 50%);
+}
+
+.build_badge.not_run {
+  .build_badge_base;
+  box-shadow: none;
+}
+
+.build_badge span {
+  position: relative;
+  top: 0.17em;
+  left: 0.08em;
+  font-size: 120%;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.numbers {
+  font-family: monospace;
+  font-size: 10pt;
+  text-align: right;
+  padding: 0 0.5em;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.box-shadow(@style, @c) when (iscolor(@c)) {
+  box-shadow:         @style @c;
+  -webkit-box-shadow: @style @c;
+  -moz-box-shadow:    @style @c;
+}
+
+.box-shadow(@style, @alpha: 50%) when (isnumber(@alpha)) {
+  .box-shadow(@style, rgba(0, 0, 0, @alpha));
+}
+
+td.line_numbers { .numbers; }
+td.hit_count { .numbers; }
+
+div.missed {
+  background-color: #FFAEA2;
+}
+
+div.hit {
+  background-color: #A3FFC4;
+}
+
+table.source {
+  margin-left:auto; 
+  margin-right:auto;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  width: 100%;
+}
+
+.label {
+  text-align: right;
+}
+
+.summary {
+  margin: 1em 0;
+  padding: 1em 0;
+}
+
+.build_title {
+  margin: 5em 0;
+}
+
+.build_title h1 {
+  font-size: 2.5em;
+  margin: 0.3em 0;
+}
+
+.build_title h2 {
+  color: #bbb;
+  font-size: 1em;
+  padding: 0.2em 0;
+  margin: 0;
+}
+
+.release_tag {
+  float: right;
+  font-size: 1.5em;
+  background-color: #FFE500;
+  padding: 0.2em 0.4em;
+  margin-top: -8px;
+  color: #333;
+  .rounded-corners(5px);
+  .box-shadow(0 0 8px , 50%);
+  text-shadow: 1px 1px white
+}
+
+.chart_box {
+  display: inline-block;
+  margin-left: 25px;
+  margin-right: 25px;
+}
+
+.summery_numbers {
+  text-align: center;
+}
+
+.chart_box h4 {
+  text-align: center;
+}
+
+.zero {
+  width: 200px;
+  height: 200px;
+}
+
+.pie_chart {
+  width: 200px;
+  height: 200px;
+}

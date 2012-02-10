@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generator: Adobe Illustrator 14.0.0, SVG Export Plug-In  -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   x="0px"
+   y="0px"
+   width="32"
+   height="32"
+   viewBox="-0.866 -0.866 32 32"
+   enable-background="new -0.866 -0.866 285 285"
+   xml:space="preserve"
+   id="svg3035"
+   inkscape:version="0.48.0 r9654"
+   sodipodi:docname="ubuntu_logo.svg"
+   inkscape:export-filename="/Users/david/projects/node.js/node_mdns/doc/pages/images/ubuntu_logo.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90"><metadata
+   id="metadata3045"><rdf:RDF><cc:Work
+       rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><sodipodi:namedview
+   pagecolor="#ffffff"
+   bordercolor="#666666"
+   borderopacity="1"
+   objecttolerance="10"
+   gridtolerance="10"
+   guidetolerance="10"
+   inkscape:pageopacity="0"
+   inkscape:pageshadow="2"
+   inkscape:window-width="1289"
+   inkscape:window-height="1060"
+   id="namedview3043"
+   showgrid="false"
+   inkscape:zoom="17.109306"
+   inkscape:cx="13.370622"
+   inkscape:cy="13.658658"
+   inkscape:window-x="0"
+   inkscape:window-y="0"
+   inkscape:window-maximized="0"
+   inkscape:current-layer="svg3035" />
+<defs
+   id="defs3037">
+</defs>
+
+<path
+   d="m 3.746582,12.40496 c -1.475781,0 -2.671597,1.195816 -2.671597,2.671596 0,1.475217 1.195816,2.671173 2.671597,2.671173 1.475216,0 2.671173,-1.195956 2.671173,-2.671173 0,-1.475921 -1.195816,-2.671596 -2.671173,-2.671596 z m 19.074745,12.141978 c -1.277843,0.737678 -1.715226,2.370878 -0.97783,3.648157 0.73782,1.277843 2.370878,1.715508 3.648721,0.97783 1.27742,-0.737538 1.715085,-2.370737 0.977407,-3.648439 -0.737538,-1.277278 -2.370878,-1.715085 -3.648298,-0.977548 z M 9.549465,15.076133 c 0,-2.640254 1.312009,-4.972307 3.318354,-6.3844145 L 10.9147,5.420096 c -2.337983,1.5620439 -4.077069,3.9500041 -4.799499,6.74683 0.843847,0.687841 1.383023,1.735274 1.383023,2.909489 0,1.173933 -0.539176,2.221366 -1.383165,2.909066 0.72229,2.797108 2.461517,5.185069 4.799499,6.746971 l 1.953261,-3.271905 C 10.861474,20.048723 9.549465,17.716811 9.549465,15.076133 z m 7.803863,-7.8038633 c 4.076928,0 7.421118,3.1259223 7.771674,7.1117863 l 3.807411,-0.05562 C 28.745064,11.385624 27.459596,8.7429702 25.48403,6.8007231 24.468363,7.184457 23.294995,7.1262897 22.28088,6.540665 21.265496,5.9544749 20.628339,4.9656325 20.453838,3.8925039 19.46669,3.6193157 18.427728,3.4703687 17.35347,3.4703687 c -1.847515,0 -3.592954,0.4337124 -5.143421,1.2017457 l 1.855986,3.32626 c 0.999149,-0.4649141 2.112514,-0.7261022 3.287293,-0.7261022 z m 0,15.6078673 c -1.17492,0 -2.288144,-0.261187 -3.287434,-0.726101 l -1.856268,3.326542 c 1.550608,0.76775 3.296189,1.201604 5.143702,1.201604 1.074258,0 2.113221,-0.148947 3.10051,-0.422135 0.174501,-1.073128 0.811799,-2.061971 1.827326,-2.648584 1.014113,-0.585343 2.187481,-0.64351 3.203148,-0.259635 1.975426,-1.942389 3.260892,-4.585043 3.447959,-7.527851 l -3.807409,-0.05562 c -0.350274,3.986429 -3.694606,7.111787 -7.771534,7.111787 z M 22.820904,5.6051868 c 1.277702,0.7379608 2.911042,0.300154 3.648438,-0.9771245 0.73782,-1.277843 0.300437,-2.911042 -0.977406,-3.64886205 -1.277561,-0.73753694 -2.91076,-0.29987165 -3.64858,0.97797135 -0.737537,1.2772785 -0.299872,2.910619 0.977548,3.6480152 z"
+   id="path3041"
+   inkscape:connector-curvature="0" />
+</svg>

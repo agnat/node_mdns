@@ -1,11 +1,31 @@
 
+//=== Page Setup ===============================================================
+
 html, body {
   height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 body {
+  background: url('../images/pattern.png');
+  //font-family: Georgia, Times, serif;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+#page {
+  position: relative;
+  margin: 0 auto;
+  height: auto !important;
   background-color: white;
-  font-family: Georgia, Times, serif;
+  max-width: 55em;
+  min-height: 100%;
+  padding: 0;
+}
+
+#content {
+  margin: 0;
+  padding: 5em;
 }
 
 a {
@@ -20,21 +40,18 @@ a:hover {
   color: black;
 }
 
-#page {
-  max-width: 50em;
-  padding: 6em;
-}
-
 header {
+  margin: 0 5em;
   border-bottom: 1px solid #ccc;
-  margin-bottom: 6.0em;
+  padding: 0;
+  padding-top: 120px;
 }
 
 nav ul {
   text-align: right;
   margin: 0;
   padding: 0;
-  margin-bottom: 1.0em;
+  margin-bottom: 0.5em;
 }
 
 nav li {
@@ -44,18 +61,25 @@ nav li {
   padding: 0;
 }
 
-#content {
-  min-height: 20em;
+footer {
+  position:absolute;
+	bottom:0;
+  border-top: 1px solid #ccc;
+  min-height: 5em;
 }
 
-footer {
-  border-top: 1px solid #ccc;
+code {
 }
 
 pre {
-  padding: 1.6em;
+  padding: 0;
+  margin: 0;
+}
+
+.guide pre {
   background: #f8f8f8;
   border: 1px solid #e8e8e8;
+  padding: 1.6em;
 }
 
 dt {
@@ -64,11 +88,11 @@ dt {
 
 h2 {
   line-height: 1.2em;
-  margin: 0 0 0.5em;
+  margin: 3em 0 0.5em;
 }
 
 h3 {
-  margin: 1.5em 0 0.5em;
+  margin: 2em 0 0.5em;
 }
 
 h4 {
@@ -83,4 +107,7 @@ h5 {
 h6 {
   line-height: 1.47;
 }
+
+
+//=== GitHub Ribbon ============================================================
 

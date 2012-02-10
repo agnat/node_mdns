@@ -12,29 +12,33 @@ var path   = require('path')
   , ejs    = require('ejs')
   , less   = require('less')
   , ncp    = require('ncp').ncp
+  , view   = require('./lib/view')
+  , obj = require('./lib/obj')
   , j      = path.join
   , chain  = slide.chain
+  , compiler = require('./lib/compiler')
   ;
 
-var rootd = path.dirname(process.argv[1]) + '/..'
+var rootd = path.resolve(path.dirname(process.argv[1]), '..')
   , docd  = rootd + '/doc'
-  , outd  = rootd + '/out'
+  , outd  = rootd + '/out/pages'
   , package = JSON.parse(fs.readFileSync(rootd + '/package.json'))
   , layout = fs.readFileSync(docd + '/layout.ejs').toString()
   ;
 
-var ejs2textile = compilerSync(render_ejs, 'ejs')
-  , ejs2html    = compiler(render_page, 'redcloth')
-  , less2css    = compiler(less.render, 'less')
+var ejs2textile = compiler.compilerSync(ejs.render, 'ejs', {package: package})
+  , ejs2html    = compiler.compiler(render_page, 'redcloth', {dst: compiler.dst, outputDir: outd})
+  , less2css    = compiler.compiler(less.render, 'less')
   ;
 
-var prepare = [ [ mkdirp, outd + '/pages']
+var prepare = [ [ mkdirp, outd ]
               ]
   , tasks   = [ [ ejs2textile, docd + '/README.ejs', rootd + '/README.textile']
               , [ render_pages, docd + '/pages/*.ejs']
               , [ render_stylesheets, docd + '/pages/stylesheets/*.less']
-              , [ ncp, docd + '/pages/images', outd + '/pages/images']
-              , [ ncp, docd + '/pages/scripts', outd + '/pages/scripts']
+              , [ ncp, docd + '/pages/images', outd + '/images']
+              , [ ncp, docd + '/pages/scripts', outd + '/scripts']
+              , [ ncp, docd + '/pages/jqplot', outd + '/jqplot']
               ]
               ;
 
@@ -49,7 +53,7 @@ chain( [ [ run_all, prepare]
 function render_pages(pattern, cb) {
   glob(pattern, function(error, files) {
     var tasks = files.map(function(f) { 
-      var dst = outd + '/pages/' + path.basename(path.basename(f), '.ejs')
+      var dst = path.join(outd, path.basename(path.basename(f), '.ejs'))
           + '.html';
       return [ejs2html, f, dst] 
     });
@@ -60,32 +64,22 @@ function render_pages(pattern, cb) {
 function render_stylesheets(pattern, cb) {
   glob(pattern, function(error, files) {
     var tasks = files.map(function(f) { 
-      var dst = outd + '/pages/stylesheets/'
+      var dst = outd + '/stylesheets/'
           + path.basename(path.basename(f), '.less') + '.css';
-      return [less2css, f, dst] 
+      return [less2css, f, dst, {}] 
     });
     run_all(tasks, cb);
   });
 }
 
-function render_ejs(source) {
-  return ejs.render(source, {package: package});
-}
-
-function render_page(source, cb) {
-  var metadata = {};
-  function meta(k, v) {
-    metadata[k] = v;
-  }
+function render_page(source, options, cb) {
+  var metadata = { scripts: [], stylesheets: ['/stylesheets/mdns.css']};
   function layout_page(error, html) {
     metadata.body = html;
-    cb(error, ejs.render(layout, metadata))
+    cb(error, ejs.render(layout, obj.union(metadata, view.helpers(metadata, options))))
   }
-  var locals = {package: package, meta: meta};
+  var locals = obj.union({package: package}, view.helpers(metadata, options));
   piped_comand('redcloth', ejs.render(source, locals), layout_page);
-}
-
-function copydir(src, dst, cb) {
 }
 
 function piped_comand(comand, input, args, cb) {
@@ -110,33 +104,6 @@ function piped_comand(comand, input, args, cb) {
   
 }
 
-function compilerSync(f, name) {
-  return function(src, dst, cb) {
-    console.log('[' + name + ']', dst)
-    fs.readFile(src, function(error, data) {
-      if (error) return cb(error);
-      var result = f('' + data);
-      mkdir_and_write_file(dst, result, cb);
-    });
-  }
-}
-
-function compiler(f, name) {
-  return function(src, dst, cb) {
-    console.log('[' + name + ']', dst)
-    fs.readFile(src, function(error, data) {
-      if (error) return cb(error);
-      f('' + data, function(error, result) {
-        if (error) {
-          cb(error);
-        } else {
-          mkdir_and_write_file(dst, result, cb);
-        }
-      });
-    });
-  }
-}
-
 
 function run_all(tasks, cb) {
   var done_count = 0, first_error;
@@ -154,13 +121,4 @@ function run_all(tasks, cb) {
   });
 }
 
-function mkdir_and_write_file(file, content, cb) {
-  mkdirp(path.dirname(file), function(error) {
-    if (error) {
-      cb(error)
-    } else {
-      fs.writeFile(file, content, cb)
-    }
-  });
-}
 // vim: filetype=javascript :
