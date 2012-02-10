@@ -18,7 +18,7 @@ var knownOptions =
     { recentBuilds: 10
     , branch: 'ci-build'
     , stages:
-      { 'node_current-macosx-gyp': ['make_coverage']
+      { 'node_head-macosx-gyp': ['make_coverage']
       , 'node_v0_7-macosx-waf': null
       , 'node_v0_6-macosx-waf': null
       , 'node_v0_4-macosx-waf': null
@@ -85,6 +85,8 @@ if (parsedOptions.cmd) {
       } else {
         build.stages[stage][prop] = value;
       }
+    } else if (['id', 'timestamp'].indexOf(key) !== -1) {
+      build[key] = parseInt(value);
     } else {
       build[key] = value;
     }
