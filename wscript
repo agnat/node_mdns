@@ -11,6 +11,15 @@ def configure(conf):
   conf.check_tool('compiler_cxx')
   conf.check_tool('node_addon')
 
+  # HACK: The current node master builds a i386 binary while older releases used
+  # the compilers default x86_64. node-waf still targets x86_64 resulting in an
+  # incompatible binary. Building the add-on as a universal binary for both
+  # architectures solves this for now ...
+  if conf.env.DEST_OS == 'darwin':
+    universal_flags = ['-arch', 'i386', '-arch', 'x86_64']
+    conf.env.append_value('CXXFLAGS', universal_flags)
+    conf.env.append_value('LINKFLAGS_MACBUNDLE', universal_flags)
+
   includes = ['/usr/local/include'] # help freebsd
   libpath = ['/usr/local/lib']      # help freebsd
   if conf.check( header_name='dns_sd.h'
@@ -23,14 +32,6 @@ def configure(conf):
                header_name="dns_sd.h",
                uselib='DNS_SD')
 
-  # HACK: The current node master builds a i386 binary while older releases used
-  # the compilers default x86_64. node-waf still targets x86_64 resulting in an
-  # incompatible binary. Building the add-on as a universal binary for both
-  # architectures solves this for now ...
-  if conf.env.DEST_OS == 'darwin':
-    universal_flags = ['-arch', 'i386', '-arch', 'x86_64']
-    conf.env.append_value('CXXFLAGS', universal_flags)
-    conf.env.append_value('LINKFLAGS_MACBUNDLE', universal_flags)
 
 def build(bld):
   obj = bld.new_task_gen('cxx', 'shlib', 'node_addon')
