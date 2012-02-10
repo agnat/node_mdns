@@ -2,6 +2,16 @@ CHANGES
 
 Version 0.0.4 to 0.0.5
 
+   - Publish and receive TXT records
+
+   - Build universal binaries on Mac OS
+     This helps to work around a architecture mismatch between gyp-build nodes
+     and waf-build addons.
+
+   - Added experimental gyp-based build
+
+   - Continuous integration and coverage testing.
+
 Version 0.0.3 to 0.0.4
 
    - New service type objects:
@@ -20,3 +30,6 @@ Version 0.0.3 to 0.0.4
      flags is now a property of the service object (service.flags)
 
    - possibly more
+
+
+vim: spell spelllang=en_us :
