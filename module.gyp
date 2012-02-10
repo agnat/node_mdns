@@ -18,6 +18,11 @@
                  , 'src/txt_record_get_length.cpp'
                  , 'src/txt_record_buffer_to_object.cpp'
                  ]
+    , 'conditions': [
+        ['OS!="mac"', {
+          'libraries': [ '-ldns_sd' ]
+        }]
+      ]
     }
   ]
 }
