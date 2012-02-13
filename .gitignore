@@ -1,6 +1,7 @@
 build
 out
 dns_sd.node
+demangle.node
 .lock-wscript
 README.html
 node_modules
