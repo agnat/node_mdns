@@ -1,3 +1,5 @@
+#include "mdns_settings.hpp"
+
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/socket.h> // AF_INET and AF_INET6 on freebsd

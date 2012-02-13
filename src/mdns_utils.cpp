@@ -1,3 +1,5 @@
+#include "mdns_settings.hpp"
+
 #include "mdns_utils.hpp"
 
 #include <string>

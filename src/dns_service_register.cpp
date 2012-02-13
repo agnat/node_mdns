@@ -1,3 +1,5 @@
+#include "mdns_settings.hpp"
+
 #include <limits>
 #include <arpa/inet.h>
 #include <dns_sd.h>

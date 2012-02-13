@@ -1,3 +1,4 @@
+#include "mdns_settings.hpp"
 #include <v8.h>
 
 #include "mdns_utils.hpp"

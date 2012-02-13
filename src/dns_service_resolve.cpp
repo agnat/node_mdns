@@ -1,3 +1,5 @@
+#include "mdns_settings.hpp"
+
 #include <string.h>
 #include <arpa/inet.h>
 #include <v8.h>

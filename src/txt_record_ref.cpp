@@ -1,3 +1,5 @@
+#include "mdns_settings.hpp"
+
 #include "txt_record_ref.hpp"
 
 using namespace v8;

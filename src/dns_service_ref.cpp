@@ -1,3 +1,5 @@
+#include "mdns_settings.hpp"
+
 #include "dns_service_ref.hpp"
 
 using namespace v8;
