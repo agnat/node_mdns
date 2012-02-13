@@ -284,5 +284,8 @@ exportConstants(Arguments const& args) {
 
 } // end of namespace node_mdns
 
-extern "C" void init(Handle<Object> target) { node_mdns::init(target); }
+extern "C"
+void
+NODE_EXTERN
+init(Handle<Object> target) { node_mdns::init(target); }
 
