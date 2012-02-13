@@ -5,3 +5,7 @@ demangle.node
 .lock-wscript
 README.html
 node_modules
+Release
+Debug
+*.sln
+*.vcxproj*

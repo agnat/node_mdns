@@ -11,6 +11,7 @@ namespace node_mdns {
 
 static
 void
+DNSSD_API
 OnServiceChanged(DNSServiceRef sdRef, DNSServiceFlags flags, 
         uint32_t interfaceIndex, DNSServiceErrorType errorCode, 
         const char * serviceName, const char * serviceType,
