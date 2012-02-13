@@ -96,10 +96,13 @@ ServiceRef::SetThis(v8::Local<v8::Object> This) { this_ = This; }
 
 bool
 ServiceRef::SetSocketFlags() {
+    return true;
+#if 0 // XXX I think IOWatcher does the right thing. TODO: check!
   int fd = DNSServiceRefSockFD(ref_);
   if (fd == -1) return false;
   return fcntl(fd, F_SETFD, FD_CLOEXEC) != -1 &&
     fcntl(fd, F_SETFL, O_NONBLOCK) != -1;
+#endif
 }
 
 Handle<Value>

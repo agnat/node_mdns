@@ -13,6 +13,7 @@ using namespace node;
 namespace node_mdns {
 
 void
+DNSSD_API
 OnEnumeration(DNSServiceRef sdRef, DNSServiceFlags flags, uint32_t interfaceIndex,
         DNSServiceErrorType errorCode, const char * replyDomain, void * context)
 {

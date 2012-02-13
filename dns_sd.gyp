@@ -19,9 +19,15 @@
                  , 'src/txt_record_buffer_to_object.cpp'
                  ]
     , 'conditions': [
-        ['OS!="mac"', {
+        [ 'OS!="mac" and OS!="win"', {
           'libraries': [ '-ldns_sd' ]
-        }]
+        }],
+        ['OS=="win"', {
+          'include_dirs': [ '$(BONJOUR_SDK_HOME)Include' ]
+        , 'libraries'   : [ '-l$(BONJOUR_SDK_HOME)Lib/Win32/dnssd.lib'
+                          , '-lws2_32.lib'
+                          ]
+        }],
       ]
     }
   ]

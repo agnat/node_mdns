@@ -1,8 +1,10 @@
 #include "mdns_settings.hpp"
 
+#ifndef WIN32 // XXX
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/socket.h> // AF_INET and AF_INET6 on freebsd
+#endif
 
 #include <v8.h>
 
@@ -17,6 +19,7 @@ namespace node_mdns {
 #ifdef HAVE_DNSSERVICEGETADDRINFO
 
 void
+DNSSD_API
 OnAddressInfo(DNSServiceRef sdRef, DNSServiceFlags flags, 
         uint32_t interfaceIndex, DNSServiceErrorType errorCode,
         const char * hostname, const struct sockaddr * address,

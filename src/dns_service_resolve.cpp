@@ -1,7 +1,11 @@
 #include "mdns_settings.hpp"
 
 #include <string.h>
+
+#ifndef WIN32 // XXX
 #include <arpa/inet.h>
+#endif
+
 #include <v8.h>
 #include <node_buffer.h>
 
@@ -15,6 +19,7 @@ using namespace node;
 namespace node_mdns {
 
 void
+DNSSD_API
 OnResolve(DNSServiceRef sdRef, DNSServiceFlags flags,
         uint32_t interfaceIndex, DNSServiceErrorType errorCode,
         const char * fullname, const char * hosttarget, uint16_t port,

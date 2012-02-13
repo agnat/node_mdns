@@ -1,8 +1,12 @@
 #include "mdns_settings.hpp"
 
 #include <limits>
-#include <arpa/inet.h>
 #include <dns_sd.h>
+
+#ifndef WIN32 // XXX
+#include <arpa/inet.h>
+#endif
+
 
 #include <v8.h>
 #include <node.h>
@@ -19,6 +23,7 @@ namespace node_mdns {
 
 static
 void
+DNSSD_API
 OnServiceRegistered(DNSServiceRef sdRef, DNSServiceFlags flags,
         DNSServiceErrorType errorCode, const char * name,
         const char * serviceType, const char * domain, void * context)
