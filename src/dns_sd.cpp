@@ -284,6 +284,11 @@ exportConstants(Arguments const& args) {
 
 } // end of namespace node_mdns
 
+// node pre 0.6 doesn't have NODE_EXTERN
+# ifndef NODE_EXTERN
+#  define NODE_EXTERN
+# endif
+
 extern "C"
 void
 NODE_EXTERN
