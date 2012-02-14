@@ -21,22 +21,18 @@
     , 'conditions': [
         [ 'OS!="mac" and OS!="win"', {
           'libraries': [ '-ldns_sd' ]
-        }],
-        ['OS=="win"', {
+        }]
+      , ['OS=="win"', {
           'sources'     : [ 'src/winsock_watcher.cpp' ]
         , 'include_dirs': [ '$(BONJOUR_SDK_HOME)Include' ]
-        , 'libraries'   : [ '-l$(BONJOUR_SDK_HOME)Lib/Win32/dnssd.lib'
+        , 'libraries'   : [ '-l$(BONJOUR_SDK_HOME)Lib/$(Platform)/dnssd.lib'
                           , '-lws2_32.lib'
                           ]
-        }],
+        }]
       ]
     , 'msbuild_settings': {
-        'ClCompile': {
-          'ExceptionHandling': 'Sync'  # /EHsc
-        },
-        'Link': {
-          'IgnoreSpecificDefaultLibraries': [ 'LIBCMT' ]
-        },
+        'ClCompile': { 'ExceptionHandling': 'Sync' }
+      , 'Link'     : { 'IgnoreSpecificDefaultLibraries': [ 'LIBCMT' ] }
       }
     }
   ]

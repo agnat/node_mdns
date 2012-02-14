@@ -320,7 +320,7 @@ exports['DNSServiceRegister()'] = function(t) {
 
 exports['DNSServiceProcessResult()'] = function(t) {
   var serviceRef = new dns_sd.DNSServiceRef()
-    , IOWatcher  = process.binding('io_watcher').IOWatcher
+    , IOWatcher  = require('../lib/io_watcher').IOWatcher
     , watcher    = new IOWatcher()
     , timeout    = 3000
     , timeoutId  = setTimeout(function() {

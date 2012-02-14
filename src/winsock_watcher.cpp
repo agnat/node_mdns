@@ -6,18 +6,16 @@ using namespace v8;
 
 namespace node_mdns {
 
-Persistent<FunctionTemplate> WinsockWatcher::constructor_template;
-
 void
 WinsockWatcher::Initialize(Handle<Object> target) {
     Local<FunctionTemplate> t = FunctionTemplate::New(New);
-    constructor_template = Persistent<FunctionTemplate>::New(t);
-    constructor_template->InstanceTemplate()->SetInternalFieldCount(1);
-
     Local<String> symbol = String::NewSymbol("WinsockWatcher");
-    constructor_template->SetClassName(symbol);
+    t->SetClassName(symbol);
+    t->InstanceTemplate()->SetInternalFieldCount(1);
 
-    target->Set(symbol, constructor_template->GetFunction());
+    NODE_SET_PROTOTYPE_METHOD(t, "set", Set);
+
+    target->Set(symbol, t->GetFunction());
 }
 
 v8::Handle<v8::Value>
