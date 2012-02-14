@@ -69,12 +69,7 @@
                    , '<(PRODUCT_DIR)/resolver_sequence_tasks.js'
                    , '<(PRODUCT_DIR)/service_type.js'
                    ]
-      , 'conditions': [
-          [ 'OS=="win"',
-            { 'action': ['xcopy', '/e', '/f', '/y', '<@(_inputs)',  '<(PRODUCT_DIR)'] }
-          , { 'action': ['cp', '-v', '<@(_inputs)', '<(PRODUCT_DIR)'] }
-          ]
-        ]
+      , 'action': ['node', 'utils/jsf', '<@(_inputs)', '<(PRODUCT_DIR)']
       }]
     }
   ]

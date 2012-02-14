@@ -1,0 +1,30 @@
+#!/usr/bin/env node
+
+var path = require('path')
+  , fs = require('fs')
+  , slide = require('slide')
+  , mkdirp = require('mkdirp')
+  , chain = slide.chain
+
+  , outd = process.argv.pop()
+  ;
+
+function copy(f, cb) {
+  var target = path.join(outd, path.basename(f))
+    , readStream = fs.createReadStream(f)
+    ;
+  console.log('  COPY', target);
+  readStream.pipe(fs.createWriteStream(target));
+  readStream.once('end', cb);
+}
+
+function copyFiles(files, cb) {
+  slide.asyncMap(files, copy, cb);
+}
+
+chain( [ [ mkdirp, outd ]
+       , [ copyFiles, process.argv.slice(2) ]
+       ]
+     , function(error) { if (error) { console.log(error); process.exit(1) } }
+     )
+// vim: set filetype=javascript :
