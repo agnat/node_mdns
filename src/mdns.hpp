@@ -6,7 +6,9 @@
 #ifdef WIN32
 # pragma warning( push )
 # pragma warning( disable: 4251 )
-# include <node.h>
+#endif
+#include <node.h>
+#ifdef WIN32
 # pragma warning( pop )
 #endif
 
