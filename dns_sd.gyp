@@ -30,6 +30,11 @@
                           ]
         }],
       ]
+    , 'msbuild_settings': {
+        'ClCompile': {
+          'ExceptionHandling': 'Sync', # /EHsc
+        },
+      }
     }
   ]
 }
