@@ -34,6 +34,48 @@
         'ClCompile': { 'ExceptionHandling': 'Sync' }
       , 'Link'     : { 'IgnoreSpecificDefaultLibraries': [ 'LIBCMT' ] }
       }
+    , 'configurations': {
+        'Release': {
+            'xcode_settings': { 'GCC_OPTIMIZATION_LEVEL': 3 }
+        }
+      , 'Debug': {
+            'xcode_settings': { 'GCC_OPTIMIZATION_LEVEL': 0 }
+        }
+      , 'Coverage': {
+            'xcode_settings': {
+                'GCC_OPTIMIZATION_LEVEL': 0
+              , 'OTHER_LDFLAGS': ['--coverage']
+              , 'OTHER_CFLAGS':  ['--coverage']
+            }
+        }
+      }
+    , 'actions': [ {
+        'action_name': 'jslib'
+      , 'inputs': [ 'lib/advertisement.js'
+                  , 'lib/browser.js'
+                  , 'lib/io_watcher.js'
+                  , 'lib/mdns.js'
+                  , 'lib/mdns_service.js'
+                  , 'lib/mdns_test.js'
+                  , 'lib/resolver_sequence_tasks.js'
+                  , 'lib/service_type.js'
+                  ]
+      , 'outputs': [ '<(PRODUCT_DIR)/advertisement.js'
+                   , '<(PRODUCT_DIR)/browser.js'
+                   , '<(PRODUCT_DIR)/io_watcher.js'
+                   , '<(PRODUCT_DIR)/mdns.js'
+                   , '<(PRODUCT_DIR)/mdns_service.js'
+                   , '<(PRODUCT_DIR)/mdns_test.js'
+                   , '<(PRODUCT_DIR)/resolver_sequence_tasks.js'
+                   , '<(PRODUCT_DIR)/service_type.js'
+                   ]
+      , 'conditions': [
+          [ 'OS=="win"',
+            { 'action': ['xcopy', '/e', '/f', '/y', '<@(_inputs)',  '<(PRODUCT_DIR)'] }
+          , { 'action': ['cp', '-v', '<@(_inputs)', '<(PRODUCT_DIR)'] }
+          ]
+        ]
+      }]
     }
   ]
 }
