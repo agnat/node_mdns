@@ -32,7 +32,10 @@
       ]
     , 'msbuild_settings': {
         'ClCompile': {
-          'ExceptionHandling': 'Sync', # /EHsc
+          'ExceptionHandling': 'Sync'  # /EHsc
+        },
+        'Link': {
+          'IgnoreSpecificDefaultLibraries': [ 'LIBCMT' ]
         },
       }
     }
