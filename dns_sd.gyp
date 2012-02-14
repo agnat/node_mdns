@@ -69,7 +69,7 @@
                    , '<(PRODUCT_DIR)/resolver_sequence_tasks.js'
                    , '<(PRODUCT_DIR)/service_type.js'
                    ]
-      , 'action': ['node', 'utils/jsf', '<@(_inputs)', '<(PRODUCT_DIR)']
+      , 'action': ['node', 'utils/jsf', '<@(_inputs)', "<(PRODUCT_DIR)."]
       }]
     }
   ]
