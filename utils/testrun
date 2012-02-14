@@ -104,7 +104,8 @@ function run_tests(files, cb) {
     }
   });
 
-  chain( [ [glob_list, test_dir + '/test_*.js']
+  chain( [ //[glob_list, path.join(test_dir, 'test_*.js')]
+         , [test_list]
          , [run_modules, chain.last, reporter]
          , [save_reports, reporter]
          ]
@@ -112,8 +113,25 @@ function run_tests(files, cb) {
        )
 }
 
+function test_list(cb) {
+  fs.readdir(test_dir, function(error, files) {
+    var r = []
+      , pattern = /^test_.*\.js$/
+      ;
+    r = files . filter(function(f) { return pattern.test(f) })
+              . map(function(f) { return path.join('tests', f)})
+              ;
+    console.log(r);
+    cb(error, [r]);
+  })
+}
+
+
+
 function glob_list(pattern, cb) {
+  console.log('pattern:', pattern);
   glob(pattern, function(error, files) {
+    console.log('====', files);
     cb(error, [files])
   });
 }
@@ -121,7 +139,7 @@ function glob_list(pattern, cb) {
 function run_modules(files, reporter, cb) {
   var module_chain = files.map(function(f) {
       var name = path.basename(path.basename(f), '.js');
-      return [run_group, require('../' + f), name, reporter];
+      return [run_group, require(path.join('..', f)), name, reporter];
   });
   chain(module_chain, cb);
 }
