@@ -1,15 +1,11 @@
-#include "mdns_settings.hpp"
+#include "mdns.hpp"
 
 #include <limits>
-#include <dns_sd.h>
 
 #ifndef WIN32 // XXX
 #include <arpa/inet.h>
 #endif
 
-
-#include <v8.h>
-#include <node.h>
 #include <node_buffer.h>
 
 #include "mdns_utils.hpp"

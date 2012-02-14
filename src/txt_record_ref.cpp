@@ -1,4 +1,4 @@
-#include "mdns_settings.hpp"
+#include "mdns.hpp"
 
 #include "txt_record_ref.hpp"
 

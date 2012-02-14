@@ -1,4 +1,4 @@
-#include "mdns_settings.hpp"
+#include "mdns.hpp"
 
 #ifndef WIN32 // XXX
 #include <netinet/in.h>

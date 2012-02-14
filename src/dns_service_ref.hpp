@@ -2,9 +2,6 @@
 #define NODE_MDNS_SERVICE_REF_INCLUDED
 
 #include <fcntl.h>
-#include <dns_sd.h>
-
-#include <node.h>
 
 namespace node_mdns {
 

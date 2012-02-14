@@ -1,8 +1,6 @@
 #ifndef NODE_MDNS_WINSOCK_WATCHER_INCLUDED
 #define NODE_MDNS_WINSOCK_WATCHER_INCLUDED
 
-#include <node.h>
-
 namespace node_mdns {
 
 class WinsockWatcher : public node::ObjectWrap {

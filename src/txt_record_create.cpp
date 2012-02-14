@@ -1,6 +1,5 @@
-#include "mdns_settings.hpp"
+#include "mdns.hpp"
 
-#include <node.h>
 #include <node_buffer.h>
 
 #include "mdns_utils.hpp"

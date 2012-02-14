@@ -1,4 +1,4 @@
-#include "mdns_settings.hpp"
+#include "mdns.hpp"
 
 #include "winsock_watcher.hpp"
 

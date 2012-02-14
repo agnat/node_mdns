@@ -1,9 +1,6 @@
 #ifndef NODE_MDNS_TXT_RECORD_REF_INCLUDED
 #define NODE_MDNS_TXT_RECORD_REF_INCLUDED
 
-#include <dns_sd.h>
-#include <node.h>
-
 namespace node_mdns {
 
 class TxtRecordRef : public node::ObjectWrap {

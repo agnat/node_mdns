@@ -23,7 +23,7 @@
           'libraries': [ '-ldns_sd' ]
         }],
         ['OS=="win"', {
-          'sources': [ 'src/winsock_watcher.cpp' ]
+          'sources'     : [ 'src/winsock_watcher.cpp' ]
         , 'include_dirs': [ '$(BONJOUR_SDK_HOME)Include' ]
         , 'libraries'   : [ '-l$(BONJOUR_SDK_HOME)Lib/Win32/dnssd.lib'
                           , '-lws2_32.lib'

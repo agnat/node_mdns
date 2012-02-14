@@ -5,11 +5,6 @@
 #include <errno.h>
 #include <fcntl.h>
 
-#include <dns_sd.h>
-
-#include <node.h>
-//#include <node_events.h>
-
 namespace node_mdns {
 
 const char * errorString(DNSServiceErrorType error);

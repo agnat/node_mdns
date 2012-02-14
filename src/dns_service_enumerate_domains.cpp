@@ -1,8 +1,4 @@
-#include "mdns_settings.hpp"
-#include <dns_sd.h>
-
-#include <v8.h>
-#include <node.h>
+#include "mdns.hpp"
 
 #include "mdns_utils.hpp"
 #include "dns_service_ref.hpp"
