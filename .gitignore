@@ -9,3 +9,4 @@ Release
 Debug
 *.sln
 *.vcxproj*
+.pulse2.properties
