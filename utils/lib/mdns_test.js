@@ -1,8 +1,13 @@
 
 var path = require('path')
   ;
-var mdns  = require('../lib/mdns')
-  ;
+
+exports.require = function _require(what) {
+  var build_type = process.env.BUILDTYPE || 'Release';
+  return require(path.resolve(__dirname, '..', '..', 'out', build_type, what));
+}
+
+var mdns  = exports.require('./mdns');
 
 var legal_chars = "abcefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 

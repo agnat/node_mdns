@@ -56,7 +56,6 @@
                   , 'lib/io_watcher.js'
                   , 'lib/mdns.js'
                   , 'lib/mdns_service.js'
-                  , 'lib/mdns_test.js'
                   , 'lib/resolver_sequence_tasks.js'
                   , 'lib/service_type.js'
                   ]
@@ -65,7 +64,6 @@
                    , '<(PRODUCT_DIR)/io_watcher.js'
                    , '<(PRODUCT_DIR)/mdns.js'
                    , '<(PRODUCT_DIR)/mdns_service.js'
-                   , '<(PRODUCT_DIR)/mdns_test.js'
                    , '<(PRODUCT_DIR)/resolver_sequence_tasks.js'
                    , '<(PRODUCT_DIR)/service_type.js'
                    ]

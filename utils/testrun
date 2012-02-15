@@ -18,6 +18,10 @@ try {
   process.exit(1);
 }
 
+if (process.env.BUILDTYPE === 'Coverage') {
+  require('./lib/ncov')
+}
+
 function padding(l) {
   var p = '', i = 0;
   for (i = 0; i < l; ++i) { p += ' ' }
@@ -121,7 +125,6 @@ function test_list(cb) {
     r = files . filter(function(f) { return pattern.test(f) })
               . map(function(f) { return path.join('tests', f)})
               ;
-    console.log(r);
     cb(error, [r]);
   })
 }
@@ -145,6 +148,7 @@ function run_modules(files, reporter, cb) {
 }
 
 function run_group(group, name, reporter, cb) {
+  console.log('===', name)
   var names = Object.keys(group)
     , group_chain = names.map(function(test) {
         return [ typeof group[test] === 'function' ? run_testcase : run_group

@@ -1,5 +1,5 @@
-var mdns = require('../lib/mdns')
-  ;
+var mdns_test = require('../utils/lib/mdns_test')
+  , mdns      = mdns_test.require('./mdns')
 
 //=== DNSServiceRef ===========================================================
 

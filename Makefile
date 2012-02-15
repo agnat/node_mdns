@@ -1,24 +1,27 @@
 BUILDTYPE ?= Release
 
-GCOV_FLAGS = -g -O0 --coverage
-GCOV_OUT   = out/reports/coverage/cpp
+GCOV_OUT = out/reports/coverage/cpp
+NCOV_OUT = out/reports/coverage
 
 all:
 	$(MAKE) -C out BUILDTYPE=$(BUILDTYPE)
 
-gcov_build:
-	$(MAKE) -C out CXXFLAGS='$(GCOV_FLAGS)' LDFLAGS='$(GCOV_FLAGS)' BUILDTYPE=$(BUILDTYPE)
+coverage_build:
+	$(MAKE) -C out BUILDTYPE=Coverage
 
 test:
-	utils/testrun
+	node --expose_gc utils/testrun
 
 citest:
-	utils/testrun --ascii --verbose
+	node --expose_gc utils/testrun --ascii --verbose
 
-coverage: gcov_build
+coverage:
+	$(MAKE) coverage_run BUILDTYPE=Coverage
+
+coverage_run: coverage_build
 	lcov -d out/$(BUILDTYPE)/obj.target/dns_sd/src --zerocounters
 	mkdir -p $(GCOV_OUT)/html; 
-	node --expose_gc utils/testrun
+	NCOV_OUT=$(NCOV_OUT) node --expose_gc utils/testrun
 	lcov --base-directory out \
 		 --directory      out/$(BUILDTYPE)/obj.target/dns_sd/src \
 		 --output-file    $(GCOV_OUT)/testrun_all.info \
@@ -38,5 +41,5 @@ doc:
 website:
 	echo TODO
 
-.PHONY: test citest coverage gcov_build doc website 
+.PHONY: test citest coverage coverage_build coverage_run doc website 
 

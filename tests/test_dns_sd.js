@@ -1,5 +1,6 @@
-var dns_sd       = require('../lib/dns_sd')
-  , mdns_test    = require('../lib/mdns_test')
+var path = require('path')
+  , mdns_test    = require('../utils/lib/mdns_test')
+  , dns_sd       = mdns_test.require('./dns_sd')
   , service_type = "_mdns_test._tcp"
   , test_port    = 4321
   ;
