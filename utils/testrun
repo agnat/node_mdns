@@ -32,7 +32,7 @@ if (process.env.BUILDTYPE === 'Coverage') {
     }
     fs.writeFileSync(file, JSON.stringify(_$jscoverage, null, 2));
     console.log('================================================================================');
-    console.log('ncov:', executable, 'coverage report saved to', file);
+    console.log(executable, ' js coverage report saved to', file);
     console.log('================================================================================');
   })
 }
@@ -147,9 +147,7 @@ function test_list(cb) {
 
 
 function glob_list(pattern, cb) {
-  console.log('pattern:', pattern);
   glob(pattern, function(error, files) {
-    console.log('====', files);
     cb(error, [files])
   });
 }
@@ -163,7 +161,6 @@ function run_modules(files, reporter, cb) {
 }
 
 function run_group(group, name, reporter, cb) {
-  console.log('===', name)
   var names = Object.keys(group)
     , group_chain = names.map(function(test) {
         return [ typeof group[test] === 'function' ? run_testcase : run_group

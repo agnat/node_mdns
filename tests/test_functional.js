@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var mdns_test = require('../utils/lib/mdns_test')
-  , mdns      = mdns_test.require('./mdns')
+  , mdns      = mdns_test.require('mdns')
   , util      = require('util')
   ;
 

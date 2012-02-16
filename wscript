@@ -1,7 +1,7 @@
 import os, shutil, subprocess, Scripting, Options
 
 out  = 'out'
-name = 'dns_sd'
+name = 'dns_sd_bindings'
 
 def set_options(opt):
   opt.tool_options('compiler_cxx')
@@ -60,15 +60,12 @@ def build(bld):
                , 'src/txt_record_buffer_to_object.cpp'
                ]
 
-  for jsfile in bld.path.ant_glob('lib/**/*.js').split(' '):
-    bld(rule='cp ${SRC} ${TGT}', source=jsfile, target=os.path.basename(jsfile))
-
   obj = bld.new_task_gen('cxx', 'shlib', 'node_addon')
   obj.target = 'demangle'
   obj.cxxflags = ['-Wall']
   obj.source = [ 'src/demangle.cpp' ]
 
-  bld.add_post_fun(post_build)
+  #bld.add_post_fun(post_build)
 
 
 def update_addon_symlink(ctx, directory, target):

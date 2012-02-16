@@ -1,5 +1,5 @@
 { 'targets': [
-    { 'target_name': 'dns_sd'
+    { 'target_name': 'dns_sd_bindings'
     , 'sources': [ 'src/dns_sd.cpp'
                  , 'src/dns_service_browse.cpp'
                  , 'src/dns_service_enumerate_domains.cpp'
@@ -49,26 +49,6 @@
             }
         }
       }
-    , 'actions': [ {
-        'action_name': 'jslib'
-      , 'inputs': [ 'lib/advertisement.js'
-                  , 'lib/browser.js'
-                  , 'lib/io_watcher.js'
-                  , 'lib/mdns.js'
-                  , 'lib/mdns_service.js'
-                  , 'lib/resolver_sequence_tasks.js'
-                  , 'lib/service_type.js'
-                  ]
-      , 'outputs': [ '<(PRODUCT_DIR)/advertisement.js'
-                   , '<(PRODUCT_DIR)/browser.js'
-                   , '<(PRODUCT_DIR)/io_watcher.js'
-                   , '<(PRODUCT_DIR)/mdns.js'
-                   , '<(PRODUCT_DIR)/mdns_service.js'
-                   , '<(PRODUCT_DIR)/resolver_sequence_tasks.js'
-                   , '<(PRODUCT_DIR)/service_type.js'
-                   ]
-      , 'action': ['node', 'utils/jsf', '<@(_inputs)', "<(PRODUCT_DIR)/"]
-      }]
     }
   ]
 }

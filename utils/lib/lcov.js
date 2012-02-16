@@ -58,7 +58,7 @@ LcovLoader.prototype.consume = function consume(chunk) {
       if (self.filefilter(filename)) {
         if (!result.files[filename]) result.files[filename] = {};
         file = result.files[filename];
-        console.log('file:', filename, file)
+        //console.log('file:', filename, file)
         if (testname) {
           if (!result.tests[testname]) result.tests[testname] = {};
           test = result.tests[testname];
@@ -112,7 +112,7 @@ LcovLoader.prototype.consume = function consume(chunk) {
       if(!file.branches[block]) {file.branches[block] = {}};
       if(!file.branches[block][branch]) {file.branches[block][branch] = 0};
       file.branches[block][branch] += parseInt(taken);
-      console.log('line:', line, 'block:', block, 'branch:', branch, 'taken:', taken)
+      //console.log('line:', line, 'block:', block, 'branch:', branch, 'taken:', taken)
     } else if (line.match(/^end_of_record/)) {
     } else {
       //console.log('unhandled:', line)

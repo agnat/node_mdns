@@ -1,5 +1,6 @@
 var mdns_test = require('../utils/lib/mdns_test')
-  , mdns      = mdns_test.require('./mdns')
+  , mdns      = mdns_test.require('mdns')
+  ;
 
 exports['protocol helpers'] = function(t) {
   t.strictEqual( mdns.udp('osc').toString(), '_osc._udp',

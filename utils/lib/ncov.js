@@ -28,6 +28,7 @@ var chain = slide.chain
   , pagedir = path.join(outd, 'pages')
   , docd = path.join(rootd, 'doc')
   , lcov_info_file = path.join(outd, 'reports', 'coverage', 'cpp', 'testrun_all.info')
+  , json_report = path.join(outd, 'reports', 'coverage', 'testrun_coverage-cpp.json')
   , prerequisites =
     { layout: path.join(docd, 'layout.ejs')
     , source_template: path.join(docd, 'build', 'source.ejs')
@@ -36,12 +37,22 @@ var chain = slide.chain
 
 chain( [ [ load_prerequisites, meta, prerequisites]
        , [ lcov.infoFileToJson, lcov_info_file, filter]
+       , [ save_json, chain.last, json_report]
        , [ render_pages, chain.last]
        ]
      , function(error) {
          console.log('done', error);
        }
      );
+
+function save_json(report, file, cb) {
+  fs.writeFile(file, JSON.stringify, null, 2, function(err) {
+    console.log('================================================================================');
+    console.log('testrun c++ coverage report saved to', file.replace(/.*\/(out\/.*)/, "$1"));
+    console.log('================================================================================');
+    cb(err, report)
+  });
+}
 
 function render_pages(coverage, cb) {
   var pages = Object.keys(coverage.files)

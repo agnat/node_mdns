@@ -9,26 +9,32 @@ ifdef PULSE_BUILD
   TEST_OPTIONS= --ascii --verbose
 endif
 
-all:
+all: bindings
+
+bindings:
 	$(MAKE) -C out BUILDTYPE=$(BUILDTYPE)
 
-coverage_build:
-	$(MAKE) -C out BUILDTYPE=Coverage
-
-test:
+test: bindings
 	node --expose_gc utils/testrun $(TEST_OPTIONS)
 
 coverage:
 	$(MAKE) coverage_run BUILDTYPE=Coverage
 
-coverage_run: coverage_build
-	lcov -d out/$(BUILDTYPE)/obj.target/dns_sd/src --zerocounters
+coverage_build:
+	$(MAKE) -C out BUILDTYPE=Coverage
+
+jscoverage:
+	jscoverage -v --no-highlight lib/ out/Coverage/lib
+
+coverage_run: coverage_build jscoverage
+	lcov -d out/$(BUILDTYPE)/obj.target/dns_sd_bindings/src --zerocounters
 	mkdir -p $(GCOV_OUT)/html; 
 	NCOV_OUT=$(NCOV_OUT) node --expose_gc utils/testrun $(TEST_OPTIONS)
 	lcov --base-directory out \
-		 --directory      out/$(BUILDTYPE)/obj.target/dns_sd/src \
+		 --directory      out/$(BUILDTYPE)/obj.target/dns_sd_bindings/src \
 		 --output-file    $(GCOV_OUT)/testrun_all.info \
 		 --capture
+	utils/ncov \
 	lcov --output-file    $(GCOV_OUT)/testrun.info \
 		 --extract \
 		 $(GCOV_OUT)/testrun_all.info "$(abspath .)/*" \
@@ -44,5 +50,5 @@ doc:
 website:
 	echo TODO
 
-.PHONY: test citest coverage coverage_build coverage_run doc website 
+.PHONY: test citest coverage coverage_build coverage_run bindings doc website 
 

@@ -2,12 +2,15 @@
 var path = require('path')
   ;
 
+
 exports.require = function _require(what) {
-  var build_type = process.env.BUILDTYPE || 'Release';
-  return require(path.resolve(__dirname, '..', '..', 'out', build_type, what));
+  if (process.env.npm_config_coverage || process.env.BUILDTYPE === 'Coverage') {
+    return require(path.join('../../out/Coverage/lib/' + what))
+  }
+  return require('../../lib/' + what)
 }
 
-var mdns  = exports.require('./mdns');
+var mdns  = exports.require('mdns');
 
 var legal_chars = "abcefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
