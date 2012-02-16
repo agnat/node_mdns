@@ -34,7 +34,7 @@ coverage_run: coverage_build jscoverage
 		 --directory      out/$(BUILDTYPE)/obj.target/dns_sd_bindings/src \
 		 --output-file    $(GCOV_OUT)/testrun_all.info \
 		 --capture
-	utils/ncov \
+	utils/ncov
 	lcov --output-file    $(GCOV_OUT)/testrun.info \
 		 --extract \
 		 $(GCOV_OUT)/testrun_all.info "$(abspath .)/*" \
