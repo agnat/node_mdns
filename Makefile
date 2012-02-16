@@ -50,5 +50,5 @@ doc:
 website:
 	echo TODO
 
-.PHONY: test citest coverage coverage_build coverage_run bindings doc website 
+.PHONY: test citest coverage coverage_build coverage_run bindings jscoverage doc website 
 

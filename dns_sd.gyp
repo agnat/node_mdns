@@ -37,9 +37,13 @@
     , 'configurations': {
         'Release': {
             'xcode_settings': { 'GCC_OPTIMIZATION_LEVEL': 3 }
+          , 'cflags': [ '-O3' ]
+          , 'ldflags': [ '-O3' ]
         }
       , 'Debug': {
             'xcode_settings': { 'GCC_OPTIMIZATION_LEVEL': 0 }
+          , 'cflags': [ '-g', '-O0' ]
+          , 'ldflags': [ '-g', '-O0' ]
         }
       , 'Coverage': {
             'xcode_settings': {
@@ -47,6 +51,8 @@
               , 'OTHER_LDFLAGS': ['--coverage']
               , 'OTHER_CFLAGS':  ['--coverage']
             }
+          , 'cflags': [ '-O0', '--coverage' ]
+          , 'ldflags': [ '--coverage' ]
         }
       }
     }
