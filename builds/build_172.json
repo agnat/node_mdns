@@ -1,87 +1,87 @@
 {
   "stages": {
     "node_head-macosx-gyp": {
-      "dir": "/Users/david/.pulse2/data/projects/163840/00000162/5144869",
+      "dir": "/Users/david/.pulse2/data/projects/163840/00000172/5996588",
       "recipe": "gyp",
       "status": "success",
       "agent": "macosx",
       "os": "macosx",
       "commands": {
         "make_coverage": {
-          "dir": "/Users/david/.pulse2/data/projects/163840/00000162/5144869/output/00000009-make_coverage",
+          "dir": "/Users/david/.pulse2/data/projects/163840/00000172/5996588/output/00000006-make_coverage",
           "status": "success"
         }
       }
     },
     "node_v0_7-macosx-waf": {
-      "dir": "/Users/david/.pulse2/data/projects/163840/00000162/5144870",
+      "dir": "/Users/david/.pulse2/data/projects/163840/00000172/5996589",
       "recipe": "waf",
       "status": "success",
       "agent": "macosx",
       "os": "macosx"
     },
     "node_v0_6-macosx-waf": {
-      "dir": "/Users/david/.pulse2/data/projects/163840/00000162/5144871",
+      "dir": "/Users/david/.pulse2/data/projects/163840/00000172/5996590",
       "recipe": "waf",
       "status": "success",
       "agent": "macosx",
       "os": "macosx"
     },
     "node_v0_4-macosx-waf": {
-      "dir": "/Users/david/.pulse2/data/projects/163840/00000162/5144872",
+      "dir": "/Users/david/.pulse2/data/projects/163840/00000172/5996591",
       "recipe": "waf",
-      "status": "success",
+      "status": "failure",
       "agent": "macosx",
       "os": "macosx"
     },
     "node_head-linux-gyp": {
-      "dir": "/Users/david/.pulse2/data/projects/163840/00000162/5144873",
+      "dir": "/Users/david/.pulse2/data/projects/163840/00000172/5996592",
       "recipe": "gyp",
-      "status": "success",
+      "status": "failure",
       "agent": "ubuntu",
       "os": "linux"
     },
     "node_v0_7-linux-waf": {
-      "dir": "/Users/david/.pulse2/data/projects/163840/00000162/5144874",
+      "dir": "/Users/david/.pulse2/data/projects/163840/00000172/5996593",
       "recipe": "waf",
       "status": "success",
       "agent": "ubuntu",
       "os": "linux"
     },
     "node_v0_6-linux-waf": {
-      "dir": "/Users/david/.pulse2/data/projects/163840/00000162/5144875",
+      "dir": "/Users/david/.pulse2/data/projects/163840/00000172/5996594",
       "recipe": "waf",
       "status": "success",
       "agent": "ubuntu",
       "os": "linux"
     },
     "node_v0_4-linux-waf": {
-      "dir": "/Users/david/.pulse2/data/projects/163840/00000162/5144876",
+      "dir": "/Users/david/.pulse2/data/projects/163840/00000172/5996595",
       "recipe": "waf",
-      "status": "success",
+      "status": "failure",
       "agent": "ubuntu",
       "os": "linux"
     },
     "node_v0_6-freebsd-waf": {
-      "dir": "/Users/david/.pulse2/data/projects/163840/00000162/5144877",
+      "dir": "/Users/david/.pulse2/data/projects/163840/00000172/5996596",
       "recipe": "waf",
       "status": "success",
       "agent": "freebsd",
       "os": "freebsd"
     },
     "node_v0_4-freebsd-waf": {
-      "dir": "/Users/david/.pulse2/data/projects/163840/00000162/5144878",
+      "dir": "/Users/david/.pulse2/data/projects/163840/00000172/5996597",
       "recipe": "waf",
-      "status": "success",
+      "status": "failure",
       "agent": "freebsd",
       "os": "freebsd"
     }
   },
-  "id": 162,
-  "revision": "3a9627e1584981278e3559024a4f0fcbb7903cb6",
+  "id": 172,
+  "revision": "3fa462a14b52d1f72ca3ee54af5b8591e11a0d52",
   "status": "failure",
-  "testSummary": "1,809 tests passed (27 skipped)",
+  "testSummary": "905 tests passed (20 skipped)",
   "repository": "git://github.com/agnat/node_mdns.git",
   "branch": "master",
-  "timestamp": 1329244109121
+  "timestamp": 1329426094193
 }
