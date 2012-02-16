@@ -5,7 +5,7 @@ NCOV_OUT = out/reports/coverage
 
 TEST_OPTIONS=
 
-ifdef PULSE_BUILD
+ifdef PULSE_BUILD_NUMBER
   TEST_OPTIONS= --ascii --verbose
 endif
 
