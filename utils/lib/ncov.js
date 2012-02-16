@@ -47,11 +47,11 @@ chain( [ [ load_prerequisites, meta, prerequisites]
      );
 
 function save_json(report, file, cb) {
-  fs.writeFile(file, JSON.stringify, null, 2, function(err) {
+  fs.writeFile(file, JSON.stringify(report, null, 2), function(err) {
     console.log('================================================================================');
     console.log('testrun c++ coverage report saved to', file.replace(/.*\/(out\/.*)/, "$1"));
     console.log('================================================================================');
-    cb(err, report)
+    cb(err, report);
   });
 }
 
