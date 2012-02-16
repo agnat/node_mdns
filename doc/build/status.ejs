@@ -1,0 +1,69 @@
+<% title('Continuous Integration')
+   stylesheet('/stylesheets/mdns.css')
+   stylesheet('/stylesheets/build_status.css')
+
+var logos =
+  { macosx:  { url: path('/images/apple_logo.png'), alt: 'Mac OS X' }
+  , linux:   { url: path('/images/ubuntu_logo.png'), alt: 'Ubuntu Linux' }
+  , freebsd: { url: path('/images/freebsd_logo.png'), alt: 'FreeBSD' }
+  , windows: { url: path('/images/windows_logo.png'), alt: 'Windows' }
+  }
+  ;
+
+function logo(os) {
+  var l = logos[os];
+  return "<img src='" + l.url + "' alt='" + l.alt + "' title='" + l.alt + "'></img>";
+}
+status_glyphs =
+  { success: '&#x2713;'
+  , warning: '!'
+  , failed: '&#x2717;'
+  , not_run: '-'
+  }
+function status(stage) {
+  var s = stage ? stage.status : 'not_run'
+  return "<div class='build_badge " + s + "'><span>" + status_glyphs[s] + "</span></div>";
+}
+%>
+
+<div class='build_status'>
+  <hgroup>
+    <h1>Build <%= latest.id %></h1>
+  </hgroup>
+
+  <div><%= latest.testSummary %></div>
+
+  <div>
+    <table class='status_table'><tbody>
+      <tr>
+        <th style='vertical-align: top'>node</th>
+         <% Object.keys(versions).forEach(function(v) { %>
+           <th class='node_config'><%= versions[v].name %><br>
+           <span><%= versions[v].sub %></span></th>
+         <% }) %>
+      </tr>
+      <% var os_array = Object.keys(os); 
+         latestStages.forEach(function(osrow, i) {%>
+        <tr>
+          <th><%- logo(os_array[i]) %></th>
+          <% for (var i = 0; i < osrow.length; ++i) { %>
+          <td><%- status(osrow[i]) %></td>
+          <% } %>
+        </tr>
+      <% }) %>
+      <!--
+      <tr>
+        <th><%- logo('windows') %></th>
+        <td><%- status({status: 'warning'}) %></td>
+        <td><%- status({status: 'success'}) %></td>
+        <td><%- status({status: 'success'}) %></td>
+        <td><%- status({status: 'failed'}) %></td>
+      </tr>
+      -->
+    </tbody></table>
+  </div>
+  <div><%= latest.revision %></div>
+  <div><%= new Date(latest.timestamp) %></div>
+</div>
+
+<!-- vim: set linebreak filetype=html spell spelllang=en_us : -->

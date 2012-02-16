@@ -1,0 +1,86 @@
+<%
+
+script('/scripts/coverage.js');
+
+script('/jqplot/jquery.min.js');
+script('/jqplot/jquery.jqplot.min.js');
+script('/jqplot/plugins/jqplot.pieRenderer.min.js');
+
+stylesheet('/jqplot/my.jqplot.css');
+
+
+function up(n) {
+  var result = []
+  for (var i = 0; i < n; ++i) {
+    result.push('..')
+  }
+  return result.join('/')
+}
+
+function src_line(l, ln, coverage) {
+  if (!l) {
+    return '&nbsp;'
+  }
+  var css_class = '';
+  if (coverage.lines[ln] === 0) {
+    css_class = 'missed';
+  } else if (coverage.lines[ln]) {
+    css_class = 'hit';
+  }
+  return "<div class='" + css_class + "'>" + escape(l) + "</div>";
+}
+
+function percent(what) {
+  if (what.found === 0) {
+    return '-'
+  }
+  return ((what.hit / what.found) * 100).toFixed(2) + '%'
+}
+
+function pie(id, name, data) {
+  return "<div class='chart_box'>" +
+           "<h4>" + name + "</h4>" +
+           "<div class='summery_numbers'>" + data.hit + "/" + data.found + 
+              (data.found ? " (" + percent(data) + ")" : "") + "</div>" +
+           "<div id='" + id + "' class='" + (data.found ? 'pie_chart' : 'zero') + "'" +
+                 "data-chart='" + JSON.stringify(data) + "'></div>" +
+         "</div>"
+}
+
+%>
+<script type='text/javascript'>$(function() { require_ncov().source_view() })</script>
+
+<article>
+
+<hgroup class='build_title'>
+  <div class='release_tag'>v0.0.4</div>
+  <h1>Build 74</h1>
+  <h2>e556d337a4d0c7c82f3d880d95a073f83ab8ccab</h2>
+  <h2><%= new Date() %></h4>
+</hgroup>
+
+<div class='charts'>
+  <%- pie('line_pie', 'Lines', counts.lines) %>
+  <%- pie('function_pie', 'Functions', counts.functions) %>
+  <%- pie('branches_pie', 'Branches', counts.branches) %>
+</div>
+
+<h2>
+  <% for (var i = 1; i < path.length; ++i) { %>
+    <a href='<%- up(path.length - i)%>/index.html'><%= path[i-1] %></a> /
+  <% } %>
+  <%= path[path.length - 1] %>
+</h2>
+
+<table class='source' cellpadding='0' cellspacing='0'><tbody>
+  <% lines.forEach(function(line, i) { 
+    var ln = i + 1;
+  %>
+  <tr>
+    <td class="line_numbers"><%= ln %></td>
+    <td class="hit_count"><%= coverage.lines[ln] || '' %></td>
+    <td><pre><%- src_line(line, ln, coverage) %></pre></td></tr>
+  <% }) %>
+</tbody></table>
+
+</article>
