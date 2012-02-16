@@ -39,7 +39,7 @@ function run_jscoverage(files, cb) {
   var spawn = require('child_process').spawn
     , cmd = process.env.JSCOVERAGE || 'jscoverage'
     , src_dir = path.dirname(files[0])
-    , jsc = spawn(cmd, [src_dir, outd, '-v'])
+    , jsc = spawn(cmd, [src_dir, outd, '-v', '--no-highlight'])
     ;
     function log(d) { console.log(d.toString()) }
     jsc.stdout.on('data', log);

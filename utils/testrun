@@ -19,7 +19,22 @@ try {
 }
 
 if (process.env.BUILDTYPE === 'Coverage') {
-  require('./lib/ncov')
+  process.once('exit', function(code) {
+    var fs   = require('fs')
+      , path = require('path')
+      , executable = path.basename(require.main.filename)
+      , file = path.join(process.env.NCOV_OUT, executable + '_coverage-js.json')
+      , dir  = path.dirname(file)
+      , existsSync = fs.existsSync || path.existsSync
+      ;
+    if( ! existsSync(dir)) {
+      fs.mkdirSync(dir);
+    }
+    fs.writeFileSync(file, JSON.stringify(_$jscoverage, null, 2));
+    console.log('================================================================================');
+    console.log('ncov:', executable, 'coverage report saved to', file);
+    console.log('================================================================================');
+  })
 }
 
 function padding(l) {

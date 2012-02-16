@@ -60,6 +60,9 @@ def build(bld):
                , 'src/txt_record_buffer_to_object.cpp'
                ]
 
+  for jsfile in bld.path.ant_glob('lib/**/*.js').split(' '):
+    bld(rule='cp ${SRC} ${TGT}', source=jsfile, target=os.path.basename(jsfile))
+
   obj = bld.new_task_gen('cxx', 'shlib', 'node_addon')
   obj.target = 'demangle'
   obj.cxxflags = ['-Wall']

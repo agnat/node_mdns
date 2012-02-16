@@ -20,8 +20,15 @@ var helpers = exports.helpers = function helpers(ctx, options) {
   helpers.title = function title(t) { if(t) {ctx.title = t} return ctx.title }
   helpers.script = function script(s) { ctx.scripts.push(s) }
   helpers.stylesheet = function stylesheet(s) { ctx.stylesheets.push(s) }
+  helpers.path = exports.getPathHelper(options)
+  return helpers;
+}
+
+function passthrough(p) { return p }
+
+exports.getPathHelper = function getPathHelper(options) {
   if (options.outputDir) {
-    helpers.path = function _path(p) {
+    return function _path(p) {
       var r = options.dst.substr(0, options.outputDir.length);
       if ( r !== options.outputDir) { throw new Error('KAPUTT') }
       var dst = options.dst.substr(options.outputDir.length);
@@ -29,13 +36,9 @@ var helpers = exports.helpers = function helpers(ctx, options) {
       return relpath;
     }
   } else {
-    helpers.path = function _path(p) { return p }
+    return function _path(p) { return p }
   }
-  //helpers.meta = function meta(key, value) { ctx[key] = value }
-  return helpers;
 }
-
-function passthrough(p) { return p }
 
 
 exports.render = function render(source, options, cb) {
