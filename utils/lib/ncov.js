@@ -42,6 +42,7 @@ chain( [ [ load_prerequisites, meta, prerequisites]
        ]
      , function(error) {
          console.log('done', error);
+         if (error) { process.exit(1) }
        }
      );
 
