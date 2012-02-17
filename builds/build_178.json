@@ -81,7 +81,7 @@
       "recipe": "gyp win",
       "status": "success",
       "agent": "win7",
-      "os": "${stage.node_head-win32-gyp.os}"
+      "os": "win32"
     }
   },
   "id": 178,
