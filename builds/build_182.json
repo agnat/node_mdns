@@ -1,0 +1,2183 @@
+{
+  "stages": {
+    "node_head-macosx-gyp": {
+      "dir": "/Users/david/.pulse2/data/projects/163840/00000182/6979617",
+      "recipe": "gyp",
+      "status": "success",
+      "agent": "macosx",
+      "os": "macosx",
+      "reports": {
+        "test_coverage": {
+          "cpp": {
+            "files": {
+              "/Users/david/.pulse2/data/agents/33/recipes/6979617/base/src/dns_sd.cpp": {
+                "functions": {
+                  "_ZN9node_mdns4initEN2v86HandleINS0_6ObjectEEE": {
+                    "line": 44
+                  },
+                  "_ZN9node_mdns14defineFunctionEN2v86HandleINS0_6ObjectEEEPKcPFNS1_INS0_5ValueEEERKNS0_9ArgumentsEE": {
+                    "line": 78
+                  },
+                  "_ZN9node_mdns14buildExceptionERKN2v89ArgumentsE": {
+                    "line": 84
+                  },
+                  "_ZN9node_mdns12addConstantsEN2v86HandleINS0_6ObjectEEE": {
+                    "line": 98
+                  },
+                  "_ZN9node_mdns15exportConstantsERKN2v89ArgumentsE": {
+                    "line": 279
+                  },
+                  "init": {
+                    "line": 302
+                  }
+                },
+                "branches": {
+                  "0": {
+                    "3": 2,
+                    "4": 32
+                  },
+                  "9999": {
+                    "1": 2,
+                    "2": 34
+                  }
+                },
+                "lines": {
+                  "44": 1,
+                  "45": 1,
+                  "47": 1,
+                  "48": 1,
+                  "53": 1,
+                  "54": 1,
+                  "55": 1,
+                  "56": 1,
+                  "57": 1,
+                  "58": 1,
+                  "59": 1,
+                  "63": 1,
+                  "64": 1,
+                  "66": 1,
+                  "67": 1,
+                  "69": 1,
+                  "70": 1,
+                  "71": 1,
+                  "73": 1,
+                  "74": 1,
+                  "78": 14,
+                  "80": 14,
+                  "81": 14,
+                  "84": 32,
+                  "85": 32,
+                  "86": 32,
+                  "87": 1,
+                  "89": 31,
+                  "90": 1,
+                  "93": 30,
+                  "94": 32,
+                  "98": 3,
+                  "100": 3,
+                  "103": 3,
+                  "104": 3,
+                  "105": 3,
+                  "106": 3,
+                  "107": 3,
+                  "108": 3,
+                  "109": 3,
+                  "110": 3,
+                  "111": 3,
+                  "112": 3,
+                  "113": 3,
+                  "114": 3,
+                  "115": 3,
+                  "116": 3,
+                  "117": 3,
+                  "118": 3,
+                  "119": 3,
+                  "120": 3,
+                  "121": 3,
+                  "122": 3,
+                  "123": 3,
+                  "124": 3,
+                  "125": 3,
+                  "152": 3,
+                  "153": 3,
+                  "154": 3,
+                  "155": 3,
+                  "156": 3,
+                  "157": 3,
+                  "158": 3,
+                  "159": 3,
+                  "160": 3,
+                  "161": 3,
+                  "162": 3,
+                  "163": 3,
+                  "164": 3,
+                  "165": 3,
+                  "166": 3,
+                  "167": 3,
+                  "168": 3,
+                  "169": 3,
+                  "170": 3,
+                  "171": 3,
+                  "172": 3,
+                  "173": 3,
+                  "174": 3,
+                  "175": 3,
+                  "176": 3,
+                  "177": 3,
+                  "178": 3,
+                  "179": 3,
+                  "180": 3,
+                  "181": 3,
+                  "182": 3,
+                  "183": 3,
+                  "184": 3,
+                  "185": 3,
+                  "186": 3,
+                  "187": 3,
+                  "188": 3,
+                  "189": 3,
+                  "190": 3,
+                  "191": 3,
+                  "192": 3,
+                  "241": 3,
+                  "242": 3,
+                  "243": 3,
+                  "244": 3,
+                  "245": 3,
+                  "246": 3,
+                  "247": 3,
+                  "250": 3,
+                  "251": 3,
+                  "252": 3,
+                  "253": 3,
+                  "254": 3,
+                  "255": 3,
+                  "256": 3,
+                  "257": 3,
+                  "258": 3,
+                  "259": 3,
+                  "260": 3,
+                  "276": 3,
+                  "279": 4,
+                  "280": 4,
+                  "281": 4,
+                  "282": 1,
+                  "284": 3,
+                  "285": 1,
+                  "288": 2,
+                  "289": 4,
+                  "302": 1
+                }
+              },
+              "/Users/david/.pulse2/data/agents/33/recipes/6979617/base/src/mdns_utils.hpp": {
+                "functions": {
+                  "_ZN9node_mdns10throwErrorEPKc": {
+                    "line": 15
+                  },
+                  "_ZN9node_mdns14throwTypeErrorEPKc": {
+                    "line": 21
+                  },
+                  "_ZN9node_mdns21argumentCountMismatchERKN2v89ArgumentsEi": {
+                    "line": 41
+                  },
+                  "_ZN9node_mdns35throwArgumentCountMismatchExceptionERKN2v89ArgumentsEm": {
+                    "line": 47
+                  },
+                  "_ZN9node_mdns9mdnsErrorEPKci": {
+                    "line": 27
+                  },
+                  "_ZN9node_mdns14throwMdnsErrorEPKci": {
+                    "line": 35
+                  }
+                },
+                "lines": {
+                  "15": 32,
+                  "16": 32,
+                  "21": 47,
+                  "22": 47,
+                  "27": 3,
+                  "28": 3,
+                  "29": 3,
+                  "30": 3,
+                  "35": 3,
+                  "36": 3,
+                  "41": 188,
+                  "42": 188,
+                  "47": 20,
+                  "48": 20,
+                  "50": 20,
+                  "51": 20
+                }
+              },
+              "/Users/david/.pulse2/data/agents/33/recipes/6979617/base/src/dns_service_browse.cpp": {
+                "functions": {
+                  "_ZN9node_mdnsL16OnServiceChangedEP16_DNSServiceRef_tjjiPKcS3_S3_Pv": {
+                    "line": 18
+                  },
+                  "_ZN9node_mdns16DNSServiceBrowseERKN2v89ArgumentsE": {
+                    "line": 43
+                  }
+                },
+                "branches": {
+                  "0": {
+                    "0": 1,
+                    "1": 6,
+                    "2": 8,
+                    "3": 16,
+                    "4": 13,
+                    "8": 3,
+                    "9": 3
+                  },
+                  "1": {
+                    "1": 24,
+                    "2": 3
+                  },
+                  "3": {
+                    "10": 3,
+                    "11": 13
+                  },
+                  "9999": {
+                    "0": 0,
+                    "1": 9,
+                    "2": 29,
+                    "3": 12,
+                    "4": 37
+                  }
+                },
+                "lines": {
+                  "18": 3,
+                  "20": 3,
+                  "21": 3,
+                  "22": 3,
+                  "23": 3,
+                  "25": 3,
+                  "26": 27,
+                  "27": 3,
+                  "28": 3,
+                  "29": 3,
+                  "30": 3,
+                  "31": 3,
+                  "32": 3,
+                  "33": 3,
+                  "34": 3,
+                  "35": 1,
+                  "37": 2,
+                  "39": 3,
+                  "40": 3,
+                  "43": 16,
+                  "44": 16,
+                  "45": 16,
+                  "46": 1,
+                  "49": 15,
+                  "50": 1,
+                  "52": 14,
+                  "53": 14,
+                  "54": 1,
+                  "57": 13,
+                  "58": 1,
+                  "60": 12,
+                  "62": 12,
+                  "63": 1,
+                  "65": 11,
+                  "67": 11,
+                  "68": 2,
+                  "70": 9,
+                  "72": 9,
+                  "73": 9,
+                  "74": 2,
+                  "75": 1,
+                  "77": 1,
+                  "79": 8,
+                  "81": 8,
+                  "82": 1,
+                  "84": 7,
+                  "86": 7,
+                  "87": 1,
+                  "92": 7,
+                  "94": 7,
+                  "95": 0,
+                  "98": 7,
+                  "99": 0,
+                  "102": 16
+                }
+              },
+              "/Users/david/.pulse2/data/agents/33/recipes/6979617/base/src/dns_service_enumerate_domains.cpp": {
+                "functions": {
+                  "_ZN9node_mdns13OnEnumerationEP16_DNSServiceRef_tjjiPKcPv": {
+                    "line": 14
+                  },
+                  "_ZN9node_mdns26DNSServiceEnumerateDomainsERKN2v89ArgumentsE": {
+                    "line": 33
+                  }
+                },
+                "branches": {
+                  "0": {
+                    "1": 0,
+                    "2": 5,
+                    "3": 11,
+                    "4": 8
+                  },
+                  "1": {
+                    "1": 6,
+                    "2": 1
+                  },
+                  "9999": {
+                    "0": 1,
+                    "1": 6,
+                    "2": 20,
+                    "3": 3,
+                    "4": 12
+                  }
+                },
+                "lines": {
+                  "14": 1,
+                  "16": 1,
+                  "17": 1,
+                  "18": 1,
+                  "19": 1,
+                  "21": 1,
+                  "22": 7,
+                  "23": 1,
+                  "24": 1,
+                  "25": 1,
+                  "26": 1,
+                  "27": 1,
+                  "28": 1,
+                  "29": 1,
+                  "30": 1,
+                  "33": 12,
+                  "34": 12,
+                  "35": 12,
+                  "36": 1,
+                  "39": 11,
+                  "40": 1,
+                  "42": 10,
+                  "43": 10,
+                  "44": 1,
+                  "47": 9,
+                  "48": 1,
+                  "50": 8,
+                  "52": 8,
+                  "53": 1,
+                  "55": 7,
+                  "57": 7,
+                  "58": 2,
+                  "60": 5,
+                  "62": 5,
+                  "65": 5,
+                  "67": 5,
+                  "68": 1,
+                  "70": 4,
+                  "71": 0,
+                  "73": 12
+                }
+              },
+              "/Users/david/.pulse2/data/agents/33/recipes/6979617/base/src/dns_service_process_result.cpp": {
+                "functions": {
+                  "_ZN9node_mdns23DNSServiceProcessResultERKN2v89ArgumentsE": {
+                    "line": 14
+                  }
+                },
+                "branches": {
+                  "0": {
+                    "3": 1,
+                    "4": 14
+                  },
+                  "9999": {
+                    "0": 1,
+                    "1": 15,
+                    "2": 15
+                  }
+                },
+                "lines": {
+                  "14": 17,
+                  "15": 17,
+                  "16": 17,
+                  "17": 2,
+                  "19": 15,
+                  "20": 1,
+                  "23": 14,
+                  "24": 14,
+                  "25": 14,
+                  "26": 14,
+                  "27": 1,
+                  "29": 17
+                }
+              },
+              "/Users/david/.pulse2/data/agents/33/recipes/6979617/base/src/dns_service_ref.cpp": {
+                "functions": {
+                  "_Z41__static_initialization_and_destruction_0ii": {
+                    "line": 9
+                  },
+                  "_ZN9node_mdns10ServiceRefC2Ev": {
+                    "line": 14
+                  },
+                  "_ZN9node_mdns10ServiceRefC1Ev": {
+                    "line": 14
+                  },
+                  "_ZN9node_mdns10ServiceRefD0Ev": {
+                    "line": 16
+                  },
+                  "_ZN9node_mdns10ServiceRefD1Ev": {
+                    "line": 16
+                  },
+                  "_ZN9node_mdns10ServiceRefD2Ev": {
+                    "line": 16
+                  },
+                  "_ZN9node_mdns10ServiceRef10InitializeEN2v86HandleINS1_6ObjectEEE": {
+                    "line": 31
+                  },
+                  "_ZN9node_mdns10ServiceRef3NewERKN2v89ArgumentsE": {
+                    "line": 46
+                  },
+                  "_ZNK9node_mdns10ServiceRef13IsInitializedEv": {
+                    "line": 54
+                  },
+                  "_ZN9node_mdns10ServiceRef11HasInstanceEN2v86HandleINS1_5ValueEEE": {
+                    "line": 57
+                  },
+                  "_ZN9node_mdns10ServiceRef11SetCallbackEN2v86HandleINS1_8FunctionEEE": {
+                    "line": 64
+                  },
+                  "_ZNK9node_mdns10ServiceRef11GetCallbackEv": {
+                    "line": 72
+                  },
+                  "_ZN9node_mdns10ServiceRef13GetServiceRefEv": {
+                    "line": 75
+                  },
+                  "_ZN9node_mdns10ServiceRef13SetServiceRefEP16_DNSServiceRef_t": {
+                    "line": 78
+                  },
+                  "_ZN9node_mdns10ServiceRef10GetContextEv": {
+                    "line": 81
+                  },
+                  "_ZN9node_mdns10ServiceRef10SetContextEN2v86HandleINS1_5ValueEEE": {
+                    "line": 84
+                  },
+                  "_ZN9node_mdns10ServiceRef7GetThisEv": {
+                    "line": 92
+                  },
+                  "_ZN9node_mdns10ServiceRef7SetThisEN2v85LocalINS1_6ObjectEEE": {
+                    "line": 95
+                  },
+                  "_ZN9node_mdns10ServiceRef14SetSocketFlagsEv": {
+                    "line": 98
+                  },
+                  "_ZN9node_mdns10ServiceRef9fd_getterEN2v85LocalINS1_6StringEEERKNS1_12AccessorInfoE": {
+                    "line": 109
+                  },
+                  "_ZN9node_mdns10ServiceRef18initialized_getterEN2v85LocalINS1_6StringEEERKNS1_12AccessorInfoE": {
+                    "line": 125
+                  },
+                  "_GLOBAL__I__ZN9node_mdns10ServiceRef20constructor_templateE": {
+                    "line": 132
+                  }
+                },
+                "branches": {
+                  "0": {
+                    "0": 9,
+                    "1": 121,
+                    "2": 118,
+                    "3": 79
+                  },
+                  "1": {
+                    "2": 1,
+                    "3": 0,
+                    "4": null,
+                    "5": null
+                  },
+                  "2": {
+                    "4": null,
+                    "5": null,
+                    "7": null,
+                    "8": null
+                  },
+                  "3": {
+                    "5": null,
+                    "6": null
+                  },
+                  "6": {
+                    "9": null,
+                    "10": null
+                  },
+                  "9999": {
+                    "0": 17,
+                    "1": 19
+                  }
+                },
+                "lines": {
+                  "9": 1,
+                  "11": 1,
+                  "12": 1,
+                  "14": 60,
+                  "16": 53,
+                  "18": 53,
+                  "19": 8,
+                  "22": 53,
+                  "23": 18,
+                  "25": 53,
+                  "26": 5,
+                  "28": 53,
+                  "31": 1,
+                  "32": 1,
+                  "33": 1,
+                  "34": 1,
+                  "35": 1,
+                  "37": 1,
+                  "38": 1,
+                  "40": 1,
+                  "41": 1,
+                  "42": 1,
+                  "43": 1,
+                  "46": 60,
+                  "47": 60,
+                  "48": 60,
+                  "49": 60,
+                  "50": 60,
+                  "54": 82,
+                  "57": 81,
+                  "58": 81,
+                  "59": 79,
+                  "60": 81,
+                  "64": 25,
+                  "65": 25,
+                  "66": 0,
+                  "68": 25,
+                  "69": 25,
+                  "72": 13,
+                  "75": 56,
+                  "78": 13,
+                  "81": 16,
+                  "84": 8,
+                  "85": 8,
+                  "86": 0,
+                  "88": 8,
+                  "89": 8,
+                  "92": 13,
+                  "95": 14,
+                  "98": 27,
+                  "99": 27,
+                  "109": 19,
+                  "110": 19,
+                  "111": 19,
+                  "112": 19,
+                  "113": 19,
+                  "114": 17,
+                  "115": 17,
+                  "117": 0,
+                  "120": 19,
+                  "121": 19,
+                  "125": 6,
+                  "126": 6,
+                  "127": 6,
+                  "128": 6,
+                  "131": 2,
+                  "132": 1
+                }
+              },
+              "/Users/david/.pulse2/data/agents/33/recipes/6979617/base/src/dns_service_ref_deallocate.cpp": {
+                "functions": {
+                  "_ZN9node_mdns23DNSServiceRefDeallocateERKN2v89ArgumentsE": {
+                    "line": 14
+                  }
+                },
+                "branches": {
+                  "0": {
+                    "3": 15,
+                    "4": 1
+                  },
+                  "1": {
+                    "10": 1,
+                    "11": 14
+                  },
+                  "4": {
+                    "12": 2,
+                    "13": 14
+                  },
+                  "9999": {
+                    "1": 3,
+                    "2": 29
+                  }
+                },
+                "lines": {
+                  "14": 18,
+                  "15": 18,
+                  "16": 18,
+                  "17": 2,
+                  "19": 16,
+                  "20": 2,
+                  "23": 14,
+                  "24": 14,
+                  "25": 1,
+                  "27": 13,
+                  "28": 13,
+                  "30": 18
+                }
+              },
+              "/Users/david/.pulse2/data/agents/33/recipes/6979617/base/src/dns_service_ref_sock_fd.cpp": {
+                "functions": {
+                  "_ZN9node_mdns19DNSServiceRefSockFDERKN2v89ArgumentsE": {
+                    "line": 14
+                  }
+                },
+                "branches": {
+                  "0": {
+                    "3": 2,
+                    "4": 1
+                  },
+                  "1": {
+                    "10": 0,
+                    "11": 2
+                  },
+                  "4": {
+                    "12": 1,
+                    "13": 2
+                  },
+                  "9999": {
+                    "0": 0,
+                    "1": 3,
+                    "2": 4
+                  }
+                },
+                "lines": {
+                  "14": 4,
+                  "15": 4,
+                  "16": 4,
+                  "17": 1,
+                  "19": 3,
+                  "20": 1,
+                  "23": 2,
+                  "24": 2,
+                  "25": 1,
+                  "27": 1,
+                  "28": 1,
+                  "29": 0,
+                  "31": 4
+                }
+              },
+              "/Users/david/.pulse2/data/agents/33/recipes/6979617/base/src/dns_service_register.cpp": {
+                "functions": {
+                  "_ZN9node_mdnsL19OnServiceRegisteredEP16_DNSServiceRef_tjiPKcS3_S3_Pv": {
+                    "line": 25
+                  },
+                  "_ZN9node_mdns18DNSServiceRegisterERKN2v89ArgumentsE": {
+                    "line": 53
+                  }
+                },
+                "branches": {
+                  "0": {
+                    "0": 5,
+                    "1": 0,
+                    "2": 14,
+                    "3": 55,
+                    "4": 76,
+                    "5": 0,
+                    "8": 6,
+                    "9": 0
+                  },
+                  "1": {
+                    "8": 14,
+                    "9": 0
+                  },
+                  "2": {
+                    "1": 35,
+                    "2": 5
+                  },
+                  "3": {
+                    "5": 2,
+                    "6": 18,
+                    "7": 11,
+                    "10": 6,
+                    "11": 50
+                  },
+                  "4": {
+                    "10": 14,
+                    "11": 22
+                  },
+                  "6": {
+                    "9": 1,
+                    "10": 10
+                  },
+                  "9": {
+                    "13": 2,
+                    "14": 9
+                  },
+                  "9999": {
+                    "0": 0,
+                    "1": 33,
+                    "2": 53,
+                    "3": 11,
+                    "4": 104
+                  }
+                },
+                "lines": {
+                  "25": 5,
+                  "27": 5,
+                  "29": 5,
+                  "30": 5,
+                  "31": 5,
+                  "32": 5,
+                  "34": 5,
+                  "35": 5,
+                  "36": 40,
+                  "37": 5,
+                  "38": 5,
+                  "39": 5,
+                  "40": 5,
+                  "41": 5,
+                  "42": 5,
+                  "43": 5,
+                  "44": 4,
+                  "46": 1,
+                  "48": 5,
+                  "49": 5,
+                  "53": 27,
+                  "54": 27,
+                  "55": 27,
+                  "56": 2,
+                  "59": 25,
+                  "60": 1,
+                  "62": 24,
+                  "63": 24,
+                  "64": 1,
+                  "67": 23,
+                  "68": 1,
+                  "70": 22,
+                  "72": 22,
+                  "73": 1,
+                  "75": 21,
+                  "77": 21,
+                  "78": 21,
+                  "79": 3,
+                  "80": 1,
+                  "82": 2,
+                  "84": 20,
+                  "86": 20,
+                  "87": 2,
+                  "89": 18,
+                  "91": 18,
+                  "92": 18,
+                  "93": 2,
+                  "94": 1,
+                  "96": 1,
+                  "98": 17,
+                  "100": 17,
+                  "101": 17,
+                  "102": 1,
+                  "103": 1,
+                  "105": 0,
+                  "107": 16,
+                  "109": 16,
+                  "110": 1,
+                  "112": 15,
+                  "113": 15,
+                  "114": 2,
+                  "116": 13,
+                  "118": 13,
+                  "119": 13,
+                  "120": 13,
+                  "121": 3,
+                  "122": 1,
+                  "123": 1,
+                  "124": 1,
+                  "125": 2,
+                  "126": 1,
+                  "127": 1,
+                  "128": 1,
+                  "130": 1,
+                  "134": 12,
+                  "135": 9,
+                  "136": 1,
+                  "138": 8,
+                  "141": 11,
+                  "142": 2,
+                  "158": 11,
+                  "159": 11,
+                  "160": 0,
+                  "162": 11,
+                  "163": 0,
+                  "165": 27
+                }
+              },
+              "/Users/david/.pulse2/data/agents/33/recipes/6979617/base/src/txt_record_ref.hpp": {
+                "functions": {
+                  "_ZN9node_mdns12TxtRecordRef11HasInstanceEN2v86HandleINS1_5ValueEEE": {
+                    "line": 16
+                  },
+                  "_ZN9node_mdns12TxtRecordRef15GetTxtRecordRefEv": {
+                    "line": 22
+                  }
+                },
+                "branches": {
+                  "0": {
+                    "2": null,
+                    "3": null
+                  }
+                },
+                "lines": {
+                  "16": 31,
+                  "17": 31,
+                  "18": 30,
+                  "19": 31,
+                  "22": 22
+                }
+              },
+              "/Users/david/.pulse2/data/agents/33/recipes/6979617/base/src/dns_service_resolve.cpp": {
+                "functions": {
+                  "_ZN9node_mdns9OnResolveEP16_DNSServiceRef_tjjiPKcS3_ttPKhPv": {
+                    "line": 26
+                  },
+                  "_ZN9node_mdns17DNSServiceResolveERKN2v89ArgumentsE": {
+                    "line": 55
+                  }
+                },
+                "branches": {
+                  "0": {
+                    "1": 0,
+                    "2": 6,
+                    "3": 13,
+                    "4": 10,
+                    "8": null,
+                    "9": null
+                  },
+                  "1": {
+                    "1": 36,
+                    "2": 4
+                  },
+                  "3": {
+                    "10": 0,
+                    "11": 5
+                  },
+                  "9999": {
+                    "0": 0,
+                    "1": 7,
+                    "2": 28,
+                    "3": 5,
+                    "4": 40
+                  }
+                },
+                "lines": {
+                  "26": 4,
+                  "29": 4,
+                  "30": 4,
+                  "31": 4,
+                  "32": 4,
+                  "34": 4,
+                  "35": 40,
+                  "36": 4,
+                  "37": 4,
+                  "38": 4,
+                  "39": 4,
+                  "40": 4,
+                  "41": 4,
+                  "42": 4,
+                  "43": 4,
+                  "44": 4,
+                  "45": 4,
+                  "46": 4,
+                  "47": 4,
+                  "49": 0,
+                  "51": 4,
+                  "52": 4,
+                  "55": 14,
+                  "56": 14,
+                  "58": 14,
+                  "59": 1,
+                  "62": 13,
+                  "63": 1,
+                  "65": 12,
+                  "66": 12,
+                  "67": 1,
+                  "70": 11,
+                  "71": 1,
+                  "73": 10,
+                  "75": 10,
+                  "76": 1,
+                  "78": 9,
+                  "80": 9,
+                  "81": 1,
+                  "83": 8,
+                  "85": 8,
+                  "86": 1,
+                  "88": 7,
+                  "90": 7,
+                  "91": 1,
+                  "93": 6,
+                  "95": 6,
+                  "96": 1,
+                  "98": 5,
+                  "100": 5,
+                  "101": 0,
+                  "105": 5,
+                  "107": 5,
+                  "108": 0,
+                  "110": 5,
+                  "111": 0,
+                  "114": 14
+                }
+              },
+              "/Users/david/.pulse2/data/agents/33/recipes/6979617/base/src/mdns_utils.cpp": {
+                "functions": {
+                  "_Z41__static_initialization_and_destruction_0ii": {
+                    "line": 11
+                  },
+                  "_ZN9node_mdns14buildExceptionEi": {
+                    "line": 14
+                  },
+                  "_ZN9node_mdns11errorStringEi": {
+                    "line": 29
+                  },
+                  "_GLOBAL__I__ZN9node_mdns14buildExceptionEi": {
+                    "line": 115
+                  }
+                },
+                "branches": {
+                  "0": {
+                    "0": 10,
+                    "1": 21,
+                    "2": 1,
+                    "3": 1,
+                    "4": 3,
+                    "5": 1,
+                    "6": 1,
+                    "7": 1,
+                    "8": 1,
+                    "9": 1,
+                    "10": 1,
+                    "11": 1,
+                    "12": 2,
+                    "13": 1,
+                    "14": 1,
+                    "15": 1,
+                    "16": 1,
+                    "17": 1,
+                    "18": 1,
+                    "19": 1,
+                    "20": 1,
+                    "21": 1,
+                    "22": 1,
+                    "23": 0
+                  },
+                  "1": {
+                    "2": 1,
+                    "3": 0
+                  }
+                },
+                "lines": {
+                  "11": 1,
+                  "14": 30,
+                  "15": 30,
+                  "16": 9,
+                  "19": 21,
+                  "20": 21,
+                  "21": 21,
+                  "22": 21,
+                  "23": 21,
+                  "25": 30,
+                  "29": 24,
+                  "30": 24,
+                  "32": 0,
+                  "34": 0,
+                  "36": 1,
+                  "38": 1,
+                  "40": 3,
+                  "42": 1,
+                  "44": 1,
+                  "46": 1,
+                  "48": 1,
+                  "50": 1,
+                  "52": 1,
+                  "54": 1,
+                  "56": 2,
+                  "58": 1,
+                  "60": 1,
+                  "62": 1,
+                  "64": 1,
+                  "66": 1,
+                  "68": 1,
+                  "70": 1,
+                  "72": 1,
+                  "74": 1,
+                  "76": 1,
+                  "110": 24,
+                  "114": 2,
+                  "115": 1
+                }
+              },
+              "/Users/david/.pulse2/data/agents/33/recipes/6979617/base/src/txt_record_buffer_to_object.cpp": {
+                "functions": {
+                  "_ZN9node_mdns23txtRecordBufferToObjectERKN2v89ArgumentsE": {
+                    "line": 16
+                  }
+                },
+                "branches": {
+                  "0": {
+                    "0": 8,
+                    "1": 5,
+                    "3": 2,
+                    "4": 1
+                  },
+                  "1": {
+                    "4": 0,
+                    "5": 4,
+                    "10": 1,
+                    "11": 1
+                  },
+                  "4": {
+                    "12": 2,
+                    "13": 1
+                  },
+                  "9999": {
+                    "1": 1,
+                    "2": 3
+                  }
+                },
+                "lines": {
+                  "16": 4,
+                  "17": 4,
+                  "18": 4,
+                  "19": 1,
+                  "21": 3,
+                  "22": 2,
+                  "24": 1,
+                  "26": 1,
+                  "27": 1,
+                  "28": 1,
+                  "29": 1,
+                  "30": 1,
+                  "34": 5,
+                  "35": 4,
+                  "39": 0,
+                  "41": 4,
+                  "42": 0,
+                  "47": 4,
+                  "49": 4
+                }
+              },
+              "/Users/david/.pulse2/data/agents/33/recipes/6979617/base/src/txt_record_create.cpp": {
+                "functions": {
+                  "_ZN9node_mdns15TXTRecordCreateERKN2v89ArgumentsE": {
+                    "line": 14
+                  }
+                },
+                "branches": {
+                  "0": {
+                    "3": 15,
+                    "4": 3
+                  },
+                  "1": {
+                    "8": 4,
+                    "9": 1,
+                    "10": 2,
+                    "11": 8
+                  },
+                  "4": {
+                    "10": 4,
+                    "11": 2,
+                    "12": 4,
+                    "13": 8
+                  },
+                  "9999": {
+                    "1": 3,
+                    "2": 8
+                  }
+                },
+                "lines": {
+                  "14": 11,
+                  "15": 11,
+                  "16": 11,
+                  "17": 3,
+                  "19": 8,
+                  "20": 2,
+                  "23": 6,
+                  "24": 6,
+                  "25": 6,
+                  "26": 4,
+                  "27": 2,
+                  "29": 2,
+                  "30": 2,
+                  "31": 2,
+                  "34": 4,
+                  "35": 4,
+                  "36": 11
+                }
+              },
+              "/Users/david/.pulse2/data/agents/33/recipes/6979617/base/src/txt_record_deallocate.cpp": {
+                "functions": {
+                  "_ZN9node_mdns19TXTRecordDeallocateERKN2v89ArgumentsE": {
+                    "line": 12
+                  }
+                },
+                "branches": {
+                  "0": {
+                    "3": 2,
+                    "4": 1
+                  },
+                  "1": {
+                    "10": 1,
+                    "11": 1
+                  },
+                  "4": {
+                    "12": 2,
+                    "13": 1
+                  },
+                  "9999": {
+                    "1": 2,
+                    "2": 3
+                  }
+                },
+                "lines": {
+                  "12": 5,
+                  "13": 5,
+                  "14": 5,
+                  "15": 2,
+                  "17": 3,
+                  "18": 2,
+                  "21": 1,
+                  "22": 1,
+                  "23": 5
+                }
+              },
+              "/Users/david/.pulse2/data/agents/33/recipes/6979617/base/src/txt_record_get_length.cpp": {
+                "functions": {
+                  "_ZN9node_mdns18TXTRecordGetLengthERKN2v89ArgumentsE": {
+                    "line": 12
+                  }
+                },
+                "branches": {
+                  "0": {
+                    "3": 4,
+                    "4": 1
+                  },
+                  "1": {
+                    "10": 1,
+                    "11": 3
+                  },
+                  "4": {
+                    "12": 2,
+                    "13": 3
+                  },
+                  "9999": {
+                    "1": 1,
+                    "2": 5
+                  }
+                },
+                "lines": {
+                  "12": 6,
+                  "13": 6,
+                  "14": 6,
+                  "15": 1,
+                  "17": 5,
+                  "18": 2,
+                  "20": 3,
+                  "21": 3,
+                  "22": 6
+                }
+              },
+              "/Users/david/.pulse2/data/agents/33/recipes/6979617/base/src/txt_record_ref.cpp": {
+                "functions": {
+                  "_Z41__static_initialization_and_destruction_0ii": {
+                    "line": 9
+                  },
+                  "_ZN9node_mdns12TxtRecordRefC2Ev": {
+                    "line": 11
+                  },
+                  "_ZN9node_mdns12TxtRecordRefC1Ev": {
+                    "line": 11
+                  },
+                  "_ZN9node_mdns12TxtRecordRefD2Ev": {
+                    "line": 16
+                  },
+                  "_ZN9node_mdns12TxtRecordRefD0Ev": {
+                    "line": 16
+                  },
+                  "_ZN9node_mdns12TxtRecordRefD1Ev": {
+                    "line": 16
+                  },
+                  "_ZN9node_mdns12TxtRecordRef10InitializeEN2v86HandleINS1_6ObjectEEE": {
+                    "line": 21
+                  },
+                  "_ZN9node_mdns12TxtRecordRef3NewERKN2v89ArgumentsE": {
+                    "line": 32
+                  },
+                  "_GLOBAL__I__ZN9node_mdns12TxtRecordRef20constructor_templateE": {
+                    "line": 40
+                  }
+                },
+                "branches": {
+                  "0": {
+                    "0": 1,
+                    "1": 0
+                  },
+                  "1": {
+                    "1": 225,
+                    "2": 16,
+                    "3": 0,
+                    "5": null,
+                    "6": null
+                  },
+                  "3": {
+                    "9": null,
+                    "10": null
+                  },
+                  "4": {
+                    "4": null,
+                    "5": null
+                  },
+                  "9999": {
+                    "1": 15,
+                    "2": 0
+                  }
+                },
+                "lines": {
+                  "9": 1,
+                  "11": 15,
+                  "12": 240,
+                  "14": 15,
+                  "16": 15,
+                  "17": 15,
+                  "18": 15,
+                  "21": 1,
+                  "22": 1,
+                  "23": 1,
+                  "24": 1,
+                  "25": 1,
+                  "28": 1,
+                  "29": 1,
+                  "32": 15,
+                  "33": 15,
+                  "34": 15,
+                  "35": 15,
+                  "36": 15,
+                  "39": 2,
+                  "40": 1
+                }
+              },
+              "/Users/david/.pulse2/data/agents/33/recipes/6979617/base/src/txt_record_set_value.cpp": {
+                "functions": {
+                  "_ZN9node_mdns6lengthEN2v86HandleINS0_5ValueEEE": {
+                    "line": 13
+                  },
+                  "_ZN9node_mdns17TXTRecordSetValueERKN2v89ArgumentsE": {
+                    "line": 24
+                  }
+                },
+                "branches": {
+                  "0": {
+                    "0": 1,
+                    "1": 13,
+                    "2": 10,
+                    "3": 32,
+                    "4": 3,
+                    "8": 9,
+                    "9": 2
+                  },
+                  "1": {
+                    "8": 8,
+                    "9": 2,
+                    "10": 1,
+                    "11": 15,
+                    "12": 7,
+                    "13": 2
+                  },
+                  "2": {
+                    "13": 6,
+                    "14": 2,
+                    "17": 1,
+                    "18": 6
+                  },
+                  "4": {
+                    "12": 2,
+                    "13": 15
+                  },
+                  "5": {
+                    "19": 1,
+                    "20": 12
+                  },
+                  "7": {
+                    "30": 6,
+                    "31": 6
+                  },
+                  "9999": {
+                    "1": 1,
+                    "2": 17,
+                    "3": 13,
+                    "4": 15
+                  }
+                },
+                "lines": {
+                  "13": 12,
+                  "14": 12,
+                  "15": 6,
+                  "16": 6,
+                  "17": 2,
+                  "19": 12,
+                  "24": 18,
+                  "25": 18,
+                  "26": 18,
+                  "27": 1,
+                  "29": 17,
+                  "30": 2,
+                  "32": 15,
+                  "34": 15,
+                  "35": 2,
+                  "37": 13,
+                  "39": 13,
+                  "41": 1,
+                  "46": 12,
+                  "48": 12,
+                  "49": 1,
+                  "51": 18
+                }
+              }
+            },
+            "tests": {},
+            "functionCount": {
+              "_ZN9node_mdns4initEN2v86HandleINS0_6ObjectEEE": 1,
+              "_ZN9node_mdns14defineFunctionEN2v86HandleINS0_6ObjectEEEPKcPFNS1_INS0_5ValueEEERKNS0_9ArgumentsEE": 14,
+              "_ZN9node_mdns14buildExceptionERKN2v89ArgumentsE": 32,
+              "_ZN9node_mdns12addConstantsEN2v86HandleINS0_6ObjectEEE": 3,
+              "_ZN9node_mdns15exportConstantsERKN2v89ArgumentsE": 4,
+              "init": 1,
+              "_ZN9node_mdns10throwErrorEPKc": 0,
+              "_ZN9node_mdns14throwTypeErrorEPKc": 0,
+              "_ZN9node_mdns21argumentCountMismatchERKN2v89ArgumentsEi": 0,
+              "_ZN9node_mdns35throwArgumentCountMismatchExceptionERKN2v89ArgumentsEm": 0,
+              "_ZN9node_mdnsL16OnServiceChangedEP16_DNSServiceRef_tjjiPKcS3_S3_Pv": 3,
+              "_ZN9node_mdns16DNSServiceBrowseERKN2v89ArgumentsE": 16,
+              "_ZN9node_mdns9mdnsErrorEPKci": 0,
+              "_ZN9node_mdns14throwMdnsErrorEPKci": 0,
+              "_ZN9node_mdns13OnEnumerationEP16_DNSServiceRef_tjjiPKcPv": 1,
+              "_ZN9node_mdns26DNSServiceEnumerateDomainsERKN2v89ArgumentsE": 12,
+              "_ZN9node_mdns23DNSServiceProcessResultERKN2v89ArgumentsE": 17,
+              "_Z41__static_initialization_and_destruction_0ii": 1,
+              "_ZN9node_mdns10ServiceRefC2Ev": 0,
+              "_ZN9node_mdns10ServiceRefC1Ev": 60,
+              "_ZN9node_mdns10ServiceRefD0Ev": 53,
+              "_ZN9node_mdns10ServiceRefD1Ev": 0,
+              "_ZN9node_mdns10ServiceRefD2Ev": 0,
+              "_ZN9node_mdns10ServiceRef10InitializeEN2v86HandleINS1_6ObjectEEE": 1,
+              "_ZN9node_mdns10ServiceRef3NewERKN2v89ArgumentsE": 60,
+              "_ZNK9node_mdns10ServiceRef13IsInitializedEv": 82,
+              "_ZN9node_mdns10ServiceRef11HasInstanceEN2v86HandleINS1_5ValueEEE": 81,
+              "_ZN9node_mdns10ServiceRef11SetCallbackEN2v86HandleINS1_8FunctionEEE": 25,
+              "_ZNK9node_mdns10ServiceRef11GetCallbackEv": 13,
+              "_ZN9node_mdns10ServiceRef13GetServiceRefEv": 56,
+              "_ZN9node_mdns10ServiceRef13SetServiceRefEP16_DNSServiceRef_t": 13,
+              "_ZN9node_mdns10ServiceRef10GetContextEv": 16,
+              "_ZN9node_mdns10ServiceRef10SetContextEN2v86HandleINS1_5ValueEEE": 8,
+              "_ZN9node_mdns10ServiceRef7GetThisEv": 13,
+              "_ZN9node_mdns10ServiceRef7SetThisEN2v85LocalINS1_6ObjectEEE": 14,
+              "_ZN9node_mdns10ServiceRef14SetSocketFlagsEv": 27,
+              "_ZN9node_mdns10ServiceRef9fd_getterEN2v85LocalINS1_6StringEEERKNS1_12AccessorInfoE": 19,
+              "_ZN9node_mdns10ServiceRef18initialized_getterEN2v85LocalINS1_6StringEEERKNS1_12AccessorInfoE": 6,
+              "_GLOBAL__I__ZN9node_mdns10ServiceRef20constructor_templateE": 1,
+              "_ZN9node_mdns23DNSServiceRefDeallocateERKN2v89ArgumentsE": 18,
+              "_ZN9node_mdns19DNSServiceRefSockFDERKN2v89ArgumentsE": 4,
+              "_ZN9node_mdnsL19OnServiceRegisteredEP16_DNSServiceRef_tjiPKcS3_S3_Pv": 5,
+              "_ZN9node_mdns18DNSServiceRegisterERKN2v89ArgumentsE": 27,
+              "_ZN9node_mdns12TxtRecordRef11HasInstanceEN2v86HandleINS1_5ValueEEE": 0,
+              "_ZN9node_mdns12TxtRecordRef15GetTxtRecordRefEv": 0,
+              "_ZN9node_mdns9OnResolveEP16_DNSServiceRef_tjjiPKcS3_ttPKhPv": 4,
+              "_ZN9node_mdns17DNSServiceResolveERKN2v89ArgumentsE": 14,
+              "_ZN9node_mdns14buildExceptionEi": 30,
+              "_ZN9node_mdns11errorStringEi": 24,
+              "_GLOBAL__I__ZN9node_mdns14buildExceptionEi": 1,
+              "_ZN9node_mdns23txtRecordBufferToObjectERKN2v89ArgumentsE": 4,
+              "_ZN9node_mdns15TXTRecordCreateERKN2v89ArgumentsE": 11,
+              "_ZN9node_mdns19TXTRecordDeallocateERKN2v89ArgumentsE": 5,
+              "_ZN9node_mdns18TXTRecordGetLengthERKN2v89ArgumentsE": 6,
+              "_ZN9node_mdns12TxtRecordRefC2Ev": 0,
+              "_ZN9node_mdns12TxtRecordRefC1Ev": 15,
+              "_ZN9node_mdns12TxtRecordRefD2Ev": 0,
+              "_ZN9node_mdns12TxtRecordRefD0Ev": 15,
+              "_ZN9node_mdns12TxtRecordRefD1Ev": 0,
+              "_ZN9node_mdns12TxtRecordRef10InitializeEN2v86HandleINS1_6ObjectEEE": 1,
+              "_ZN9node_mdns12TxtRecordRef3NewERKN2v89ArgumentsE": 15,
+              "_GLOBAL__I__ZN9node_mdns12TxtRecordRef20constructor_templateE": 1,
+              "_ZN9node_mdns6lengthEN2v86HandleINS0_5ValueEEE": 12,
+              "_ZN9node_mdns17TXTRecordSetValueERKN2v89ArgumentsE": 18
+            }
+          },
+          "js": {
+            "mdns.js": [
+              null,
+              1,
+              null,
+              null,
+              null,
+              null,
+              null,
+              1,
+              null,
+              1,
+              1,
+              null,
+              1,
+              1,
+              1,
+              1,
+              null,
+              1,
+              null,
+              1,
+              1,
+              1,
+              1,
+              null,
+              1,
+              null,
+              1
+            ],
+            "dns_sd.js": [
+              null,
+              1,
+              1,
+              null,
+              1,
+              1,
+              1,
+              1,
+              null,
+              null,
+              1,
+              null,
+              null,
+              null,
+              null,
+              null,
+              1,
+              1,
+              1,
+              null,
+              0,
+              null,
+              null,
+              1,
+              1,
+              null,
+              0,
+              0,
+              0,
+              null,
+              null,
+              0,
+              0,
+              0,
+              null,
+              0
+            ],
+            "advertisement.js": [
+              null,
+              1,
+              null,
+              null,
+              null,
+              1,
+              null,
+              null,
+              null,
+              1,
+              6,
+              6,
+              null,
+              6,
+              3,
+              1,
+              1,
+              null,
+              null,
+              6,
+              null,
+              6,
+              null,
+              6,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              6,
+              null,
+              null,
+              1,
+              null,
+              null,
+              6,
+              null,
+              null,
+              4,
+              4,
+              4,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              4,
+              0,
+              null,
+              null,
+              null,
+              6,
+              null,
+              null,
+              null,
+              1,
+              1,
+              null,
+              1,
+              6,
+              null,
+              null,
+              1,
+              1,
+              null,
+              null,
+              1,
+              1,
+              1,
+              4,
+              4,
+              1,
+              null,
+              3,
+              null,
+              4,
+              null,
+              1,
+              null,
+              null,
+              1,
+              4,
+              4,
+              22,
+              22,
+              0
+            ],
+            "mdns_service.js": [
+              null,
+              1,
+              null,
+              null,
+              null,
+              1,
+              null,
+              1,
+              14,
+              14,
+              null,
+              14,
+              14,
+              14,
+              14,
+              14,
+              12,
+              12,
+              null,
+              null,
+              null,
+              1,
+              1,
+              null,
+              1,
+              13,
+              0,
+              null,
+              13,
+              13,
+              13,
+              null,
+              null,
+              1,
+              12,
+              12,
+              12,
+              12,
+              12
+            ],
+            "io_watcher.js": [
+              null,
+              1,
+              0,
+              null,
+              0,
+              0,
+              null,
+              null,
+              1
+            ],
+            "service_type.js": [
+              null,
+              1,
+              38,
+              38,
+              38,
+              null,
+              38,
+              38,
+              37,
+              1,
+              1,
+              null,
+              38,
+              38,
+              21,
+              10,
+              11,
+              5,
+              6,
+              5,
+              null,
+              1,
+              null,
+              17,
+              17,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              1,
+              1,
+              3,
+              null,
+              null,
+              1,
+              39,
+              39,
+              11,
+              null,
+              39,
+              35,
+              12,
+              12,
+              null,
+              39,
+              null,
+              null,
+              1,
+              10,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              10,
+              1,
+              null,
+              10,
+              null,
+              10,
+              10,
+              9,
+              null,
+              14,
+              10,
+              null,
+              8,
+              2,
+              0,
+              null,
+              null,
+              null,
+              10,
+              10,
+              14,
+              null,
+              null,
+              1,
+              0,
+              null,
+              null,
+              1,
+              22,
+              null,
+              19,
+              null,
+              22,
+              19,
+              38,
+              null,
+              16,
+              16,
+              16,
+              null,
+              null,
+              1,
+              5,
+              1,
+              null,
+              4,
+              0,
+              null,
+              null,
+              4,
+              null,
+              null,
+              6,
+              null,
+              null,
+              4,
+              4,
+              9,
+              null,
+              3,
+              3,
+              3,
+              3,
+              0,
+              null,
+              null,
+              null,
+              1,
+              0,
+              null,
+              null,
+              null,
+              1,
+              44,
+              9,
+              null,
+              35,
+              null,
+              null,
+              1,
+              2,
+              11,
+              11,
+              1,
+              null,
+              10,
+              10,
+              null,
+              null,
+              null,
+              1,
+              11,
+              null,
+              null,
+              102,
+              78,
+              null,
+              1,
+              1,
+              51,
+              1,
+              null,
+              50,
+              2,
+              null,
+              48,
+              3,
+              null,
+              null,
+              null,
+              null,
+              1,
+              1,
+              13,
+              0,
+              null,
+              13,
+              0,
+              null,
+              13,
+              0,
+              null,
+              null,
+              null,
+              null,
+              1,
+              10,
+              0,
+              null,
+              null,
+              null,
+              null,
+              1,
+              23,
+              1
+            ],
+            "browser.js": [
+              null,
+              1,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              1,
+              3,
+              3,
+              null,
+              3,
+              3,
+              null,
+              null,
+              null,
+              null,
+              3,
+              null,
+              3,
+              null,
+              null,
+              3,
+              2,
+              0,
+              null,
+              2,
+              2,
+              null,
+              null,
+              3,
+              3,
+              0,
+              0,
+              null,
+              3,
+              null,
+              null,
+              null,
+              null,
+              null,
+              6,
+              null,
+              3,
+              2,
+              null,
+              null,
+              null,
+              1,
+              1,
+              null,
+              null,
+              0,
+              null,
+              null,
+              null,
+              3,
+              null,
+              null,
+              1,
+              null,
+              1,
+              5,
+              5,
+              1,
+              1,
+              null,
+              null,
+              5,
+              14,
+              0,
+              0,
+              null,
+              14,
+              5,
+              5,
+              null,
+              9,
+              null,
+              null,
+              5,
+              null,
+              null,
+              1,
+              3,
+              null,
+              null,
+              1,
+              null,
+              null,
+              null,
+              null,
+              null,
+              1,
+              1,
+              1,
+              1
+            ],
+            "resolver_sequence_tasks.js": [
+              null,
+              1,
+              null,
+              null,
+              null,
+              null,
+              1,
+              3,
+              3,
+              3,
+              null,
+              3,
+              4,
+              4,
+              null,
+              4,
+              null,
+              null,
+              4,
+              4,
+              4,
+              8,
+              8,
+              8,
+              null,
+              4,
+              1,
+              1,
+              1,
+              null,
+              null,
+              null,
+              4,
+              4,
+              null,
+              0,
+              0,
+              null,
+              null,
+              null,
+              4,
+              null,
+              null,
+              4,
+              null,
+              0,
+              0,
+              null,
+              null,
+              null,
+              null,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              null,
+              0,
+              0,
+              null,
+              null,
+              0,
+              0,
+              0,
+              null,
+              null,
+              null,
+              0,
+              null,
+              null,
+              0,
+              0,
+              0,
+              0,
+              0,
+              null,
+              0,
+              0,
+              null,
+              0,
+              0,
+              0,
+              0,
+              null,
+              null,
+              null,
+              0,
+              0,
+              null,
+              null,
+              null,
+              0,
+              null,
+              null,
+              0,
+              null,
+              0,
+              0,
+              null,
+              null,
+              null,
+              null,
+              1,
+              1,
+              1,
+              1,
+              6,
+              6,
+              0,
+              null,
+              6,
+              null,
+              6,
+              6,
+              0,
+              0,
+              null,
+              0,
+              null,
+              null,
+              null,
+              null,
+              0,
+              null,
+              null,
+              1,
+              2,
+              2,
+              2,
+              3,
+              null,
+              null,
+              null,
+              3,
+              6,
+              6,
+              0,
+              null,
+              6,
+              null,
+              6,
+              3,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              1,
+              2,
+              6,
+              6,
+              2,
+              null,
+              null,
+              1,
+              1,
+              2,
+              2,
+              null,
+              null,
+              null,
+              1,
+              0,
+              0,
+              0,
+              null,
+              null,
+              null,
+              1,
+              0,
+              0,
+              0,
+              null,
+              null,
+              null,
+              1,
+              null,
+              null,
+              null,
+              0,
+              null,
+              null,
+              0,
+              0,
+              null,
+              null,
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      }
+    },
+    "node_v0_7-macosx-waf": {
+      "dir": "/Users/david/.pulse2/data/projects/163840/00000182/6979618",
+      "recipe": "waf",
+      "status": "success",
+      "agent": "macosx",
+      "os": "macosx"
+    },
+    "node_v0_6-macosx-waf": {
+      "dir": "/Users/david/.pulse2/data/projects/163840/00000182/6979619",
+      "recipe": "waf",
+      "status": "success",
+      "agent": "macosx",
+      "os": "macosx"
+    },
+    "node_v0_4-macosx-waf": {
+      "dir": "/Users/david/.pulse2/data/projects/163840/00000182/6979620",
+      "recipe": "waf",
+      "status": "success",
+      "agent": "macosx",
+      "os": "macosx"
+    },
+    "node_head-linux-gyp": {
+      "dir": "/Users/david/.pulse2/data/projects/163840/00000182/6979621",
+      "recipe": "gyp",
+      "status": "success",
+      "agent": "ubuntu",
+      "os": "linux"
+    },
+    "node_v0_7-linux-waf": {
+      "dir": "/Users/david/.pulse2/data/projects/163840/00000182/6979622",
+      "recipe": "waf",
+      "status": "success",
+      "agent": "ubuntu",
+      "os": "linux"
+    },
+    "node_v0_6-linux-waf": {
+      "dir": "/Users/david/.pulse2/data/projects/163840/00000182/6979623",
+      "recipe": "waf",
+      "status": "success",
+      "agent": "ubuntu",
+      "os": "linux"
+    },
+    "node_v0_4-linux-waf": {
+      "dir": "/Users/david/.pulse2/data/projects/163840/00000182/6979624",
+      "recipe": "waf",
+      "status": "success",
+      "agent": "ubuntu",
+      "os": "linux"
+    },
+    "node_v0_6-freebsd-waf": {
+      "dir": "/Users/david/.pulse2/data/projects/163840/00000182/6979625",
+      "recipe": "waf",
+      "status": "success",
+      "agent": "freebsd",
+      "os": "freebsd"
+    },
+    "node_v0_4-freebsd-waf": {
+      "dir": "/Users/david/.pulse2/data/projects/163840/00000182/6979626",
+      "recipe": "waf",
+      "status": "success",
+      "agent": "freebsd",
+      "os": "freebsd"
+    },
+    "node_head-win32-gyp": {
+      "dir": "/Users/david/.pulse2/data/projects/163840/00000182/6979627",
+      "recipe": "gyp win",
+      "status": "success",
+      "agent": "win7",
+      "os": "win32"
+    }
+  },
+  "id": 182,
+  "revision": "d979f84891ccfe6cf101c10a37fc228efc08d045",
+  "status": "success",
+  "testSummary": "1,809 tests passed (27 skipped)",
+  "repository": "git://github.com/agnat/node_mdns.git",
+  "branch": "master",
+  "timestamp": 1329458636792
+}
