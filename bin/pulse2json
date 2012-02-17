@@ -28,6 +28,7 @@ var knownOptions =
       , 'node_v0_4-linux-waf': null
       , 'node_v0_6-freebsd-waf': null
       , 'node_v0_4-freebsd-waf': null
+      , 'node_head-win32-gyp': null
       }
     }
   , properties =
