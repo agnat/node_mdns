@@ -47,7 +47,7 @@ exports.render = function render(source, options, cb) {
     ;
   locals = obj.union(options.locals || {}, locals);
   metadata.body = ejs.render(source, locals);
-  metadata = obj.union(metadata, helpers(metadata, options));
+  metadata.path = exports.getPathHelper(options);
   var html = ejs.render(options.layout.toString(), metadata);
   cb(null, html);
 }

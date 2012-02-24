@@ -14,6 +14,10 @@ var fs = require('fs')
 var rootd = path.resolve(__dirname, '..')
   , env =
     { layout: rootd + '/doc/layout.ejs'
+    , apple_logo: rootd + '/doc/pages/images/apple_logo.svg'
+    , ubuntu_logo: rootd + '/doc/pages/images/ubuntu_logo.svg'
+    , freebsd_logo: rootd + '/doc/pages/images/freebsd_logo.svg'
+    , windows_logo: rootd + '/doc/pages/images/windows_logo.svg'
     }
 
 function done() {
@@ -39,8 +43,8 @@ console.log('rootd', rootd);
 
 chain( [ [ actors.loadEnv, env ]
        , [ configure ]
-       , [ git, ['clone', '-b', 'ci-build', 'git://github.com/agnat/node_mdns.git'
-               , rootd + '/out/ci-build'] ]
+       //, [ git, ['clone', '-b', 'ci-build', 'git://github.com/agnat/node_mdns.git'
+       //        , rootd + '/out/ci-build'] ]
        , [ actors.glob, rootd + '/out/ci-build/builds/*.json' ]
        , [ load_builds, chain.last ]
        , [ render_status_page, chain.last]
@@ -88,7 +92,7 @@ function render_status_page(builds, cb) {
   });
   for (var stage in latest.stages) {
     var s = latest.stages[stage];
-    latest_stages[os[s.os].idx][versions[s.key].idx] = s;
+    latest_stages[versions[s.key].idx][os[s.os].idx] = s;
   }
 
   console.log('versions:', versions, 'os:', os);
@@ -101,6 +105,12 @@ function render_status_page(builds, cb) {
             , latestStages: latest_stages
             , versions: versions
             , os: os
+            , logos:
+              { macosx: env.apple_logo
+              , linux: env.ubuntu_logo
+              , freebsd: env.freebsd_logo
+              , win32: env.windows_logo
+              }
             }
           }
         , cb
