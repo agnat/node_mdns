@@ -1,6 +1,7 @@
 #include "mdns.hpp"
 
 #include "dns_service_ref.hpp"
+#include "mdns_utils.hpp"
 
 using namespace v8;
 
@@ -45,6 +46,9 @@ ServiceRef::Initialize(Handle<Object> target) {
 Handle<Value>
 ServiceRef::New(const Arguments & args) {
     HandleScope scope;
+    if (argumentCountMismatch(args, 0)) {
+        return throwArgumentCountMismatchException(args, 0);
+    }
     ServiceRef * o = new ServiceRef();
     o->Wrap(args.Holder());
     return args.This();
