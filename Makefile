@@ -1,7 +1,7 @@
 BUILDTYPE ?= Release
 
-GCOV_OUT = out/reports/coverage/cpp
-NCOV_OUT = out/reports/coverage
+GCOV_OUT = build/reports/coverage/cpp
+NCOV_OUT = build/reports/coverage
 
 TEST_OPTIONS=
 
@@ -12,7 +12,7 @@ endif
 all: bindings
 
 bindings:
-	$(MAKE) -C out BUILDTYPE=$(BUILDTYPE)
+	$(MAKE) -C build BUILDTYPE=$(BUILDTYPE)
 
 test: bindings
 	node --expose_gc utils/testrun $(TEST_OPTIONS)
@@ -21,17 +21,17 @@ coverage:
 	$(MAKE) coverage_run BUILDTYPE=Coverage
 
 coverage_build:
-	$(MAKE) -C out BUILDTYPE=Coverage
+	$(MAKE) -C build BUILDTYPE=Coverage
 
 jscoverage:
-	jscoverage -v --no-highlight lib/ out/Coverage/lib
+	jscoverage -v --no-highlight lib/ build/Coverage/lib
 
 coverage_run: coverage_build jscoverage
-	lcov -d out/$(BUILDTYPE)/obj.target/dns_sd_bindings/src --zerocounters
+	lcov -d build/$(BUILDTYPE)/obj.target/dns_sd_bindings/src --zerocounters
 	mkdir -p $(GCOV_OUT)/html; 
 	NCOV_OUT=$(NCOV_OUT) node --expose_gc utils/testrun $(TEST_OPTIONS)
-	lcov --base-directory out \
-		 --directory      out/$(BUILDTYPE)/obj.target/dns_sd_bindings/src \
+	lcov --base-directory build \
+		 --directory      build/$(BUILDTYPE)/obj.target/dns_sd_bindings/src \
 		 --output-file    $(GCOV_OUT)/testrun_all.info \
 		 --capture
 	utils/ncov

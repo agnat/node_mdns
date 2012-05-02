@@ -1,6 +1,6 @@
 import os, shutil, subprocess, Scripting, Options
 
-out  = 'out'
+out  = 'build'
 name = 'dns_sd_bindings'
 
 def set_options(opt):

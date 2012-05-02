@@ -4,9 +4,8 @@
 , "main": "./lib/mdns.js"
 , "scripts":
   { "test": "utils/testrun"
-  , "preinstall": "node-waf configure build"
   }
-, "keywords": ["mdns", "zeroconf", "bonjour", "dns_sd", "mDNSResponder"]
+, "keywords": ["zeroconf", "bonjour", "dns_sd", "mDNSResponder"]
 , "devDependencies": 
   { "ejs":       "*"
   , "less":      "*"

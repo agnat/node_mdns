@@ -5,7 +5,7 @@ var path = require('path')
 
 exports.require = function _require(what) {
   if (process.env.npm_config_coverage || process.env.BUILDTYPE === 'Coverage') {
-    return require(path.join('../../out/Coverage/lib/' + what))
+    return require(path.join('../../build/Coverage/lib/' + what))
   }
   return require('../../lib/' + what)
 }

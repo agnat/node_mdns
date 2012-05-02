@@ -24,7 +24,7 @@ filter = function(f) { return filefilter.match(f) };
 
 var chain = slide.chain
   , meta = {}
-  , outd = path.join(rootd, 'out')
+  , outd = path.join(rootd, 'build')
   , pagedir = path.join(outd, 'pages')
   , docd = path.join(rootd, 'doc')
   , lcov_info_file = path.join(outd, 'reports', 'coverage', 'cpp', 'testrun_all.info')
@@ -49,7 +49,7 @@ chain( [ [ load_prerequisites, meta, prerequisites]
 function save_json(report, file, cb) {
   fs.writeFile(file, JSON.stringify(report, null, 2), function(err) {
     console.log('================================================================================');
-    console.log('testrun c++ coverage report saved to', file.replace(/.*\/(out\/.*)/, "$1"));
+    console.log('testrun c++ coverage report saved to', file.replace(/.*\/(build\/.*)/, "$1"));
     console.log('================================================================================');
     cb(err, report);
   });

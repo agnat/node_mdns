@@ -11,9 +11,6 @@ exports['DNSServiceRef'] = function(t) {
   
   var sr = new dns_sd.DNSServiceRef();
 
-  // coverage: uninitialized serviceRef to cover more destructor branches
-  var uninitialized_ref = new dns_sd.DNSServiceRef();
-
   t.ok(sr,
       'DNSServiceRef must be truthy');
   t.strictEqual(sr.fd, -1,
@@ -782,7 +779,7 @@ exports['TXTRecordRef'] = function(t) {
       dns_sd.TXTRecordSetValue(new dns_sd.TXTRecordRef(), {not_a_string: true}, null)
   }, 'TXTRecordSetValue() must throw when called with non TXTRecordRef object');
 
-  // XXX ahahi doesn't like these. replace with real tests when txt records are
+  // XXX avahi doesn't like these. replace with real tests when txt records are
   //     implemented in javascript
   try {
     dns_sd.TXTRecordSetValue(new dns_sd.TXTRecordRef(), 'foo', null);

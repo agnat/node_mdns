@@ -35,6 +35,7 @@ var prepare = [ [ mkdirp, outd ]
               ]
   , tasks   = [ [ ejs2textile, docd + '/README.ejs', rootd + '/README.textile']
               , [ render_pages, docd + '/pages/*.ejs']
+              , [ render_build_status_pages ]
               , [ render_stylesheets, docd + '/pages/stylesheets/*.less']
               , [ ncp, docd + '/pages/images', outd + '/images']
               , [ ncp, docd + '/pages/scripts', outd + '/scripts']
@@ -80,6 +81,10 @@ function render_page(source, options, cb) {
   }
   var locals = obj.union({package: package}, view.helpers(metadata, options));
   piped_comand('redcloth', ejs.render(source, locals), layout_page);
+}
+
+function render_build_status_pages(cb) {
+  cb()
 }
 
 function piped_comand(comand, input, args, cb) {
