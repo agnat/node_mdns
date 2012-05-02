@@ -1,5 +1,10 @@
 CHANGES
 
+Version 0.0.5 to 0.0.6
+
+   - use node-gyp in gyp based builds
+   - prepared a windows port
+
 Version 0.0.4 to 0.0.5
 
    - Publish and receive TXT records
