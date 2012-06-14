@@ -28,9 +28,20 @@ OnServiceChanged(DNSServiceRef sdRef, DNSServiceFlags flags,
     args[1] = Integer::New(flags);
     args[2] = Integer::New(interfaceIndex);
     args[3] = Integer::New(errorCode);
-    args[4] = String::New(serviceName);
-    args[5] = String::New(serviceType);
-    args[6] = String::New(replyDomain);
+		if(serviceName)
+    	args[4] = String::New(serviceName);
+    else
+    	args[4] = Local<Value>::New(Undefined());
+  	if(serviceType)
+   		args[5] = String::New(serviceType);
+		else
+    	args[5] = Local<Value>::New(Undefined());
+  	if(replyDomain)
+			args[6] = String::New(replyDomain);
+   	else
+    	args[6] = Local<Value>::New(Undefined());
+
+
     if (serviceRef->GetContext().IsEmpty()) {
         args[7] = Local<Value>::New(Undefined());
     } else {
