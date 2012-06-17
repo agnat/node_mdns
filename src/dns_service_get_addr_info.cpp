@@ -38,7 +38,7 @@ OnAddressInfo(DNSServiceRef sdRef, DNSServiceFlags flags,
     args[1] = Integer::New(flags);
     args[2] = Integer::New(interfaceIndex);
     args[3] = Integer::New(errorCode);
-    args[4] = String::New(hostname);
+    args[4] = stringOrUndefined(hostname);
     args[5] = String::Empty();
     char ip[INET6_ADDRSTRLEN];
     struct sockaddr_in *a4;

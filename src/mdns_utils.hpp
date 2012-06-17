@@ -51,6 +51,12 @@ throwArgumentCountMismatchException(v8::Arguments const& args, size_t expectedCo
     return throwError(msg.str().c_str());
 }
 
+inline
+v8::Local<v8::Value>
+stringOrUndefined(const char * str) {
+    return v8::Local<v8::Value>::New(str ? v8::String::New(str) : v8::Undefined());
+}
+
 } // end of namespace node_mdns
 
 #endif // NODE_MDNS_UTILS_INCLUDED

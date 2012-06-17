@@ -24,7 +24,7 @@ OnEnumeration(DNSServiceRef sdRef, DNSServiceFlags flags, uint32_t interfaceInde
     args[1] = Integer::New(flags);
     args[2] = Integer::New(interfaceIndex);
     args[3] = Integer::New(errorCode);
-    args[4] = String::New(replyDomain);
+    args[4] = stringOrUndefined(replyDomain);
     args[5] = Local<Value>::New(serviceRef->GetContext());
     callback->Call(this_, argc, args);
 }

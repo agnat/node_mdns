@@ -37,8 +37,8 @@ OnResolve(DNSServiceRef sdRef, DNSServiceFlags flags,
     args[1] = Integer::New(flags);
     args[2] = Integer::New(interfaceIndex);
     args[3] = Integer::New(errorCode);
-    args[4] = String::New(fullname);
-    args[5] = String::New(hosttarget);
+    args[4] = stringOrUndefined(fullname);
+    args[5] = stringOrUndefined(hosttarget);
     args[6] = Integer::New( ntohs(port) );
     Buffer * buffer = Buffer::New(txtLen);
     memcpy(Buffer::Data(buffer->handle_), txtRecord, txtLen);
