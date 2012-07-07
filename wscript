@@ -89,7 +89,7 @@ def distclean(ctx):
   remove_symlink(os.path.join('lib', name + '.node'))
   remove_symlink(os.path.join('utils/lib', 'demangle.node'))
 
-  if os.path.exists('node_modules'):
+  if os.fs.exists('node_modules'):
       shutil.rmtree('node_modules')
 
 def test(ctx):
