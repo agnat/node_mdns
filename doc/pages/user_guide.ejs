@@ -134,7 +134,7 @@ Resolver sequence tasks (RSTs) are created by calling factory functions:
 
 bc. var sequence = [
     mdns.rst.DNSServiceResolve()
-  , mdns.rst.DNSGetAddrInfo({families: [4] })
+  , mdns.rst.DNSServiceGetAddrInfo({families: [4] })
 ];
 
 A browser with a custom sequence is created like this:
@@ -246,11 +246,11 @@ Stop the browser.
 
 h4. mdns.Browser.defaultResolverSequence
 
-This is the resolver sequence used by all browser objects that do not override it. It contains two steps. On platforms that have @DNSGetAddrInfo(...)@ it has the following items:
+This is the resolver sequence used by all browser objects that do not override it. It contains two steps. On platforms that have @DNSServiceGetAddrInfo(...)@ it has the following items:
 
 bc. var default_sequence = [
     mdns.rst.DNSServiceResolve()
-  , mdns.rst.DNSGetAddrInfo()
+  , mdns.rst.DNSServiceGetAddrInfo()
   , mdns.rst.makeAddressesUnique()
 ];
 
@@ -264,9 +264,9 @@ Resolve host name and port. Probably all but the empty sequence start with this 
 
 - flags := flags passed to @DNSServiceResolve(...)@
 
-h4. mdns.rst.DNSGetAddrInfo(options)
+h4. mdns.rst.DNSServiceGetAddrInfo(options)
 
-Resolve IP addresses using @DNSGetAddrInfo(...)@
+Resolve IP addresses using @DNSServiceGetAddrInfo(...)@
 
 h4. mdns.rst.getaddrinfo(options)
 
