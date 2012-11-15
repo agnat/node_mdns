@@ -21,7 +21,7 @@ var path   = require('path')
 
 var rootd = path.resolve(path.dirname(process.argv[1]), '..')
   , docd  = rootd + '/doc'
-  , outd  = rootd + '/out/pages'
+  , outd  = rootd + '/build/pages'
   , package = JSON.parse(fs.readFileSync(rootd + '/package.json'))
   , layout = fs.readFileSync(docd + '/layout.ejs').toString()
   ;
