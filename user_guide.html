@@ -3,22 +3,26 @@
   <head>
     <title>mdns &#8212; User Guide</title>
     
+    
+    
     <link rel="stylesheet" href="stylesheets/mdns.css" type="text/css"/>
     
   </head>
   <body>
-    <div id="page">
+    <div id='page'>
+      <a href="https://github.com/you"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_orange_ff7600.png" alt="Fork me on GitHub"></a>
       <header>
         <nav>
           <ul>
-            <li><a href="./index.html">Home</a></li>
-            <li><a href="./user_guide.html">User Guide</a></li>
-            <li><a href="http://github.com/agnat/node_mdns">GitHub</a></li>
+            <li><a href='index.html'>Home</a></li>
+            <li><a href='user_guide.html'>User Guide</a></li>
+            <li><a href='http://github.com/agnat/node_mdns'>GitHub</a></li>
           </ul>
         </nav>
       </header>
-      <div id="content">
-        <h1>mdns User Guide</h1>
+      <div id='content'>
+<div class='guide'>
+<h1>mdns User Guide</h1>
 <ul id="toc">
 	<li><a href="#introduction">Introduction</a></li>
 	<li><a href="#tutorial">Tutorial</a>
@@ -117,7 +121,7 @@ var ad = mdns.createAdvertisement(mdns.tcp('http'), 4321, {txtRecord: txt_record
 <p>Resolver sequence tasks (RSTs) are created by calling factory functions:</p>
 <pre><code>var sequence = [
     mdns.rst.DNSServiceResolve()
-  , mdns.rst.DNSGetAddrInfo({families: [4] })
+  , mdns.rst.DNSServiceGetAddrInfo({families: [4] })
 ];</code></pre>
 <p>A browser with a custom sequence is created like this:</p>
 <pre><code>var browser = mdns.createBrowser(mdns.tcp('http'), {resolverSequence: sequence});</code></pre>
@@ -204,10 +208,10 @@ var ad = mdns.createAdvertisement(mdns.tcp('http'), 4321, {txtRecord: txt_record
 <h4>browser.stop()</h4>
 <p>Stop the browser.</p>
 <h4>mdns.Browser.defaultResolverSequence</h4>
-<p>This is the resolver sequence used by all browser objects that do not override it. It contains two steps. On platforms that have <code>DNSGetAddrInfo(...)</code> it has the following items:</p>
+<p>This is the resolver sequence used by all browser objects that do not override it. It contains two steps. On platforms that have <code>DNSServiceGetAddrInfo(...)</code> it has the following items:</p>
 <pre><code>var default_sequence = [
     mdns.rst.DNSServiceResolve()
-  , mdns.rst.DNSGetAddrInfo()
+  , mdns.rst.DNSServiceGetAddrInfo()
   , mdns.rst.makeAddressesUnique()
 ];</code></pre>
 <p>On platforms that don&#8217;t, <code>mdns.rst.getaddrinfo(...)</code> is used instead. You could modify the default sequence but you shouldn&#8217;t.</p>
@@ -218,8 +222,8 @@ var ad = mdns.createAdvertisement(mdns.tcp('http'), 4321, {txtRecord: txt_record
 	<dt>flags</dt>
 	<dd>flags passed to <code>DNSServiceResolve(...)</code></dd>
 </dl>
-<h4>mdns.rst.DNSGetAddrInfo(options)</h4>
-<p>Resolve IP addresses using <code>DNSGetAddrInfo(...)</code></p>
+<h4>mdns.rst.DNSServiceGetAddrInfo(options)</h4>
+<p>Resolve IP addresses using <code>DNSServiceGetAddrInfo(...)</code></p>
 <h4>mdns.rst.getaddrinfo(options)</h4>
 <p>Resolve IP addresses using nodes <code>cares.getaddrinfo(...)</code>&#8230; but it&#8217;s a mess.</p>
 <h4>mdns.rst.makeAddressesUnique()</h4>
@@ -284,14 +288,12 @@ var ad = mdns.createAdvertisement(mdns.tcp('http'), 4321, {txtRecord: txt_record
 	<li><a href="http://developer.apple.com/library/mac/#documentation/Networking/Conceptual/dns_discovery_api/Introduction.html"><span class="caps">DNS</span> Service Discovery Programming Guide</a></li>
 	<li><a href="http://files.dns-sd.org/draft-cheshire-dnsext-dns-sd.txt">Internet Draft: <span class="caps">DNS</span>-Based Service Discovery</a></li>
 </ul>
+</div>
 <p><!-- vim: set linebreak filetype=textile spell spelllang=en_us : --></p>
 
       </div>
       <footer>
       </footer>
     </div>
-    <!-- GitHub Ribbon ... srsly? -->
-    <a href="http://github.com/agnat/node_mdns"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/edc6dae7a1079163caf7f17c60495bbb6d027c93/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub"></a>
   </body>
 </html>
-
