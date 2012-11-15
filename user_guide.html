@@ -63,7 +63,7 @@ browser.on('serviceDown', function(service) {
 });</code>
 
 <code>browser.start();</code></pre>
-<p>As you can see the browser object is an <code>EventEmitter</code>. For each <span class="caps">HTTP</span> server a <code>'serviceUp'</code> event is emitted. Likewise, if a server disappears <code>'serviceDown'</code> is send. The <code>service</code> object of a <code>'serviceUp'</code> event might look like this:</p>
+<p>As you can see the browser object is an <code>EventEmitter</code>. For each <span class="caps">HTTP</span> server a <code>'serviceUp'</code> event is emitted. Likewise, if a server disappears <code>'serviceDown'</code> is sent. The <code>service</code> object of a <code>'serviceUp'</code> event might look like this:</p>
 <pre><code>{ interfaceIndex: 4
 , name: 'somehost'
 , type: {name: 'http', protocol: 'tcp', subtypes: []}
