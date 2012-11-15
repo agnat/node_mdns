@@ -53,7 +53,7 @@ browser.on('serviceDown', function(service) {
 
 browser.start();
 
-p. As you can see the browser object is an @EventEmitter@. For each HTTP server a @'serviceUp'@ event is emitted. Likewise, if a server disappears @'serviceDown'@ is send. The @service@ object of a @'serviceUp'@ event might look like this:
+p. As you can see the browser object is an @EventEmitter@. For each HTTP server a @'serviceUp'@ event is emitted. Likewise, if a server disappears @'serviceDown'@ is sent. The @service@ object of a @'serviceUp'@ event might look like this:
 
 bc. { interfaceIndex: 4
 , name: 'somehost'
