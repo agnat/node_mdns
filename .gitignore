@@ -1,10 +1,9 @@
 out
+build
 dns_sd.node
 demangle.node
 .lock-wscript
 node_modules
-Release
-Debug
 *.sln
 *.vcxproj*
 .pulse2.properties
