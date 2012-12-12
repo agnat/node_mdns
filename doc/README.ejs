@@ -3,7 +3,7 @@ h1. mdns -- node.js Service Discovery
 |_. Package:       | <%- package.name %> |
 |_. Description:   | <%- package.description %> |
 |_. Version:       | <%- package.version %> |
-|_. Installation:  | @npm install <%- package.name %>@ |
+|_. Installation:  | @npm install <%- package.name %>@ (see below) |
 |_. Documentation: | "mdns user guide":<%- package.homepage + '/user_guide.html'%> |
 |_. License:       | "<%- package.licenses[0].type %>":http://github.com/agnat/node_mdns/blob/master/LICENSE |
 
@@ -33,11 +33,13 @@ var all_the_types = mdns.browseThemAll(); // all_the_types is just another brows
 
 h2. Installation
 
+On Linux and other systems using the avahi daemon the avahi dns_sd compat library and its header files are required.  On debianesque systems the package name is @libavahi-compat-libdnssd-dev@.  On other platforms Apples "mDNSResponder":http://opensource.apple.com/tarballs/mDNSResponder/ is recommended. Care should be taken not to install more than one mDNS stack on a system. 
+
+On Windows Apples "Bonjour SDK for Windows" is required. You can download it either from Apple (registration required) or various unofficial sources. Take your pick. You're also going to need a compiler. Microsoft Visual Studio Express will do.
+
 mdns is available as a npm package:
 
 bc. npm install mdns
-
-On Linux and other systems using the avahi daemon the avahi dns_sd compat library and its header files are required.  On debianesque systems the package name is @libavahi-compat-libdnssd-dev@.  On other platforms Apples "mDNSResponder":http://opensource.apple.com/tarballs/mDNSResponder/ is recommended. Care should be taken not to install more than one mDNS stack on a system. 
 
 If you want to play with the latest source code, here is a more manual approach:
 
