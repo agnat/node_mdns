@@ -3,7 +3,7 @@
 , "description": "multicast DNS service discovery"
 , "main": "./lib/mdns.js"
 , "scripts":
-  { "test": "utils/testrun"
+  { "test": "node utils/testrun"
   }
 , "keywords": ["zeroconf", "bonjour", "dns_sd", "mDNSResponder"]
 , "devDependencies": 
