@@ -57,6 +57,7 @@ h2. Contributors
 * Ryan Dahl ("@ry":http://github.com/ry)
 * Dominic Tarr ("@dominictarr":http://github.com/dominictarr)
 * Emil Stenqvist ("@emilisto":http://github.com/emilisto)
+* Toby Ealden ("@TobyEalden":http://github.com/TobyEalden)
 
 Your name is missing on the list? Shame on me. Please open an issue.
 
