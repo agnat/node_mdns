@@ -17,23 +17,25 @@
                  , 'src/txt_record_set_value.cpp'
                  , 'src/txt_record_get_length.cpp'
                  , 'src/txt_record_buffer_to_object.cpp'
+				 , 'src/socket_watcher.cpp'
                  ]
     , 'conditions': [
         [ 'OS!="mac" and OS!="win"', {
           'libraries': [ '-ldns_sd' ]
         }]
       , ['OS=="win"', {
-          'sources'     : [ 'src/winsock_watcher.cpp' ]
-        , 'include_dirs': [ '$(BONJOUR_SDK_HOME)Include' ]
-        , 'libraries'   : [ '-l$(BONJOUR_SDK_HOME)Lib/$(Platform)/dnssd.lib'
+          'include_dirs': [ '$(BONJOUR_SDK_HOME)Include' ]
+		  , 'defines': [ 'HAVE_DNSSERVICEGETADDRINFO' ]
+		  , 'libraries'   : [ '-l$(BONJOUR_SDK_HOME)Lib/$(Platform)/dnssd.lib'
                           , '-lws2_32.lib'
                           ]
         }]
       ]
-    , 'msbuild_settings': {
-        'ClCompile': { 'ExceptionHandling': 'Sync' }
-      , 'Link'     : { 'IgnoreSpecificDefaultLibraries': [ 'LIBCMT' ] }
-      }
+	# The following breaks the debug build, so just ignore the warning for now.
+    #, 'msbuild_settings': {
+    #    'ClCompile': { 'ExceptionHandling': 'Sync' }
+    #  , 'Link'     : { 'IgnoreSpecificDefaultLibraries': [ 'LIBCMT' ] }
+    #  }
     , 'configurations': {
         'Release': {
             'xcode_settings': { 'GCC_OPTIMIZATION_LEVEL': 3 }
@@ -42,7 +44,7 @@
         }
       , 'Debug': {
             'xcode_settings': { 'GCC_OPTIMIZATION_LEVEL': 0 }
-          , 'cflags': [ '-g', '-O0' ]
+          , 'cflags': [ '-g', '-O0', ]
           , 'ldflags': [ '-g', '-O0' ]
         }
       , 'Coverage': {

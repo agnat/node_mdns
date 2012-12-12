@@ -4,10 +4,7 @@
 #include "mdns_utils.hpp"
 #include "dns_service_ref.hpp"
 #include "txt_record_ref.hpp"
-
-#ifdef NODE_MDNS_WINSOCK_WATCHER
-# include "winsock_watcher.hpp"
-#endif
+# include "socket_watcher.hpp"
 
 using namespace v8;
 using namespace node;
@@ -46,9 +43,7 @@ init(Handle<Object> target) {
 
     ServiceRef::Initialize( target );
     TxtRecordRef::Initialize( target );
-#ifdef NODE_MDNS_WINSOCK_WATCHER
-    WinsockWatcher::Initialize( target );
-#endif
+    SocketWatcher::Initialize( target );
 
     defineFunction(target, "DNSServiceRegister", DNSServiceRegister);
     defineFunction(target, "DNSServiceRefSockFD", DNSServiceRefSockFD);
@@ -291,13 +286,4 @@ exportConstants(Arguments const& args) {
 
 } // end of namespace node_mdns
 
-// node pre 0.6 doesn't have NODE_EXTERN
-# ifndef NODE_EXTERN
-#  define NODE_EXTERN
-# endif
-
-extern "C"
-void
-NODE_EXTERN
-init(Handle<Object> target) { node_mdns::init(target); }
-
+NODE_MODULE(dns_sd_bindings,node_mdns::init);
