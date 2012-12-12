@@ -41,10 +41,6 @@ namespace node_mdns {
 
     Persistent<String> callback_symbol;
 
-    Handle<Value> Calleback(const Arguments& args) {
-        return Undefined();
-    };
-
     SocketWatcher::SocketWatcher() : poll_(NULL), fd_(0), events_(0) {
     }
 
