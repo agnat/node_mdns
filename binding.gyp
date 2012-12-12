@@ -21,14 +21,17 @@
                  ]
     , 'conditions': [
         [ 'OS!="mac" and OS!="win"', {
-          'libraries': [ '-ldns_sd' ]
+            'libraries': [ '-ldns_sd' ]
+        }]
+      , [ 'OS=="mac"', {
+            'defines': [ 'HAVE_DNSSERVICEGETADDRINFO' ]
         }]
       , ['OS=="win"', {
-          'include_dirs': [ '$(BONJOUR_SDK_HOME)Include' ]
+            'include_dirs': [ '$(BONJOUR_SDK_HOME)Include' ]
           , 'defines': [ 'HAVE_DNSSERVICEGETADDRINFO' ]
-          , 'libraries'   : [ '-l$(BONJOUR_SDK_HOME)Lib/$(Platform)/dnssd.lib'
-                          , '-lws2_32.lib'
-                          ]
+          , 'libraries': [ '-l$(BONJOUR_SDK_HOME)Lib/$(Platform)/dnssd.lib'
+                         , '-lws2_32.lib'
+                         ]
         }]
       ]
     # The following breaks the debug build, so just ignore the warning for now.
