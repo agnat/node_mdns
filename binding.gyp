@@ -17,7 +17,7 @@
                  , 'src/txt_record_set_value.cpp'
                  , 'src/txt_record_get_length.cpp'
                  , 'src/txt_record_buffer_to_object.cpp'
-				 , 'src/socket_watcher.cpp'
+                 , 'src/socket_watcher.cpp'
                  ]
     , 'conditions': [
         [ 'OS!="mac" and OS!="win"', {
@@ -25,13 +25,13 @@
         }]
       , ['OS=="win"', {
           'include_dirs': [ '$(BONJOUR_SDK_HOME)Include' ]
-		  , 'defines': [ 'HAVE_DNSSERVICEGETADDRINFO' ]
-		  , 'libraries'   : [ '-l$(BONJOUR_SDK_HOME)Lib/$(Platform)/dnssd.lib'
+          , 'defines': [ 'HAVE_DNSSERVICEGETADDRINFO' ]
+          , 'libraries'   : [ '-l$(BONJOUR_SDK_HOME)Lib/$(Platform)/dnssd.lib'
                           , '-lws2_32.lib'
                           ]
         }]
       ]
-	# The following breaks the debug build, so just ignore the warning for now.
+    # The following breaks the debug build, so just ignore the warning for now.
     #, 'msbuild_settings': {
     #    'ClCompile': { 'ExceptionHandling': 'Sync' }
     #  , 'Link'     : { 'IgnoreSpecificDefaultLibraries': [ 'LIBCMT' ] }
