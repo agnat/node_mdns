@@ -4,7 +4,9 @@
 #include "mdns_utils.hpp"
 #include "dns_service_ref.hpp"
 #include "txt_record_ref.hpp"
+#ifdef NODE_MDNS_USE_SOCKET_WATCHER
 # include "socket_watcher.hpp"
+#endif
 
 using namespace v8;
 using namespace node;
@@ -43,7 +45,9 @@ init(Handle<Object> target) {
 
     ServiceRef::Initialize( target );
     TxtRecordRef::Initialize( target );
+#ifdef NODE_MDNS_USE_SOCKET_WATCHER
     SocketWatcher::Initialize( target );
+#endif
 
     defineFunction(target, "DNSServiceRegister", DNSServiceRegister);
     defineFunction(target, "DNSServiceRefSockFD", DNSServiceRefSockFD);

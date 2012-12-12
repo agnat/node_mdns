@@ -1,7 +1,11 @@
 #include "mdns.hpp"
 
+// poor mans conditional compilation. is there a better way to do this with gyp?
+#ifdef NODE_MDNS_USE_SOCKET_WATCHER
+
 #include "socket_watcher.hpp"
 
+#include <string.h> // needed for memset() with node v0.7.9 on Mac OS
 #include <node.h>
 #include <node_version.h>
 
@@ -11,27 +15,28 @@ using namespace v8;
 // Nothing
 #else
 namespace node {
-    Handle<Value>
-        MakeCallback(const Handle<Object> object,
-        const Handle<Function> callback,
-        int argc,
-        Handle<Value> argv[]) {
-            HandleScope scope;
 
-            // TODO Hook for long stack traces to be made here.
+Handle<Value>
+MakeCallback(const Handle<Object> object, const Handle<Function> callback,
+        int argc, Handle<Value> argv[])
+{
+    HandleScope scope;
 
-            TryCatch try_catch;
+    // TODO Hook for long stack traces to be made here.
 
-            Local<Value> ret = callback->Call(object, argc, argv);
+    TryCatch try_catch;
 
-            if (try_catch.HasCaught()) {
-                FatalException(try_catch);
-                return Undefined();
-            }
+    Local<Value> ret = callback->Call(object, argc, argv);
 
-            return scope.Close(ret);
+    if (try_catch.HasCaught()) {
+        FatalException(try_catch);
+        return Undefined();
     }
-}  // namespace node
+
+    return scope.Close(ret);
+}
+
+}  // end of namespace node
 #endif
 
 namespace node_mdns {
@@ -158,3 +163,5 @@ namespace node_mdns {
     }
 
 } // end of namespace node_mdns
+
+#endif // NODE_MDNS_USE_SOCKET_WATCHER
