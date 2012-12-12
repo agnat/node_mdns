@@ -63,8 +63,8 @@ namespace node_mdns {
 
     Handle<Value> SocketWatcher::Start(const Arguments& args) {
         HandleScope scope;
-        SocketWatcher *io = ObjectWrap::Unwrap<SocketWatcher>(args.Holder());
-        io->Start();
+        SocketWatcher *watcher = ObjectWrap::Unwrap<SocketWatcher>(args.Holder());
+        watcher->Start();
         return Undefined();
     }
 
@@ -106,8 +106,8 @@ namespace node_mdns {
 
     Handle<Value> SocketWatcher::Stop(const Arguments& args) {
         HandleScope scope;
-        SocketWatcher *io = ObjectWrap::Unwrap<SocketWatcher>(args.Holder());
-        io->Stop();
+        SocketWatcher *watcher = ObjectWrap::Unwrap<SocketWatcher>(args.Holder());
+        watcher->Stop();
         return Undefined();
     }
 
@@ -128,7 +128,7 @@ namespace node_mdns {
 
     Handle<Value> SocketWatcher::Set(const Arguments& args) {
         HandleScope scope;
-        SocketWatcher *io = ObjectWrap::Unwrap<SocketWatcher>(args.Holder());
+        SocketWatcher *watcher = ObjectWrap::Unwrap<SocketWatcher>(args.Holder());
         if (!args[0]->IsInt32()) {
             return ThrowException(Exception::TypeError(
                 String::New("First arg should be a file descriptor.")));
@@ -149,10 +149,10 @@ namespace node_mdns {
 
         if (args[2]->IsTrue()) events |= UV_WRITABLE;
 
-        assert(io->poll_ == NULL);
+        assert(watcher->poll_ == NULL);
 
-        io->fd_ = fd;
-        io->events_ = events;
+        watcher->fd_ = fd;
+        watcher->events_ = events;
 
         return Undefined();
     }
