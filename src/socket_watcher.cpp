@@ -44,7 +44,8 @@ namespace node_mdns {
     SocketWatcher::SocketWatcher() : poll_(NULL), fd_(0), events_(0) {
     }
 
-    void SocketWatcher::Initialize(Handle<Object> target) {
+    void
+    SocketWatcher::Initialize(Handle<Object> target) {
         Local<FunctionTemplate> t = FunctionTemplate::New(New);
 
         Local<String> symbol = String::NewSymbol("SocketWatcher");
@@ -60,14 +61,16 @@ namespace node_mdns {
         callback_symbol = NODE_PSYMBOL("callback");
     }
 
-    Handle<Value> SocketWatcher::Start(const Arguments& args) {
+    Handle<Value>
+    SocketWatcher::Start(const Arguments& args) {
         HandleScope scope;
         SocketWatcher *watcher = ObjectWrap::Unwrap<SocketWatcher>(args.Holder());
         watcher->Start();
         return Undefined();
     }
 
-    void SocketWatcher::Start() {
+    void
+    SocketWatcher::Start() {
         if (poll_ == NULL) {
             poll_ = new uv_poll_t;
             memset(poll_,0,sizeof(uv_poll_t));
@@ -82,7 +85,8 @@ namespace node_mdns {
         }
     }
 
-    void SocketWatcher::Callback(uv_poll_t *w, int status, int revents) {
+    void
+    SocketWatcher::Callback(uv_poll_t *w, int status, int revents) {
         HandleScope scope;
 
         SocketWatcher *watcher = static_cast<SocketWatcher*>(w->data);
@@ -103,14 +107,16 @@ namespace node_mdns {
         node::MakeCallback(watcher->handle_, callback, 2, argv);
     }
 
-    Handle<Value> SocketWatcher::Stop(const Arguments& args) {
+    Handle<Value>
+    SocketWatcher::Stop(const Arguments& args) {
         HandleScope scope;
         SocketWatcher *watcher = ObjectWrap::Unwrap<SocketWatcher>(args.Holder());
         watcher->Stop();
         return Undefined();
     }
 
-    void SocketWatcher::Stop() {
+    void
+    SocketWatcher::Stop() {
         if (poll_ != NULL) {
             uv_poll_stop(poll_);
             Unref();
@@ -118,14 +124,15 @@ namespace node_mdns {
     }
 
     v8::Handle<v8::Value>
-        SocketWatcher::New(const v8::Arguments & args) {
-            HandleScope scope;
-            SocketWatcher *s = new SocketWatcher();
-            s->Wrap(args.This());
-            return args.This();
+    SocketWatcher::New(const v8::Arguments & args) {
+        HandleScope scope;
+        SocketWatcher *s = new SocketWatcher();
+        s->Wrap(args.This());
+        return args.This();
     }
 
-    Handle<Value> SocketWatcher::Set(const Arguments& args) {
+    Handle<Value>
+    SocketWatcher::Set(const Arguments& args) {
         HandleScope scope;
         SocketWatcher *watcher = ObjectWrap::Unwrap<SocketWatcher>(args.Holder());
         if (!args[0]->IsInt32()) {
