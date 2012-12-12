@@ -11,9 +11,7 @@
 
 using namespace v8;
 
-#if NODE_VERSION_AT_LEAST(0, 7, 8)
-// Nothing
-#else
+#if ! NODE_VERSION_AT_LEAST(0, 7, 8)
 namespace node {
 
 Handle<Value>
