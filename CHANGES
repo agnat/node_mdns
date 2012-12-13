@@ -1,8 +1,15 @@
 CHANGES
 
+Version 0.0.7 to 1.0.0
+
+   - replaced IOWatcher with a libuv based SocketWatcher (Tony Ealden)
+   - fixed an API typo: filterAdresses -> filterAddresses (major version bumped)
+   - first release that actually works on windows
+
 Version 0.0.6 to 0.0.7
 
    - Bugfix: convert NULL strings to undefined values in callbacks
+
 Version 0.0.5 to 0.0.6
 
    - use node-gyp in gyp based builds
