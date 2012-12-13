@@ -176,7 +176,7 @@ Create a new service advertisement with the given @serviceType@ and @port@. The 
 
 - name := up to 63 bytes of Unicode to be used as the instance name. Think iTunes shared library names. If not given the host name is used instead.
 - interfaceIndex   := one-based index of the network interface the service should be announced on.
-- txtRecord        := is interesting... but not yet implemented. You can pass a @Buffer@ object but unfortunately there is no way to create it.
+- txtRecord        := an object to be published as a TXT record. Refer to the "TXT record section":#txt_records for details.
 - host             := see documentation of @DNSServiceRegister(...)@
 - domain           := see documentation of @DNSServiceRegister(...)@
 - flags            := see documentation of @DNSServiceRegister(...)@
