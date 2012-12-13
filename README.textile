@@ -1,6 +1,6 @@
 h1. mdns -- node.js Service Discovery
 
-!>http://api.flattr.com/button/flattr-badge-large.png(Flattr this git repository)!:https://flatrr.com/submit/auto?user_id=agnat&url=https://github.com/agnat/node_mdns&title=node_mdns&tags=github&category=software
+!>http://api.flattr.com/button/flattr-badge-large.png(Flattr this git repository)!:https://flattr.com/submit/auto?user_id=agnat&url=https://github.com/agnat/node_mdns&title=node_mdns&tags=github&category=software
 
 |_. Package:       | mdns |
 |_. Description:   | multicast DNS service discovery |
