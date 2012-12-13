@@ -1,8 +1,8 @@
 h1. mdns -- node.js Service Discovery
-
+!>http://api.flattr.com/button/flattr-badge-large.png(Flattr this git repository)!:https://flatrr.com/submit/auto?user_id=agnat&url=http://github.com/agnat/node_mdns&title=node_mdns&language=&tags=github&category=software
 |_. Package:       | mdns |
 |_. Description:   | multicast DNS service discovery |
-|_. Version:       | 1.0.0 |
+|_. Version:       | 1.0.0-dev |
 |_. Installation:  | @npm install mdns@ (see below) |
 |_. Documentation: | "mdns user guide":http://agnat.github.com/node_mdns/user_guide.html |
 |_. License:       | "MIT":http://github.com/agnat/node_mdns/blob/master/LICENSE |
