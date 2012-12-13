@@ -5,7 +5,7 @@ h1. mdns -- node.js Service Discovery
 |_. Version:       | 1.0.0-dev |
 |_. Installation:  | @npm install mdns@ (see below) |
 |_. Documentation: | "mdns user guide":http://agnat.github.com/node_mdns/user_guide.html |
-|_. Donations:     | !http://api.flattr.com/button/flattr-badge-large.png(Flattr this git repository)!:https://flattr.com/submit/auto?user_id=agnat&url=https://github.com/agnat/node_mdns&title=node_mdns&tags=github&category=software
+|_. Donations:     | !http://api.flattr.com/button/flattr-badge-large.png(Flattr this git repository)!:https://flattr.com/submit/auto?user_id=agnat&url=https://github.com/agnat/node_mdns&title=node_mdns&tags=github&category=software |
 |_. License:       | "MIT":http://github.com/agnat/node_mdns/blob/master/LICENSE |
 
 mdns adds multicast DNS service discovery, also known as zeroconf or bonjour to "node.js":/joyent/node. It provides an object based interface to announce and browse services on the local network.
