@@ -3,11 +3,15 @@ var os = require('os')
   , nif = require('../lib/network_interface.js');
 
 function loopback() {
-  switch (os.platform()) {
-    case 'linux':  return 'lo';
-    case 'darwin': return 'lo0';
-    default: throw new Error('unhandled platform' + os.platform());
+  var interfaces = os.networkInterfaces();
+  for (var name in interfaces) {
+    for (var i = 0; i < interfaces[name].length; ++i) {
+      if (interfaces[name][i].address === '127.0.0.1') {
+        return name;
+      }
+    }
   }
+  throw new Error('failed to find loopback interface');
 }
 
 exports['getInterfaceIndex'] = function(t) {

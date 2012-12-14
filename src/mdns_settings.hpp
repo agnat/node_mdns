@@ -12,6 +12,14 @@
 
 #  define NODE_MDNS_WINSOCK_WATCHER
 
+#  if NTDDI_VERSION >= NTDDI_VISTA
+#   define NODE_MDNS_HAVE_INTERFACE_NAME_CONVERSION
+#  endif
+
+# else // Unices
+
+#  define NODE_MDNS_HAVE_INTERFACE_NAME_CONVERSION
+
 # endif // WIN32
 
 
