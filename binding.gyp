@@ -31,6 +31,7 @@
           , 'defines': [ 'HAVE_DNSSERVICEGETADDRINFO' ]
           , 'libraries': [ '-l$(BONJOUR_SDK_HOME)Lib/$(Platform)/dnssd.lib'
                          , '-lws2_32.lib'
+                         , 'iphlpapi.lib'
                          ]
         }]
       ]

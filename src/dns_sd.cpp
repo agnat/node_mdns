@@ -1,6 +1,8 @@
 #include "mdns.hpp"
 
-#ifndef WIN32
+#ifdef WIN32
+# include <netioapi.h>
+#else
 # include <sys/types.h>
 # include <sys/socket.h>
 # include <net/if.h> // if_nametoindex()
