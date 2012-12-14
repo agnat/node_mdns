@@ -1,6 +1,10 @@
 #include "mdns.hpp"
 
-#include <net/if.h> // if_nametoindex()
+#ifndef WIN32
+# include <sys/types.h>
+# include <sys/socket.h>
+# include <net/if.h> // if_nametoindex()
+#endif
 
 #include <v8.h>
 
