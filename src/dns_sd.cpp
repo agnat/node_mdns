@@ -1,4 +1,7 @@
 #include "mdns.hpp"
+
+#include <net/if.h> // if_nametoindex()
+
 #include <v8.h>
 
 #include "mdns_utils.hpp"
@@ -29,6 +32,9 @@ Handle<Value> TXTRecordDeallocate(Arguments const& args);
 //Handle<Value> TXTRecordGetCount(Arguments const& args); 
 Handle<Value> TXTRecordSetValue(Arguments const& args); 
 Handle<Value> TXTRecordGetLength(Arguments const& args); 
+
+// === posix ============================================
+Handle<Value> if_nametoindex(Arguments const& args); 
 
 // === additions ========================================
 Handle<Value> txtRecordBufferToObject(Arguments const& args); 
@@ -65,6 +71,8 @@ init(Handle<Object> target) {
     defineFunction(target, "TXTRecordSetValue", TXTRecordSetValue);
     defineFunction(target, "TXTRecordGetLength", TXTRecordGetLength);
 
+    defineFunction(target, "if_nametoindex", if_nametoindex);
+
     defineFunction(target, "txtRecordBufferToObject", txtRecordBufferToObject);
     defineFunction(target, "buildException", buildException);
     defineFunction(target, "exportConstants", exportConstants);
@@ -77,6 +85,24 @@ void
 defineFunction(Handle<Object> target, const char * name, InvocationCallback f) {
     target->Set(String::NewSymbol(name),
             FunctionTemplate::New(f)->GetFunction());
+}
+
+Handle<Value>
+if_nametoindex(Arguments const& args) {
+    HandleScope scope;
+    if (argumentCountMismatch(args, 1)) {
+        return throwArgumentCountMismatchException(args, 1);
+    }
+    if ( ! args[0]->IsString()) {
+        return throwTypeError("argument 1 must be a string (interface name)");
+    }
+    String::Utf8Value interfaceName(args[0]->ToString());
+
+    unsigned int index = ::if_nametoindex(*interfaceName);
+    if (index == 0) {
+        return throwError((std::string("interface '") + *interfaceName + "' does not exist").c_str());
+    }
+    return scope.Close( Integer::New(index));
 }
 
 Handle<Value>
