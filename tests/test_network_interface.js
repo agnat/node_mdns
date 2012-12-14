@@ -1,8 +1,13 @@
-var mdns_test = require('../utils/lib/mdns_test')
+var os = require('os')
+  , mdns_test = require('../utils/lib/mdns_test')
   , nif = require('../lib/network_interface.js');
 
 function loopback() {
-  return 'lo0';
+  switch (os.platform()) {
+    case 'linux':  return 'lo';
+    case 'darwin': return 'lo0';
+    default: throw new Error('unhandled platform' + os.platform());
+  }
 }
 
 exports['getInterfaceIndex'] = function(t) {
