@@ -1,5 +1,5 @@
-#ifndef NODE_MDNS_SOCKET_poll_INCLUDED
-#define NODE_MDNS_SOCKET_poll_INCLUDED
+#ifndef NODE_MDNS_SOCKET_WATCHER_INCLUDED
+#define NODE_MDNS_SOCKET_WATCHER_INCLUDED
 
 namespace node_mdns {
 
@@ -26,4 +26,4 @@ class SocketWatcher : public node::ObjectWrap {
 
 } // end of namespace node_mdns
 
-#endif // NODE_MDNS_WINSOCK_poll_INCLUDED
+#endif // NODE_MDNS_SOCKET_WATCHER_INCLUDED

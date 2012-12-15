@@ -10,8 +10,6 @@
 #   undef max
 #  endif
 
-#  define NODE_MDNS_WINSOCK_WATCHER
-
 #  ifndef NTDDI_VISTA
 #   define NTDDI_VISTA 0x6000000
 #  endif
