@@ -12,6 +12,10 @@
 
 #  define NODE_MDNS_WINSOCK_WATCHER
 
+#  ifndef NTDDI_VISTA
+#   define NTDDI_VISTA 0x6000000
+#  endif
+
 #  if NTDDI_VERSION >= NTDDI_VISTA
 #   define NODE_MDNS_HAVE_INTERFACE_NAME_CONVERSION
 #  endif
