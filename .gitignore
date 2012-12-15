@@ -7,3 +7,5 @@ node_modules
 *.sln
 *.vcxproj*
 .pulse2.properties
+Release
+Debug
