@@ -17,11 +17,13 @@ function loopback() {
 }
 
 var have_if_nametoindex = typeof dns_sd.if_nametoindex !== 'undefined';
-exports['if_nametoindex'] = function(t) {
+exports['if_nametoindex <-> if_indextoname'] = function(t) {
   if (have_if_nametoindex) {
     var interfaces = os.networkInterfaces();
     for (var name in interfaces) {
-      t.ok(dns_sd.if_nametoindex(name) > 0);
+      var index = dns_sd.if_nametoindex(name);
+      t.ok( index > 0);
+      t.strictEqual( dns_sd.if_indextoname(index), name);
     }
   } else {
     console.log('[SKIPPED] if_nametoindex() not supported on this platform');

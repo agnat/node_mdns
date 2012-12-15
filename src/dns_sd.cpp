@@ -44,6 +44,7 @@ Handle<Value> TXTRecordGetLength(Arguments const& args);
 // === posix ============================================
 #ifdef NODE_MDNS_HAVE_INTERFACE_NAME_CONVERSION
 Handle<Value> if_nametoindex(Arguments const& args); 
+Handle<Value> if_indextoname(Arguments const& args); 
 #endif
 
 // === additions ========================================
@@ -83,6 +84,7 @@ init(Handle<Object> target) {
 
 #ifdef NODE_MDNS_HAVE_INTERFACE_NAME_CONVERSION
     defineFunction(target, "if_nametoindex", if_nametoindex);
+    defineFunction(target, "if_indextoname", if_indextoname);
 #endif
 
     defineFunction(target, "txtRecordBufferToObject", txtRecordBufferToObject);
@@ -145,7 +147,29 @@ if_nametoindex(Arguments const& args) {
     }
     return scope.Close( Integer::New(index));
 }
+
+Handle<Value>
+if_indextoname(Arguments const& args) {
+    HandleScope scope;
+    if (argumentCountMismatch(args, 1)) {
+        return throwArgumentCountMismatchException(args, 1);
+    }
+    if ( ! args[0]->IsUint32()) {
+        return throwTypeError("argument 1 must be a positive integer (interface index)");
+    }
+#ifdef WIN32
+    char alias[NDIS_IF_MAX_STRING_SIZE + 1];
+    char name[NDIS_IF_MAX_STRING_SIZE + 1]; // XXX
+#else
+    char name[IFNAMSIZ];
+    if ( ! ::if_indextoname(args[0]->Uint32Value(), name)) {
+        return throwError("index has no corresponding interface");
+    }
 #endif
+    return scope.Close( String::New(name));
+}
+
+#endif // NODE_MDNS_HAVE_INTERFACE_NAME_CONVERSION
 
 Handle<Value>
 buildException(Arguments const& args) {
