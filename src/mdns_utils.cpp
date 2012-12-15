@@ -111,4 +111,4 @@ errorString(DNSServiceErrorType error) {
     }
 }
 
-}
+} // end of namespace node_mdns

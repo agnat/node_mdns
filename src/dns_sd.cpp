@@ -110,8 +110,8 @@ if_nametoindex(Arguments const& args) {
         return throwTypeError("argument 1 must be a string (interface name)");
     }
     String::Utf8Value interfaceName(args[0]->ToString());
-#ifdef WIN32
 
+#ifdef WIN32
     DWORD aliasLength = MultiByteToWideChar(CP_UTF8, 0, *interfaceName, -1,
             NULL, 0);
     if (aliasLength == 0) {
