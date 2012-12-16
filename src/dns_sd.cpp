@@ -271,6 +271,20 @@ addConstants(Handle<Object> target) {
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_PollingMode);
 #endif
 
+    // Interface Index
+#ifdef kDNSServiceInterfaceIndexAny
+    NODE_DEFINE_CONSTANT(target, kDNSServiceInterfaceIndexAny);
+#endif
+#ifdef kDNSServiceInterfaceIndexLocalOnly
+    NODE_DEFINE_CONSTANT(target, kDNSServiceInterfaceIndexLocalOnly);
+#endif
+#ifdef kDNSServiceInterfaceIndexP2P
+    NODE_DEFINE_CONSTANT(target, kDNSServiceInterfaceIndexP2P);
+#endif
+#ifdef kDNSServiceInterfaceIndexUnicast
+    NODE_DEFINE_CONSTANT(target, kDNSServiceInterfaceIndexUnicast);
+#endif
+
     // DNS Service Types
     NODE_DEFINE_CONSTANT(target, kDNSServiceType_A);
     NODE_DEFINE_CONSTANT(target, kDNSServiceType_NS);
