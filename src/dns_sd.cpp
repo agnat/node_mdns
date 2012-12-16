@@ -72,7 +72,8 @@ init(Handle<Object> target) {
     defineFunction(target, "DNSServiceBrowse", DNSServiceBrowse);
     defineFunction(target, "DNSServiceRefDeallocate", DNSServiceRefDeallocate);
     defineFunction(target, "DNSServiceResolve", DNSServiceResolve);
-    defineFunction(target, "DNSServiceEnumerateDomains", DNSServiceEnumerateDomains);
+    defineFunction(target, "DNSServiceEnumerateDomains",
+            DNSServiceEnumerateDomains);
 #ifdef HAVE_DNSSERVICEGETADDRINFO
     defineFunction(target, "DNSServiceGetAddrInfo", DNSServiceGetAddrInfo);
 #endif
@@ -143,7 +144,8 @@ if_nametoindex(Arguments const& args) {
     unsigned int index = ::if_nametoindex(*interfaceName);
 #endif
     if (index == 0) {
-        return throwError((std::string("interface '") + *interfaceName + "' does not exist").c_str());
+        return throwError((std::string("interface '") + *interfaceName +
+                    "' does not exist").c_str());
     }
     return scope.Close( Integer::New(index));
 }
@@ -155,7 +157,8 @@ if_indextoname(Arguments const& args) {
         return throwArgumentCountMismatchException(args, 1);
     }
     if ( ! args[0]->IsUint32()) {
-        return throwTypeError("argument 1 must be a positive integer (interface index)");
+        return throwTypeError("argument 1 must be a positive integer "
+                "(interface index)");
     }
 #ifdef WIN32
     char alias[NDIS_IF_MAX_STRING_SIZE + 1];
@@ -178,7 +181,8 @@ buildException(Arguments const& args) {
         return throwArgumentCountMismatchException(args, 1);
     }
     if ( ! args[0]->IsInt32()) {
-        return throwTypeError("argument 1 must be an integer (DNSServiceErrorType)");
+        return throwTypeError("argument 1 must be an integer " 
+                "(DNSServiceErrorType)");
     }
 
     DNSServiceErrorType error = args[0]->Int32Value();
