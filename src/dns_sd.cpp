@@ -165,15 +165,39 @@ if_indextoname(Arguments const& args) {
                 "(interface index)");
     }
 #ifdef WIN32
-    char alias[NDIS_IF_MAX_STRING_SIZE + 1];
-    char name[NDIS_IF_MAX_STRING_SIZE + 1]; // XXX
+    NET_LUID luid;
+    if (ConvertInterfaceIndexToLuid(args[0]->Uint32Value(), &luid) != NO_ERROR)
+    {
+        return throwError("failed to convert interface index to luid");
+    }
+    enum { size = NDIS_IF_MAX_STRING_SIZE + 1 };
+    wchar_t alias[size];
+    if (ConvertInterfaceLuidToAlias(&luid, alias, size) != NO_ERROR) {
+        return throwError("failed to convert interface luid to alias");
+    }
+    int utf8Length = WideCharToMultiByte(CP_UTF8, 0, alias, -1,
+            NULL, 0, NULL, NULL);
+    if (utf8Length == 0) {
+        return throwError("failed to determine buffer size");
+    }
+    char * nameBuffer = new char[utf8Length];
+
+    if (WideCharToMultiByte(CP_UTF8, 0, alias, -1, nameBuffer, utf8Length,
+                NULL, NULL) == 0)
+    {
+        delete [] nameBuffer;
+        return throwError("failed to convert unicode to utf8");
+    }
+    Local<String> name = String::New(nameBuffer);
+    delete [] nameBuffer;
 #else
-    char name[IFNAMSIZ];
-    if ( ! ::if_indextoname(args[0]->Uint32Value(), name)) {
+    char nameBuffer[IFNAMSIZ];
+    if ( ! ::if_indextoname(args[0]->Uint32Value(), nameBuffer)) {
         return throwError("index has no corresponding interface");
     }
+    Local<String> name = String::New(nameBuffer);
 #endif
-    return scope.Close( String::New(name));
+    return scope.Close(name);
 }
 
 #endif // NODE_MDNS_HAVE_INTERFACE_NAME_CONVERSION
