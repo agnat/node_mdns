@@ -18,6 +18,7 @@
                  , 'src/txt_record_get_length.cpp'
                  , 'src/txt_record_buffer_to_object.cpp'
                  , 'src/socket_watcher.cpp'
+                 , 'src/network_interface.cpp'
                  ]
     , 'conditions': [
         [ 'OS!="mac" and OS!="win"', {
