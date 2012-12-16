@@ -17,6 +17,7 @@ function loopback() {
 }
 
 var have_if_nametoindex = typeof dns_sd.if_nametoindex !== 'undefined';
+
 exports['if_nametoindex <-> if_indextoname'] = function(t) {
   if (have_if_nametoindex) {
     var interfaces = os.networkInterfaces();
@@ -36,6 +37,9 @@ exports['interfaceIndex'] = function(t) {
   t.strictEqual(nif.interfaceIndex({interfaceIndex: 1}), 1);
 
   t.strictEqual(nif.interfaceIndex({networkInterface: 0}), 0);
+
+  t.strictEqual(nif.interfaceIndex({}), 0);
+
   if (have_if_nametoindex) {
     t.ok(nif.interfaceIndex({networkInterface: loopback()}) > 0);
     t.ok(nif.interfaceIndex({networkInterface: '127.0.0.1'}) > 0);
@@ -45,6 +49,7 @@ exports['interfaceIndex'] = function(t) {
   } else {
     console.log('[SKIPPED] if_nametoindex() not supported on this platform');
   }
+
 
   t.done();
 }
