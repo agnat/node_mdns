@@ -126,7 +126,11 @@ if_nametoindex(Arguments const& args) {
         return throwError("failed to allocate alias buffer");
     }
 
-    MultiByteToWideChar(CP_UTF8, 0, *interfaceName, -1, alias, aliasLength);
+    if (MultiByteToWideChar(CP_UTF8, 0, *interfaceName, -1, alias,
+                aliasLength) == 0)
+    {
+        return throwError("failed to convert utf8 to unicode");
+    }
 
     NET_LUID luid;
     if (ConvertInterfaceAliasToLuid(alias, &luid) != NO_ERROR) {
