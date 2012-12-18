@@ -20,9 +20,9 @@ buildException(DNSServiceErrorType error_code) {
     error_str += errorString(error_code);
     Local<String> error_msg = String::New(error_str.c_str());
     Local<Value> error_v = Exception::Error(error_msg);
-    Local<Object> error = Local<Object>::Cast(error_v);
-    // XXX error->Set(error_code_symbol, Integer::New(error_code));
-    return error;
+    Local<Object> error = error_v->ToObject();
+    error->Set(String::NewSymbol("errorCode"), Integer::New(error_code));
+    return error_v;
 }
 
 const char *
