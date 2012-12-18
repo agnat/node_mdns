@@ -6,6 +6,20 @@
     <% for (var s in scripts) { %>
     <script src="<%- path(scripts[s]) %>" type="text/javascript"></script>
     <% } %>
+    <script type="text/javascript">
+    /* <![CDATA[ */
+    (function() {
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = 'http://api.flattr.com/js/0.6/load.js?mode=auto&uid=agnat';
+
+      var t = document.getElementsByTagName('script')[0];
+      t.parentNode.insertBefore(s, t);
+    })();
+    /* ]]> */
+    </script>
+
     <% for (var s in stylesheets) { %>
     <link rel="stylesheet" href="<%- path(stylesheets[s]) %>" type="text/css"/>
     <% } %>
