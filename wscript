@@ -52,6 +52,7 @@ def build(bld):
                , 'src/dns_service_resolve.cpp'
                , 'src/dns_service_get_addr_info.cpp'
                , 'src/mdns_utils.cpp'
+               , 'src/network_interface.cpp'
                , 'src/txt_record_ref.cpp'
                , 'src/txt_record_create.cpp'
                , 'src/txt_record_deallocate.cpp'
