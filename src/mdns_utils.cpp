@@ -8,8 +8,6 @@ namespace node_mdns {
 
 using namespace v8;
 
-static Persistent<String> error_code_symbol;
-
 Local<Value>
 buildException(DNSServiceErrorType error_code) {
     if (error_code == kDNSServiceErr_NoError) {
