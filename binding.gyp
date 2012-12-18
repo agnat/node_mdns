@@ -11,14 +11,14 @@
                  , 'src/dns_service_register.cpp'
                  , 'src/dns_service_resolve.cpp'
                  , 'src/mdns_utils.cpp'
+                 , 'src/network_interface.cpp'
+                 , 'src/socket_watcher.cpp'
                  , 'src/txt_record_ref.cpp'
                  , 'src/txt_record_create.cpp'
                  , 'src/txt_record_deallocate.cpp'
                  , 'src/txt_record_set_value.cpp'
                  , 'src/txt_record_get_length.cpp'
                  , 'src/txt_record_buffer_to_object.cpp'
-                 , 'src/socket_watcher.cpp'
-                 , 'src/network_interface.cpp'
                  ]
     , 'conditions': [
         [ 'OS!="mac" and OS!="win"', {
@@ -32,7 +32,7 @@
           , 'defines': [ 'HAVE_DNSSERVICEGETADDRINFO' ]
           , 'libraries': [ '-l$(BONJOUR_SDK_HOME)Lib/$(Platform)/dnssd.lib'
                          , '-lws2_32.lib'
-                         , 'iphlpapi.lib'
+                         , '-liphlpapi.lib'
                          ]
         }]
       ]
