@@ -182,9 +182,13 @@ The underlying library dns_sd uses interface indices to identify network interfa
 
 h4. Special Case: The Loopback Interface
 
+Newer versions of dns_sd do not use the interface index of the loopback interface to specify local operation. They use the constant @kDNSServiceInterfaceIndexLocalOnly@. To write cross platform code that works with all versions of dns_sd you should use the function @mdns.loopbackInterface()@ like so:
 
+bc. var browser(mdns.tcp('http'), { networkInterface: mdns.loopbackInterface()});
 
 h4. Compatibility
+
+On windows interface names and IP addresses are only available on vista and better. Also note that historic versions of node did not have @os.networkInterfaces()@. On these versions using an IP address will not work.
 
 h2(#reference). Reference
 
@@ -201,7 +205,7 @@ h4. new mdns.Advertisement(serviceType, port, [options], [callback])
 Create a new service advertisement with the given @serviceType@ and @port@. The @callback@ has the arguments @(error, service)@ and it is run after successful registration and if an error occurs. If the advertisement is used without a callback an handler should be attached to the @'error'@ event. The @options@ object contains additional arguments to @DNSServiceRegister(...)@:
 
 - name := up to 63 bytes of Unicode to be used as the instance name. Think iTunes shared library names. If not given the host name is used instead.
-- interfaceIndex   := one-based index of the network interface the service should be announced on.
+- networkInterface := the network interface to use. See "Network Interfaces":#network_interfaces for details.
 - txtRecord        := an object to be published as a TXT record. Refer to the "TXT record section":#txt_records for details.
 - host             := see documentation of @DNSServiceRegister(...)@
 - domain           := see documentation of @DNSServiceRegister(...)@
@@ -233,7 +237,7 @@ h4. new mdns.Browser(serviceType, [options])
 Create a new browser to discover services that match the given @serviceType@. @options@ may contain the following properties:
 
 - resolverSequence := custom "resolver sequence":#resolver_sequence for this browser
-- interfaceIndex   := one-based index of the network interface the services should be discovered on.
+- networkInterface := the network interface to use. See "Network Interfaces":#network_interfaces for details.
 - domain           := see documentation of @DNSServiceBrowse(...)@
 - context          := see documentation of @DNSServiceBrowse(...)@
 - flags            := see documentation of @DNSServiceBrowse(...)@
