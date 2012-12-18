@@ -193,7 +193,8 @@ h4. Special Case: The Loopback Interface
 
 Newer versions of dns_sd do not use the interface index of the loopback interface to specify local operation. They use the constant @kDNSServiceInterfaceIndexLocalOnly@. To write cross platform code that works with all versions of dns_sd you should use the function @mdns.loopbackInterface()@ like so:
 
-bc. var browser(mdns.tcp('http'), { networkInterface: mdns.loopbackInterface()});
+bc. var browser = mdns.createBrowser( mdns.tcp('http')
+                                , { networkInterface: mdns.loopbackInterface()});
 
 h4. Compatibility
 
@@ -285,15 +286,16 @@ Stop the browser.
 
 h4. mdns.Browser.defaultResolverSequence
 
-This is the resolver sequence used by all browser objects that do not override it. It contains three steps. On platforms that have @DNSServiceGetAddrInfo(...)@ it has the following items:
+This is the resolver sequence used by all browser objects that do not override it. It contains four steps. On platforms that have @DNSServiceGetAddrInfo(...)@ it has the following items:
 
 bc. var default_sequence = [
     mdns.rst.DNSServiceResolve()
   , mdns.rst.DNSServiceGetAddrInfo()
   , mdns.rst.makeAddressesUnique()
+  , mdns.rst.networkInterfaceName()
 ];
 
-On platforms that don't, @mdns.rst.getaddrinfo(...)@ is used instead. You could modify the default sequence but you shouldn't.
+On platforms that don't, @mdns.rst.getaddrinfo(...)@ is used instead. On platforms that do not support @mdns.rst.networkInterfaceName()@ it is omitted. You could modify the default sequence but you shouldn't.
 
 h3(#rst). Resolver Sequence Tasks
 
@@ -318,6 +320,10 @@ Filters the addresses to be unique.
 h4. mdns.rst.filterAddresses(f)
 
 Filters the addresses by invoking @f()@ on each address. If @f()@ returns false the address is dropped.
+
+h4. mdns.rst.networkInterfaceName()
+
+Inspects @interfaceIndex@ and fills in the @networkInterface@ property.
 
 h4. mdns.rst.logService()
 
@@ -398,6 +404,10 @@ Fill in a @service@ object by running a resolver @sequence@. If no sequence is g
 h4. mdns.browseThemAll(options)
 
 Creates a browser initialized with the wildcard service type. When started the browser emits events for each _service type_ instead of each service instance. The @service@ objects have no @name@ property. By default the browser has an empty resolver sequence. You still can set one using the @options@ object.
+
+h4. mdns.loopbackInterface()
+
+Returns the platform and version dependent constant to set up a browser or advertisement for local operation. See "Network Interfaces":#network_interfaces for details.
 
 h3(#constants). Constants
 
