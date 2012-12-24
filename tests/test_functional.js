@@ -3,6 +3,7 @@
 var mdns_test = require('../utils/lib/mdns_test')
   , mdns      = mdns_test.require('mdns')
   , util      = require('util')
+  , os        = require('os')
   ;
 
 exports['simple browsing'] = function(t) {
@@ -67,6 +68,9 @@ exports['simple browsing'] = function(t) {
     t.strictEqual(service.replyDomain, 'local.',
         "'replyDomain' must match 'local.'");
 
+    t.strictEqual(typeof service.networkInterface, 'string',
+        'must have a networkInterface');
+
     t.ok(ctx, 'must have context');
     t.strictEqual(ctx.some, 'context', 'property must match input');
 
@@ -114,6 +118,10 @@ exports['simple browsing'] = function(t) {
         "'rawTxtRecord' must be truthy");
     t.ok(service.txtRecord,
         "'txtRecord' must be truthy");
+
+    t.strictEqual(typeof service.networkInterface, 'string',
+        'must have a networkInterface');
+
     var p;
     for (p in txt_record) {
       t.strictEqual('' + txt_record[p], service.txtRecord[p],
@@ -144,6 +152,9 @@ exports['simple browsing'] = function(t) {
     t.strictEqual(service.replyDomain, 'local.',
         "'replyDomain' must match 'local.'");
 
+    t.strictEqual(typeof service.networkInterface, 'string',
+        'must have a networkInterface');
+
     t.ok(ctx, 'must have context');
     t.strictEqual(ctx.some, 'context', 'property must match input');
 
@@ -162,7 +173,6 @@ exports['simple browsing'] = function(t) {
 
   ad.start();
 }
-
 
 exports['create ads'] = function(t) {
   var timeout = 500 // ms
@@ -200,7 +210,6 @@ exports['create ads'] = function(t) {
 
     var ad = this;
     setTimeout(function(){ ad.stop(); stopIfDone(); }, timeout);
-    //console.log(service)
   });
   ad3.start();
 
