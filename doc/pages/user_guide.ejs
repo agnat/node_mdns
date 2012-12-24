@@ -65,15 +65,15 @@ browser.start();
 
 p. As you can see the browser object is an @EventEmitter@. For each HTTP server a @'serviceUp'@ event is emitted. Likewise, if a server disappears @'serviceDown'@ is sent. The @service@ object of a @'serviceUp'@ event might look like this:
 
-bc. { interfaceIndex: 4
+bc(#service_object_example). { interfaceIndex: 4
 , name: 'somehost'
+, networkInterface: 'en0'
 , type: {name: 'http', protocol: 'tcp', subtypes: []}
 , replyDomain: 'local.'
 , fullname: 'somehost._http._tcp.local.'
 , host: 'somehost.local.'
 , port: 4321
 , addresses: [ '10.1.1.50', 'fe80::21f:5bff:fecd:ce64' ]
-, networkInterface: 'en0'
 }
 
 In fact you might receive more than one event per service instance. That is because dns_sd reports each available network path to a service. Also, note that you might get more (or less) addresses. This depends on the network topology. While testing you will often run both peers on the same machine. Now, if you have both a wired and a wireless connection to the same network you will see both addresses on both interfaces (not including IPv6 addresses). The number of IP addresses also depends on the platform and the resolver being used. More on this later.
@@ -175,15 +175,17 @@ h3(#network_interfaces). Network Interfaces
 
 Sometimes it is necessary to restrict a browser or advertisement to a certain network interface. Sometimes the service is only available on one interface like on a router. Or maybe you want to run your mdns stuff on the loopback interface to keep it from interfering with a production system. Restricting operation to the loopback interface is also very handy in unit tests. 
 
-@Browser@ and @Advertisment@ both support a @networkInterface@ option. It can be set to network interface name, an IP address or an interface index. All three variants have different properties:
+@Browser@ and @Advertisment@ both support a @networkInterface@ option. It may be set to network interface name, an IP address or an interface index. All three variants have different properties:
 
 h4. Network Interface Names
 
-These are the same names as returned by @os.networkInterfaces()@. They are stable accross reboots, as far as I know even if hot pluggable network adapters (think USB to ethernet) are involved. They are human readable. However, please note that they are not portable across platforms. On Linux ethernet interfaces have an @eth@ prefix while on darwin (and probably other BSDs) @en@ is used. Also note that on windows the interface names are localized and, to make things worse, user configurable.
+These are the same names as returned by @os.networkInterfaces()@. They are persistent accross reboots, as far as I know even if hot pluggable network adapters (think USB to ethernet) are involved. They are human readable. However, please note that they are not portable across platforms. On Linux ethernet interfaces have an @eth@ prefix while on darwin (and probably other BSDs) @en@ is used. Also note that on windows the interface names are localized and, to make things worse, user configurable.
+
+When browsing the @service@ object passed to the event listeners has a @networkInterface@ property. It contains the human readable name of the network interface the service was discovered on. See the "service object example":#service_object_example above.
 
 h4. IP Addresses
 
-IP addresses are portable across platforms. In an environment that uses dynamic addresses (DHCP, mdns, zeroconf or MS autoconf) they are not necessarily stable across reboots or disconnects. Also, note that currently simple string comparison is used to find the address in the result returned by @os.networkInterfaces()@. This works great for IPv4 addresses. However, IPv6 addresses have multiple equivalent string representations. That means at present you have to use the exact same string as found in the result of @os.networkInterfaces()@. Otherwise mdns will fail to find the corresponding interface. This makes IPv6 addresses less portable than IPv4 ones.
+IP addresses are portable across platforms. In an environment that uses dynamic addresses (DHCP, mdns, zeroconf or MS autoconf) they are not necessarily persistent across reboots or disconnects. Also, note that currently simple string comparison is used to find the address in the result returned by @os.networkInterfaces()@. This works great for IPv4 addresses. However, IPv6 addresses have multiple equivalent string representations. That means at present you have to use the exact same string as found in the result of @os.networkInterfaces()@. Otherwise mdns will fail to find the corresponding interface. This makes IPv6 addresses less portable than IPv4 ones.
 
 h4. Interface Indices
 
@@ -195,6 +197,8 @@ Newer versions of dns_sd do not use the interface index of the loopback interfac
 
 bc. var browser = mdns.createBrowser( mdns.tcp('http')
                                 , { networkInterface: mdns.loopbackInterface()});
+
+On current versions of Mac OS X a @Browser@ listening on the loopback interface will still discover _all_ services running on the local host. To discover only services that are announced on the loopback interface you'll have to do some filtering in your @serviceUp@ and @serviceDown@ listeners. Just ignore any event where @service.interfaceIndex@ does not equal @mdns.loopbackInterface()@. This approach is portable across platforms.
 
 h4. Compatibility
 
@@ -286,16 +290,15 @@ Stop the browser.
 
 h4. mdns.Browser.defaultResolverSequence
 
-This is the resolver sequence used by all browser objects that do not override it. It contains four steps. On platforms that have @DNSServiceGetAddrInfo(...)@ it has the following items:
+This is the resolver sequence used by all browser objects that do not override it. It contains three steps. On platforms that have @DNSServiceGetAddrInfo(...)@ it has the following items:
 
 bc. var default_sequence = [
     mdns.rst.DNSServiceResolve()
   , mdns.rst.DNSServiceGetAddrInfo()
   , mdns.rst.makeAddressesUnique()
-  , mdns.rst.networkInterfaceName()
 ];
 
-On platforms that don't, @mdns.rst.getaddrinfo(...)@ is used instead. On platforms that do not support @mdns.rst.networkInterfaceName()@ it is omitted. You could modify the default sequence but you shouldn't.
+On platforms that don't, @mdns.rst.getaddrinfo(...)@ is used instead. You could modify the default sequence but you shouldn't.
 
 h3(#rst). Resolver Sequence Tasks
 
@@ -320,10 +323,6 @@ Filters the addresses to be unique.
 h4. mdns.rst.filterAddresses(f)
 
 Filters the addresses by invoking @f()@ on each address. If @f()@ returns false the address is dropped.
-
-h4. mdns.rst.networkInterfaceName()
-
-Inspects @interfaceIndex@ and fills in the @networkInterface@ property.
 
 h4. mdns.rst.logService()
 
