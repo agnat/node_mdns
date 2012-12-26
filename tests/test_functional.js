@@ -387,12 +387,16 @@ exports['local advertisement invisible on external interfaces'] = function(t) {
     setTimeout(function() { ad.stop() }, 1000);
   });
   loopbackBrowser.on('serviceDown', function(service) {
+    t.strictEqual(service.interfaceIndex, mdns.loopbackInterface(),
+        'service must have the loopback interface index');
+    t.strictEqual(service.networkInterface, nif.loopbackName(),
+        'service must have the loopback interface name');
     setTimeout(function() {
       t.strictEqual(externalBrowserEvents, 0, 
         'browser on external interface must not receive events');
-      t.done();
       externalBrowser.stop();
       loopbackBrowser.stop();
+      t.done();
     }, 1000);
   });
   externalBrowser.start();
