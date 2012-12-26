@@ -2,6 +2,7 @@
 
 var mdns_test = require('../utils/lib/mdns_test')
   , mdns      = mdns_test.require('mdns')
+  , nif       = require('../lib/network_interface.js')
   , util      = require('util')
   , os        = require('os')
   ;
@@ -355,6 +356,60 @@ exports['resolver sequence'] = function(t) {
     }
     return clone;
   }
+}
+
+exports['local advertisement invisible on external interfaces'] = function(t) {
+  var st = mdns.tcp('local-ad')
+    , exif = someExternalInterface();
+  if ( ! exif) {
+    console.log('[SKIPPED] failed to find an external network interface');
+    t.done();
+    return;
+  }
+  var ad = mdns.createAdvertisement(st, 4321, 
+      {networkInterface: mdns.loopbackInterface()})
+    , externalBrowser = mdns.createBrowser(st, {networkInterface: exif})
+    , externalBrowserEvents = 0
+    ;
+  externalBrowser.on('serviceUp', function(service) {
+    externalBrowserEvents++;
+  });
+  externalBrowser.on('serviceDown', function(service) {
+    externalBrowserEvents++;
+  });
+  var loopbackBrowser = mdns.createBrowser(st,
+      {networkInterface: mdns.loopbackInterface()});
+  loopbackBrowser.on('serviceUp', function(service) {
+    t.strictEqual(service.interfaceIndex, mdns.loopbackInterface(),
+        'service must have the loopback interface index');
+    t.strictEqual(service.networkInterface, nif.loopbackName(),
+        'service must have the loopback interface name');
+    setTimeout(function() { ad.stop() }, 1000);
+  });
+  loopbackBrowser.on('serviceDown', function(service) {
+    setTimeout(function() {
+      t.strictEqual(externalBrowserEvents, 0, 
+        'browser on external interface must not receive events');
+      t.done();
+      externalBrowser.stop();
+      loopbackBrowser.stop();
+    }, 1000);
+  });
+  externalBrowser.start();
+  loopbackBrowser.start();
+  ad.start();
+}
+
+function someExternalInterface() {
+  var ifaces = os.networkInterfaces()
+    , loopback = nif.loopbackName()
+    ;
+  for (var name in ifaces) {
+    if (name !== loopback) {
+      return name;
+    }
+  }
+  throw new Error('failed to find an external network interface');
 }
 
 // vim: filetype=javascript :
