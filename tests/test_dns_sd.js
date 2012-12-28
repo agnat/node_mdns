@@ -839,12 +839,12 @@ exports['buildException()'] = function(t) {
   t.strictEqual(dns_sd.buildException(dns_sd.kDNSServiceErr_NoError), undefined,
       'buildException(kDNSServiceErr_NoError) must return undefined');
 
-  /*
-  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_Unknwon) instanceof Error,
+  var ex = dns_sd.buildException(dns_sd.kDNSServiceErr_Unknown);
+  t.ok(ex instanceof Error,
       'buildException(kDNSServiceErr_Unknwon) must return an Error object');
-  */
+  t.strictEqual( ex.errorCode, dns_sd.kDNSServiceErr_Unknown);
 
-  var ex = dns_sd.buildException(dns_sd.kDNSServiceErr_NoSuchName);
+  ex = dns_sd.buildException(dns_sd.kDNSServiceErr_NoSuchName);
   t.ok(ex instanceof Error,
       'buildException(kDNSServiceErr_NoSuchName) must return an Error object');
   t.strictEqual( ex.errorCode, dns_sd.kDNSServiceErr_NoSuchName);
