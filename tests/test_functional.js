@@ -360,7 +360,14 @@ exports['resolver sequence'] = function(t) {
 
 exports['local advertisement invisible on external interfaces'] = function(t) {
   var st = mdns.tcp('local-ad')
-    , exif = someExternalInterface();
+    , exif = someExternalInterface()
+    , avahi = require('../lib/avahi')
+    ;
+  if (avahi) {
+    console.log('[SKIPPED] avahi does not support local only operation');
+    t.done();
+    return;
+  }
   if ( ! exif) {
     console.log('[SKIPPED] failed to find an external network interface');
     t.done();
