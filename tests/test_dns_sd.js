@@ -844,68 +844,110 @@ exports['buildException()'] = function(t) {
       'buildException(kDNSServiceErr_Unknwon) must return an Error object');
   */
 
-  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_NoSuchName) instanceof Error,
+  var ex = dns_sd.buildException(dns_sd.kDNSServiceErr_NoSuchName);
+  t.ok(ex instanceof Error,
       'buildException(kDNSServiceErr_NoSuchName) must return an Error object');
+  t.strictEqual( ex.errorCode, dns_sd.kDNSServiceErr_NoSuchName);
 
-  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_NoMemory) instanceof Error,
+  ex = dns_sd.buildException(dns_sd.kDNSServiceErr_NoMemory);
+  t.ok(ex instanceof Error,
       'buildException(kDNSServiceErr_NoMemory) must return an Error object');
+  t.strictEqual( ex.errorCode, dns_sd.kDNSServiceErr_NoMemory);
 
-  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_BadParam) instanceof Error,
+  ex = dns_sd.buildException(dns_sd.kDNSServiceErr_BadParam);
+  t.ok(ex instanceof Error,
       'buildException() must return an Error object');
+  t.strictEqual( ex.errorCode, dns_sd.kDNSServiceErr_BadParam);
 
-  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_BadReference) instanceof Error,
+  ex = dns_sd.buildException(dns_sd.kDNSServiceErr_BadReference);
+  t.ok(ex instanceof Error,
       'buildException(kDNSServiceErr_BadReference) must return an Error object');
+  t.strictEqual( ex.errorCode, dns_sd.kDNSServiceErr_BadReference);
 
-  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_BadState) instanceof Error,
+  ex = dns_sd.buildException(dns_sd.kDNSServiceErr_BadState);
+  t.ok(ex instanceof Error,
       'buildException(kDNSServiceErr_BadState) must return an Error object');
+  t.strictEqual( ex.errorCode, dns_sd.kDNSServiceErr_BadState);
 
-  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_BadFlags) instanceof Error,
+  ex = dns_sd.buildException(dns_sd.kDNSServiceErr_BadFlags);
+  t.ok(ex instanceof Error,
       'buildException(kDNSServiceErr_BadFlags) must return an Error object');
+  t.strictEqual( ex.errorCode, dns_sd.kDNSServiceErr_BadFlags);
 
-  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_Unsupported) instanceof Error,
+  ex = dns_sd.buildException(dns_sd.kDNSServiceErr_Unsupported);
+  t.ok(ex instanceof Error,
       'buildException(kDNSServiceErr_Unsupported) must return an Error object');
+  t.strictEqual( ex.errorCode, dns_sd.kDNSServiceErr_Unsupported);
 
-  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_NotInitialized) instanceof Error,
+  ex = dns_sd.buildException(dns_sd.kDNSServiceErr_NotInitialized);
+  t.ok(ex instanceof Error,
       'buildException(kDNSServiceErr_NotInitialized) must return an Error object');
+  t.strictEqual( ex.errorCode, dns_sd.kDNSServiceErr_NotInitialized);
 
-  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_AlreadyRegistered) instanceof Error,
+  ex = dns_sd.buildException(dns_sd.kDNSServiceErr_AlreadyRegistered);
+  t.ok(ex instanceof Error,
       'buildException(kDNSServiceErr_AlreadyRegistered) must return an Error object');
+  t.strictEqual( ex.errorCode, dns_sd.kDNSServiceErr_AlreadyRegistered);
 
-  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_NameConflict) instanceof Error,
+  ex = dns_sd.buildException(dns_sd.kDNSServiceErr_NameConflict);
+  t.ok(ex instanceof Error,
       'buildException(kDNSServiceErr_NameConflict) must return an Error object');
+  t.strictEqual( ex.errorCode, dns_sd.kDNSServiceErr_NameConflict);
 
-  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_Invalid) instanceof Error,
+  ex = dns_sd.buildException(dns_sd.kDNSServiceErr_Invalid);
+  t.ok(ex instanceof Error,
       'buildException(kDNSServiceErr_Invalid) must return an Error object');
+  t.strictEqual( ex.errorCode, dns_sd.kDNSServiceErr_Invalid);
 
-  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_Firewall) instanceof Error,
+  ex = dns_sd.buildException(dns_sd.kDNSServiceErr_Firewall);
+  t.ok(ex instanceof Error,
       'buildException(kDNSServiceErr_Firewall) must return an Error object');
+  t.strictEqual( ex.errorCode, dns_sd.kDNSServiceErr_Firewall);
 
-  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_Incompatible) instanceof Error,
+  ex = dns_sd.buildException(dns_sd.kDNSServiceErr_Incompatible);
+  t.ok(ex instanceof Error,
       'buildException(kDNSServiceErr_Incompatible) must return an Error object');
+  t.strictEqual( ex.errorCode, dns_sd.kDNSServiceErr_Incompatible);
 
-  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_BadInterfaceIndex) instanceof Error,
+  ex = dns_sd.buildException(dns_sd.kDNSServiceErr_BadInterfaceIndex);
+  t.ok(ex instanceof Error,
       'buildException(kDNSServiceErr_BadInterfaceIndex) must return an Error object');
+  t.strictEqual( ex.errorCode, dns_sd.kDNSServiceErr_BadInterfaceIndex);
 
-  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_Refused) instanceof Error,
+  ex = dns_sd.buildException(dns_sd.kDNSServiceErr_Refused);
+  t.ok(ex instanceof Error,
       'buildException(kDNSServiceErr_Refused) must return an Error object');
+  t.strictEqual( ex.errorCode, dns_sd.kDNSServiceErr_Refused);
 
-  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_NoSuchRecord) instanceof Error,
+  ex = dns_sd.buildException(dns_sd.kDNSServiceErr_NoSuchRecord);
+  t.ok(ex instanceof Error,
       'buildException(kDNSServiceErr_NoSuchRecord) must return an Error object');
+  t.strictEqual( ex.errorCode, dns_sd.kDNSServiceErr_NoSuchRecord);
 
-  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_NoAuth) instanceof Error,
+  ex = dns_sd.buildException(dns_sd.kDNSServiceErr_NoAuth);
+  t.ok(ex instanceof Error,
       'buildException(kDNSServiceErr_NoAuth) must return an Error object');
+  t.strictEqual( ex.errorCode, dns_sd.kDNSServiceErr_NoAuth);
 
-  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_NoSuchKey) instanceof Error,
+  ex = dns_sd.buildException(dns_sd.kDNSServiceErr_NoSuchKey);
+  t.ok(ex instanceof Error,
       'buildException(kDNSServiceErr_NoSuchKey) must return an Error object');
+  t.strictEqual( ex.errorCode, dns_sd.kDNSServiceErr_NoSuchKey);
 
-  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_NATTraversal) instanceof Error,
+  ex = dns_sd.buildException(dns_sd.kDNSServiceErr_NATTraversal);
+  t.ok(ex instanceof Error,
       'buildException(kDNSServiceErr_NATTraversal) must return an Error object');
+  t.strictEqual( ex.errorCode, dns_sd.kDNSServiceErr_NATTraversal);
 
-  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_DoubleNAT) instanceof Error,
+  ex = dns_sd.buildException(dns_sd.kDNSServiceErr_DoubleNAT);
+  t.ok(ex instanceof Error,
       'buildException(kDNSServiceErr_DoubleNAT) must return an Error object');
+  t.strictEqual( ex.errorCode, dns_sd.kDNSServiceErr_DoubleNAT);
 
-  t.ok(dns_sd.buildException(dns_sd.kDNSServiceErr_BadTime) instanceof Error,
+  ex = dns_sd.buildException(dns_sd.kDNSServiceErr_BadTime);
+  t.ok(ex instanceof Error,
       'buildException(kDNSServiceErr_BadTime) must return an Error object');
+  t.strictEqual( ex.errorCode, dns_sd.kDNSServiceErr_BadTime);
 
   t.throws(function() { dns_sd.buildException() },
     'not enough arguments');
