@@ -19,6 +19,7 @@ h1. mdns User Guide
 ** "TXT Records":#txt_records
 ** "The Resolver Sequence":#resolver_sequence
 ** "Network Interfaces":#network_interfaces
+** "Error Handling":#error_handling
 * "Reference":#reference
 ** "mdns.Advertisement()":#advertisement
 ** "mdns.Browser()":#browser
@@ -43,7 +44,7 @@ h2(#tutorial). Tutorial
 
 Before we begin go to the internet and get you a _bonjour browser_ so that you can _ALL_ the service discovery.
 
-Multicast DNS service discovery provides a way to announce and discover services on the local network. Here is how to announce a HTTP server running on port 4321:
+Multicast DNS service discovery is a solution to announce and discover services on the local network. Here is how to announce a HTTP server running on port 4321:
 
 bc. var mdns = require('mdns')
   , ad = mdns.createAdvertisement(mdns.tcp('http'), 4321)
@@ -106,6 +107,10 @@ bc. var r0 = '_http._tcp,_api-v1'                                   // string fo
 In fact all of these are legal constructor arguments for @ServiceType@. JSON (de-)serialization works too. And finally there is @makeServiceType(...)@ which turns any representation into a @ServiceType@ object unless it already is one.
 
 Note: mdns liberally makes up service types for testing purposes and it is probably OK if you do the same for your media art project or something. But if you ship a product you should register your service type with the "IANA":http://www.iana.org/form/ports-services.
+
+h4(#subtypes). Subtypes
+
+TBD.
 
 h3(#txt_records). TXT Records
 
@@ -183,9 +188,13 @@ These are the same names as returned by @os.networkInterfaces()@. They are persi
 
 When browsing the @service@ object passed to the event listeners has a @networkInterface@ property. It contains the human readable name of the network interface the service was discovered on. See the "service object example":#service_object_example above.
 
+On windows interface names are only available on vista and better.
+
 h4. IP Addresses
 
 IP addresses are portable across platforms. In an environment that uses dynamic addresses (DHCP, mdns, zeroconf or MS autoconf) they are not necessarily persistent across reboots or disconnects. Also, note that currently simple string comparison is used to find the address in the result returned by @os.networkInterfaces()@. This works great for IPv4 addresses. However, IPv6 addresses have multiple equivalent string representations. That means at present you have to use the exact same string as found in the result of @os.networkInterfaces()@. Otherwise mdns will fail to find the corresponding interface. This makes IPv6 addresses less portable than IPv4 ones.
+
+On windows IP addresses are only available on vista and better.
 
 h4. Interface Indices
 
@@ -200,9 +209,9 @@ bc. var browser = mdns.createBrowser( mdns.tcp('http')
 
 On current versions of Mac OS X a @Browser@ listening on the loopback interface will still discover _all_ services running on the local host. To discover only services that are announced on the loopback interface you'll have to do some filtering in your @serviceUp@ and @serviceDown@ listeners. Just ignore any event where @service.interfaceIndex@ does not equal @mdns.loopbackInterface()@. This approach is portable across platforms.
 
-h4. Compatibility
+h3(#error_handling). Error Handling
 
-On windows interface names and IP addresses are only available on vista and better. Also note that historic versions of node did not have @os.networkInterfaces()@. On these versions using an IP address will not work.
+TBD.
 
 h2(#reference). Reference
 
