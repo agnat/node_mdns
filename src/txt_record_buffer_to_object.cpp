@@ -39,7 +39,7 @@ txtRecordBufferToObject(Arguments const& args) {
             key.resize(key.size() * 2);
         }
         if (error != kDNSServiceErr_NoError) {
-            return throwMdnsError("TXTRecordGetItemAtIndex", error);
+            return throwMdnsError(error);
         }
         result->Set(String::New(&*key.begin()),
                 value_ptr ? 

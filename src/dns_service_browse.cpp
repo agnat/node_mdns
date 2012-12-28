@@ -92,7 +92,7 @@ DNSServiceBrowse(Arguments const& args) {
             OnServiceChanged, serviceRef);
 
     if (error != kDNSServiceErr_NoError) {
-        return throwMdnsError("DNSServiceBrowse()", error);
+        return throwMdnsError(error);
     }
 
     if ( ! serviceRef->SetSocketFlags()) {

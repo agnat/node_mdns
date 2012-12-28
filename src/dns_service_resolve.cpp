@@ -105,7 +105,7 @@ DNSServiceResolve(Arguments const& args) {
             flags, interfaceIndex, *name, *serviceType, *domain, OnResolve, serviceRef);
 
     if (error != kDNSServiceErr_NoError) {
-        return throwMdnsError("DNSServiceResolve()", error);
+        return throwMdnsError(error);
     }
     if ( ! serviceRef->SetSocketFlags()) {
         return throwError("Failed to set socket flags (O_NONBLOCK, FD_CLOEXEC)");

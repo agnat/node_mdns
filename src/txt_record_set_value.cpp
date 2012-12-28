@@ -46,7 +46,7 @@ TXTRecordSetValue(Arguments const& args) {
                 ? NULL : args[2]->IsString() ? *String::Utf8Value(args[2]->ToString()) : Buffer::Data(args[2]->ToObject())));
 
     if (code != kDNSServiceErr_NoError) {
-        return throwMdnsError("failed to set txt record value", code);
+        return throwMdnsError(code);
     }
     return Undefined();
 }

@@ -65,7 +65,7 @@ DNSServiceEnumerateDomains(Arguments const& args) {
             flags, interfaceIndex, OnEnumeration, serviceRef);
 
     if (error != kDNSServiceErr_NoError) {
-        return throwMdnsError("DNSServiceEnumerateDomains()", error);
+        return throwMdnsError(error);
     }
     if ( ! serviceRef->SetSocketFlags()) {
         return throwError("Failed to set socket flags (O_NONBLOCK, FD_CLOEXEC)");

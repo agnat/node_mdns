@@ -157,7 +157,7 @@ DNSServiceRegister(Arguments const& args) {
             args[9]->IsFunction() ? OnServiceRegistered : NULL,
             serviceRef);
     if (error != kDNSServiceErr_NoError) {
-        return throwMdnsError("DNSServiceRegister()", error);
+        return throwMdnsError(error);
     }
     if ( ! serviceRef->SetSocketFlags()) {
         return throwError("Failed to set socket flags (O_NONBLOCK, FD_CLOEXEC)");

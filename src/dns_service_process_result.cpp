@@ -24,7 +24,7 @@ DNSServiceProcessResult(Arguments const& args) {
     ref->SetThis(args.This());
     DNSServiceErrorType error = DNSServiceProcessResult(ref->GetServiceRef());
     if (error != kDNSServiceErr_NoError) {
-        return throwMdnsError("DNSServiceProcessResult()", error);
+        return throwMdnsError(error);
     }
     return Undefined();
 }
