@@ -3,7 +3,6 @@
 var mdns_test = require('../utils/lib/mdns_test')
   , mdns      = mdns_test.require('mdns')
   , nif       = require('../lib/network_interface.js')
-  , util      = require('util')
   , os        = require('os')
   ;
 
