@@ -161,12 +161,13 @@ bc. var browser = mdns.createBrowser(mdns.tcp('http'), {resolverSequence: sequen
 
 And of course you can write your own tasks:
 
-bc. var MCHammer = function MCHammer(options) {
+bc. function MCHammer(options) {
+  options = options || {};
   return function MCHammer(service, next) {
     console.log('STOP!');
     setTimeout(function() {
         console.log('hammertime...');
-        service.hammertime = new Date();
+        service.hammerTime = new Date();
         next();
     }, options.delay || 1000);
   }
