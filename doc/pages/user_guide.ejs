@@ -464,9 +464,11 @@ h2(#design_notes). Design Notes
 
 The implementation has two layers: A low-level API and a more user friendly object based API. The low-level API is implemented in C++ and just wraps functions, data structures and constants from @dns_sd.h@. Most of the code deals with argument conversion and error handling. A smaller portion deals with callbacks from C(++) to javascript.
 
-The high-level API is written in javascript. It connects the low-level API to nodes non-blocking IO infrastructure, namely @process.IOWatcher@. This results in excellent separation of concerns and leads to a very robust design... because Ryan is doing all the work.
+The high-level API is written in javascript. It connects the low-level API to nodes non-blocking IO infrastructure.
 
 h2(#compatibility). Compatibility Notes
+
+TBD.
 
 h2(#further_reading). Further Reading
 
