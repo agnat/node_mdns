@@ -200,16 +200,20 @@ On windows IP addresses are only available on vista and better.
 
 h4. Interface Indices
 
-The underlying library dns_sd uses interface indices to identify network interfaces. It is a one-based index into the list of interfaces as returned by @ifconfig@ or @ipconfig@. It is not a valid index into the list returned by @os.networkInterfaces()@ because node intentionally skips interfaces that have no address assigned or are down. Passing zero as @networkInterface@ means "do the right thing". Refer to the dns_sd API documentation under "Further Reading":#further_reading for details. This is the default behavior.
+The underlying library dns_sd uses interface indices to identify network interfaces. It is a one-based index as returned by the @if_nametoindex(...)@ family of calls. It is not a valid index into the list returned by @os.networkInterfaces()@ because node intentionally skips interfaces that have no address assigned or are down. Passing zero as @networkInterface@ means "do the right thing" or, to put it simple "listen on all interfaces". Refer to the dns_sd API documentation under "Further Reading":#further_reading for details. This is the default behavior.
 
 h4. Special Case: The Loopback Interface
 
-Newer versions of dns_sd do not use the interface index of the loopback interface to specify local operation. They use the constant @kDNSServiceInterfaceIndexLocalOnly@. To write cross platform code that works with all versions of dns_sd you should use the function @mdns.loopbackInterface()@ like so:
+Newer versions of dns_sd do not use the interface index of the loopback interface to specify local operation. They use the constant @kDNSServiceInterfaceIndexLocalOnly@. To write cross platform code that works on most versions of dns_sd you should use the function @mdns.loopbackInterface()@ like so:
 
 bc. var browser = mdns.createBrowser( mdns.tcp('http')
                                 , { networkInterface: mdns.loopbackInterface()});
 
-On current versions of Mac OS X a @Browser@ listening on the loopback interface will still discover _all_ services running on the local host. To discover only services that are announced on the loopback interface you'll have to do some filtering in your @serviceUp@ and @serviceDown@ listeners. Just ignore any event where @service.interfaceIndex@ does not equal @mdns.loopbackInterface()@. This approach is portable across platforms.
+On current versions of Mac OS X a @Browser@ listening on the loopback interface will still discover _all_ services running on the local host. To discover only services that are announced on the loopback interface you'll have to do some filtering in your @serviceUp@ and @serviceDown@ listeners. Just ignore any event where @service.interfaceIndex@ does not equal @mdns.loopbackInterface()@. This is the most portable approach.
+
+As far as I can tell avahi's dns_sd compatibility library does not support operation on the loopback interface. Neither using the appropriate interface index nor passing the constant seems to work. If you happen to know how to do it please get in touch.
+
+Please note that setting @networkInterface@ to the loopback name or passing 127.0.0.1 has undefined behavior. It may work on some platforms and/or versions and fail on others. Even worth, it may just do nothing useful without reporting an error.
 
 h3(#error_handling). Error Handling
 
@@ -257,6 +261,7 @@ h4. new mdns.Advertisement(serviceType, port, [options], [callback])
 Create a new service advertisement with the given @serviceType@ and @port@. The @callback@ has the arguments @(error, service)@ and it is run after successful registration and if an error occurs. If the advertisement is used without a callback an handler should be attached to the @'error'@ event. The @options@ object contains additional arguments to @DNSServiceRegister(...)@:
 
 - name := up to 63 bytes of Unicode to be used as the instance name. Think iTunes shared library names. If not given the host name is used instead.
+- interfaceIndex := one-based index of the network interface the service should be announced on. *Deprecated:* Use networkInterface instead.
 - networkInterface := the network interface to use. See "Network Interfaces":#network_interfaces for details.
 - txtRecord        := an object to be published as a TXT record. Refer to the "TXT record section":#txt_records for details.
 - host             := see documentation of @DNSServiceRegister(...)@
@@ -289,6 +294,7 @@ h4. new mdns.Browser(serviceType, [options])
 Create a new browser to discover services that match the given @serviceType@. @options@ may contain the following properties:
 
 - resolverSequence := custom "resolver sequence":#resolver_sequence for this browser
+- interfaceIndex   := one-based index of the network interface the services should be discovered on. *Deprecated:* Use networkInterface instead.
 - networkInterface := the network interface to use. See "Network Interfaces":#network_interfaces for details.
 - domain           := see documentation of @DNSServiceBrowse(...)@
 - context          := see documentation of @DNSServiceBrowse(...)@
