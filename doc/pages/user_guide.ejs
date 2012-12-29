@@ -214,7 +214,7 @@ On current versions of Mac OS X a @Browser@ listening on the loopback interface 
 
 As far as I can tell avahi's dns_sd compatibility library does not support operation on the loopback interface. Neither using the appropriate interface index nor passing the constant seems to work. If you happen to know how to do it please get in touch.
 
-Please note that setting @networkInterface@ to the loopback name or passing 127.0.0.1 has undefined behavior. It may work on some platforms and/or versions and fail on others. Even worth, it may just do nothing useful without reporting an error.
+Please note that setting @networkInterface@ to the loopback name or passing 127.0.0.1 results in undefined behavior. It may work on some platforms and/or versions and fail on others. Even worse, it may just do nothing useful without reporting an error.
 
 h3(#error_handling). Error Handling
 
