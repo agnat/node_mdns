@@ -457,6 +457,10 @@ h3(#constants). Constants
 
 All dns_sd constants (supported by the implementation) are exposed on the @mdns@ object. Refer to the "dns_sd API documentation":http://developer.apple.com/library/mac/documentation/Networking/Reference/DNSServiceDiscovery_CRef/index.html for a list.
 
+h4. mdns.isAvahi
+
+A boolean that is true when running on avahi. It's a kludge though.
+
 h3(#dns_sd). mdns.dns_sd
 
 @mdns.dns_sd@ contains the native functions and data structures. The functions are bound to javascript using the exact C names and arguments. This breaks with the usual node convention of lower-case function names.
