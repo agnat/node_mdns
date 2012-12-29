@@ -50,15 +50,17 @@ mdns User Guide<br />
 	<li><a href="#introduction">Introduction</a></li>
 	<li><a href="#tutorial">Tutorial</a>
 	<ul>
-		<li><a href="#service_types">On service types</a></li>
+		<li><a href="#service_types">On Service Types</a></li>
 		<li><a href="#txt_records"><span class="caps">TXT</span> Records</a></li>
-		<li><a href="#resolver_sequence">The resolver sequence</a></li>
+		<li><a href="#resolver_sequence">The Resolver Sequence</a></li>
+		<li><a href="#network_interfaces">Network Interfaces</a></li>
+		<li><a href="#error_handling">Error Handling</a></li>
 	</ul></li>
 	<li><a href="#reference">Reference</a>
 	<ul>
 		<li><a href="#advertisement" title="">mdns.Advertisement</a></li>
 		<li><a href="#browser" title="">mdns.Browser</a></li>
-		<li><a href="#rst">Resolver sequence tasks</a></li>
+		<li><a href="#rst">Resolver Sequence Tasks</a></li>
 		<li><a href="#service_type">mdns.ServiceType</a></li>
 		<li><a href="#functions">Functions</a></li>
 		<li><a href="#constants">Constants</a></li>
@@ -74,7 +76,7 @@ mdns User Guide<br />
 <p>The <span class="caps">API</span> is documented in the <a href="#reference">reference section</a> below.</p>
 <h2 id="tutorial">Tutorial</h2>
 <p>Before we begin go to the internet and get you a <em>bonjour browser</em> so that you can <em><span class="caps">ALL</span></em> the service discovery.</p>
-<p>Multicast <span class="caps">DNS</span> service discovery provides a way to announce and discover services on the local network. Here is how to announce a <span class="caps">HTTP</span> server running on port 4321:</p>
+<p>Multicast <span class="caps">DNS</span> service discovery is a solution to announce and discover services on the local network. Here is how to announce a <span class="caps">HTTP</span> server running on port 4321:</p>
 <pre><code>var mdns = require('mdns')
   , ad = mdns.createAdvertisement(mdns.tcp('http'), 4321)
   ;
@@ -91,8 +93,9 @@ browser.on('serviceDown', function(service) {
 
 <code>browser.start();</code></pre>
 <p>As you can see the browser object is an <code>EventEmitter</code>. For each <span class="caps">HTTP</span> server a <code>'serviceUp'</code> event is emitted. Likewise, if a server disappears <code>'serviceDown'</code> is sent. The <code>service</code> object of a <code>'serviceUp'</code> event might look like this:</p>
-<pre><code>{ interfaceIndex: 4
+<pre id="service_object_example"><code id="service_object_example">{ interfaceIndex: 4
 , name: 'somehost'
+, networkInterface: 'en0'
 , type: {name: 'http', protocol: 'tcp', subtypes: []}
 , replyDomain: 'local.'
 , fullname: 'somehost._http._tcp.local.'
@@ -102,6 +105,7 @@ browser.on('serviceDown', function(service) {
 }</code></pre>
 <p>In fact you might receive more than one event per service instance. That is because dns_sd reports each available network path to a service. Also, note that you might get more (or less) addresses. This depends on the network topology. While testing you will often run both peers on the same machine. Now, if you have both a wired and a wireless connection to the same network you will see both addresses on both interfaces (not including IPv6 addresses). The number of IP addresses also depends on the platform and the resolver being used. More on this later.</p>
 <p>The <code>name</code> property is not necessarily the host name. It is a user defined string specifically meant to be displayed in the user interface. It only defaults to the host name.</p>
+<p>Note that the examples above intentionally omit error handling. See <a href="#error_handling">Error Handling</a> below on how to deal with synchronous and asynchronous errors.</p>
 <h3 id="service_types">On service types</h3>
 <p>Service type identifiers are strings used to match service instances to service queries. A service type always contains the service name and the protocol. Additionally it may contain one or more subtype identifiers. Here are some examples:</p>
 <pre><code>_http._tcp
@@ -120,6 +124,8 @@ _osc._udp,_api-v1,_api-v2</code></pre>
   ;</code></pre>
 <p>In fact all of these are legal constructor arguments for <code>ServiceType</code>. <span class="caps">JSON</span> (de-)serialization works too. And finally there is <code>makeServiceType(...)</code> which turns any representation into a <code>ServiceType</code> object unless it already is one.</p>
 <p>Note: mdns liberally makes up service types for testing purposes and it is probably OK if you do the same for your media art project or something. But if you ship a product you should register your service type with the <a href="http://www.iana.org/form/ports-services"><span class="caps">IANA</span></a>.</p>
+<h4 id="subtypes">Subtypes</h4>
+<p><span class="caps">TBD</span>.</p>
 <h3 id="txt_records"><span class="caps">TXT</span> Records</h3>
 <p>Each service has an associated <span class="caps">DNS</span> <span class="caps">TXT</span> record. The application can use it to publish a small amount of metadata. The record contains key-value pairs. The keys must be all printable ascii characters excluding &#8216;=&#8217;. The value may contain any data.</p>
 <p>The <span class="caps">TXT</span> record is passed to the <code>Advertisement</code> as an <code>object</code>:</p>
@@ -139,7 +145,7 @@ var ad = mdns.createAdvertisement(mdns.tcp('http'), 4321, {txtRecord: txt_record
 <p>When browsing for services, the incoming <span class="caps">TXT</span> record is automatically decoded and attached to the <code>txtRecord</code> property of the <code>service</code> object.</p>
 <p>Now, what to put into a <span class="caps">TXT</span> record? Let&#8217;s start with what <em>not</em> to put in there. You should not put anything in the <span class="caps">TXT</span> record that is <em>required</em> to successfully establish a connection to your service. Things like the protocol version should be negotiated <em>in-band</em> whenever possible. Multicast <span class="caps">DNS</span> is pretty much a local thing. If your application relies to much on mDNS it will not work in a wide area network. So, just think twice before depending on the <span class="caps">TXT</span> record. That said, the <span class="caps">TXT</span> record may be used to help with legacy or proprietary protocols. Another application is to convey additional information to the user. Think about a printer dialog. It is very helpful to display the printers location, information about color support &amp;c. <em>before</em> the user makes a choice.</p>
 <p class="footnote" id="fn1"><a href="#fnr1"><sup>1</sup></a> This is not entirely accurate. It is possible to use larger <span class="caps">TXT</span> records. But you should read the relevant sections of the internet draft before doing so.</p>
-<h3 id="resolver_sequence">The resolver sequence</h3>
+<h3 id="resolver_sequence">The Resolver Sequence</h3>
 <p>The <code>Browser</code> object uses a resolver sequence to collect address and port information. A resolver sequence is basically just an array of functions. The functions are called in order and receive two arguments: a <code>service</code> object to decorate and a <code>next()</code> function. Each function gathers information on the service, often by invoking asynchronous operations. When done the data is stored on the <code>service</code> object and the next function is invoked by calling <code>next()</code>. This is kind of like web server middleware as it happens between service discovery and emitting the events. On the other hand it is just another async function chain thing.</p>
 <p>Resolver sequence tasks (RSTs) are created by calling factory functions:</p>
 <pre><code>var sequence = [
@@ -149,28 +155,74 @@ var ad = mdns.createAdvertisement(mdns.tcp('http'), 4321, {txtRecord: txt_record
 <p>A browser with a custom sequence is created like this:</p>
 <pre><code>var browser = mdns.createBrowser(mdns.tcp('http'), {resolverSequence: sequence});</code></pre>
 <p>And of course you can write your own tasks:</p>
-<pre><code>var MCHammer = function MCHammer(options) {
+<pre><code>function MCHammer(options) {
+  options = options || {};
   return function MCHammer(service, next) {
     console.log('STOP!');
     setTimeout(function() {
         console.log('hammertime...');
-        service.hammertime = new Date();
+        service.hammerTime = new Date();
         next();
     }, options.delay || 1000);
   }
 }</code></pre>
 <p>Although it seems a bit complicated this design solves a number of problems:</p>
 <ol>
-	<li>The default behavior to resolve all services down to the IP is very convenient. But it is very expensive and very time consuming too. Many applications just don&#8217;t need every port number for every service instance. They just need one. Now it is up to the user to plug together whatever the application requires.</li>
+	<li>The default behavior to resolve all services down to the IP is very convenient. But it is very expensive and very time consuming too. Many applications just don&#8217;t need every port number and IP address for every service instance. They just need one. Now it is up to the user to plug together whatever the application requires.</li>
 	<li>Portability was another issue. Not all platforms support all functions required by the (old) default behavior. The resolver sequence provides the necessary abstraction to handle this cleanly.</li>
 	<li>Something with separation of concerns.</li>
 </ol>
+<h3 id="network_interfaces">Network Interfaces</h3>
+<p>Sometimes it is necessary to restrict a browser or advertisement to a certain network interface. Sometimes the service is only available on one interface like on a router. Or maybe you want to run your mdns stuff on the loopback interface to keep it from interfering with a production system. Restricting operation to the loopback interface is also very handy in unit tests.</p>
+<p><code>Browser</code> and <code>Advertisment</code> both support a <code>networkInterface</code> option. It may be set to network interface name, an IP address or an interface index. All three variants have different properties:</p>
+<h4>Network Interface Names</h4>
+<p>These are the same names as returned by <code>os.networkInterfaces()</code>. They are persistent accross reboots, as far as I know even if hot pluggable network adapters (think <span class="caps">USB</span> to ethernet) are involved. They are human readable. However, please note that they are not portable across platforms. On Linux ethernet interfaces have an <code>eth</code> prefix while on darwin (and probably other BSDs) <code>en</code> is used. Also note that on windows the interface names are localized and, to make things worse, user configurable.</p>
+<p>When browsing the <code>service</code> object passed to the event listeners has a <code>networkInterface</code> property. It contains the human readable name of the network interface the service was discovered on. See the <a href="#service_object_example">service object example</a> above.</p>
+<p>On windows interface names are only available on vista and better.</p>
+<h4>IP Addresses</h4>
+<p>IP addresses are portable across platforms. In an environment that uses dynamic addresses (<span class="caps">DHCP</span>, mdns, zeroconf or MS autoconf) they are not necessarily persistent across reboots or disconnects. Also, note that currently simple string comparison is used to find the address in the result returned by <code>os.networkInterfaces()</code>. This works great for IPv4 addresses. However, IPv6 addresses have multiple equivalent string representations. That means at present you have to use the exact same string as found in the result of <code>os.networkInterfaces()</code>. Otherwise mdns will fail to find the corresponding interface. This makes IPv6 addresses less portable than IPv4 ones.</p>
+<p>On windows IP addresses are only available on vista and better.</p>
+<h4>Interface Indices</h4>
+<p>The underlying library dns_sd uses interface indices to identify network interfaces. It is a one-based index as returned by the <code>if_nametoindex(...)</code> family of calls. It is not a valid index into the list returned by <code>os.networkInterfaces()</code> because node intentionally skips interfaces that have no address assigned or are down. Passing zero as <code>networkInterface</code> means &#8220;do the right thing&#8221; or, to put it simple &#8220;listen on all interfaces&#8221;. Refer to the dns_sd <span class="caps">API</span> documentation under <a href="#further_reading">Further Reading</a> for details. This is the default behavior.</p>
+<h4>Special Case: The Loopback Interface</h4>
+<p>Newer versions of dns_sd do not use the interface index of the loopback interface to specify local operation. They use the constant <code>kDNSServiceInterfaceIndexLocalOnly</code>. To write cross platform code that works on most versions of dns_sd you should use the function <code>mdns.loopbackInterface()</code> like so:</p>
+<pre><code>var browser = mdns.createBrowser( mdns.tcp('http')
+                                , { networkInterface: mdns.loopbackInterface()});</code></pre>
+<p>On current versions of Mac OS X a <code>Browser</code> listening on the loopback interface will still discover <em>all</em> services running on the local host. To discover only services that are announced on the loopback interface you&#8217;ll have to do some filtering in your <code>serviceUp</code> and <code>serviceDown</code> listeners. Just ignore any event where <code>service.interfaceIndex</code> does not equal <code>mdns.loopbackInterface()</code>. This is the most portable approach.</p>
+<p>As far as I can tell avahi&#8217;s dns_sd compatibility library does not support operation on the loopback interface. Neither using the appropriate interface index nor passing the constant seems to work. If you happen to know how to do it please get in touch.</p>
+<p>Please note that setting <code>networkInterface</code> to the loopback name or passing 127.0.0.1 has undefined behavior. It may work on some platforms and/or versions and fail on others. Even worth, it may just do nothing useful without reporting an error.</p>
+<h3 id="error_handling">Error Handling</h3>
+<p>In production code error handling is probably a good idea. Synchronous errors are reported by throwing exceptions. EventEmitters report asynchronous errors by emitting an <code>error</code> event. Asynchronous functions report errors by invoking their callback with an error object as first argument.</p>
+<p>Here is an example of an advertisement that is automatically restarted when an unknown error occurs. This happens for example when the systems mdns daemon is currently down. All other errors, like bad parameters, &amp;c. are treated as fatal.</p>
+<pre><code>var ad;</code>
+
+<code>function createAdvertisement() {
+  try {
+    ad = mdns.createAdvertisement(mdns.tcp('http'), 1337);
+    ad.on('error', handleError);
+    ad.start();
+  } catch (ex) {
+    handleError(ex);
+  }
+}</code>
+
+<code>function handleError(error) {
+  switch (error.errorCode) {
+    case mdns.kDNSServiceErr_Unknown:
+      console.warn(error);
+      setTimeout(createAdvertisement, 5000);
+      break;
+    default:
+      throw error;
+  } 
+}</code></pre>
+<p>All errors generated by the underlying dns_sd library have an <code>errorCode</code> property. Feel free to extend the code above to treat other errors as non-fatal. See the <span class="caps">API</span> documentation under <a href="#further_reading">Further Reading</a> for a list of error codes. Errors generated by mdns itself do not have error codes. Adding a maximum retry count is left as an exercise for the reader.</p>
 <h2 id="reference">Reference</h2>
 <p>Many arguments and options in mdns are directly passed to the dns_sd <span class="caps">API</span>. This document only covers the more important features. For in depth information on the <span class="caps">API</span> and how zeroconf service discovery works refer to <a href="#further_reading">Further Reading</a>.</p>
 <h3 id="advertisement">mdns.Advertisement</h3>
 <p>An <code>Advertisement</code> publishes information about a service on the local network.</p>
 <blockquote id="fairydust">
-<p id="fairydust">The hack0r takes a good look at the local network, <em>someones</em> local network and sprinkles it with fairydust. He watches the particles being swirled up into vortices originating in the passing network traffic. Datadevils on a parking lot next to the information freeway. Visible entropy. The particles in the vortices are illuminated by open ports and the pale neon light of multicast <span class="caps">DNS</span> service advertisements. The hack0r smiles.</p>
+<p id="fairydust">The hack0r takes a good look at the local network, <em>someones</em> local network and sprinkles it with fairydust. He watches the particles being swirled up into vortices originating in the passing network traffic. Datadevils on a parking lot next to the information freeway. Visible entropy. The vortices are illuminated by open ports and the pale neon light of multicast <span class="caps">DNS</span> service advertisements. The hack0r smiles.</p>
 </blockquote>
 <h4>new mdns.Advertisement(serviceType, port, [options], [callback])</h4>
 <p>Create a new service advertisement with the given <code>serviceType</code> and <code>port</code>. The <code>callback</code> has the arguments <code>(error, service)</code> and it is run after successful registration and if an error occurs. If the advertisement is used without a callback an handler should be attached to the <code>'error'</code> event. The <code>options</code> object contains additional arguments to <code>DNSServiceRegister(...)</code>:</p>
@@ -178,9 +230,11 @@ var ad = mdns.createAdvertisement(mdns.tcp('http'), 4321, {txtRecord: txt_record
 	<dt>name</dt>
 	<dd>up to 63 bytes of Unicode to be used as the instance name. Think iTunes shared library names. If not given the host name is used instead.</dd>
 	<dt>interfaceIndex</dt>
-	<dd>one-based index of the network interface the service should be announced on.</dd>
+	<dd>one-based index of the network interface the service should be announced on. <strong>Deprecated:</strong> Use networkInterface instead.</dd>
+	<dt>networkInterface</dt>
+	<dd>the network interface to use. See <a href="#network_interfaces">Network Interfaces</a> for details.</dd>
 	<dt>txtRecord</dt>
-	<dd>is interesting&#8230; but not yet implemented. You can pass a <code>Buffer</code> object but unfortunately there is no way to create it.</dd>
+	<dd>an object to be published as a <span class="caps">TXT</span> record. Refer to the <a href="#txt_records"><span class="caps">TXT</span> record section</a> for details.</dd>
 	<dt>host</dt>
 	<dd>see documentation of <code>DNSServiceRegister(...)</code></dd>
 	<dt>domain</dt>
@@ -206,7 +260,9 @@ var ad = mdns.createAdvertisement(mdns.tcp('http'), 4321, {txtRecord: txt_record
 	<dt>resolverSequence</dt>
 	<dd>custom <a href="#resolver_sequence">resolver sequence</a> for this browser</dd>
 	<dt>interfaceIndex</dt>
-	<dd>one-based index of the network interface the services should be discovered on.</dd>
+	<dd>one-based index of the network interface the services should be discovered on. <strong>Deprecated:</strong> Use networkInterface instead.</dd>
+	<dt>networkInterface</dt>
+	<dd>the network interface to use. See <a href="#network_interfaces">Network Interfaces</a> for details.</dd>
 	<dt>domain</dt>
 	<dd>see documentation of <code>DNSServiceBrowse(...)</code></dd>
 	<dt>context</dt>
@@ -231,14 +287,14 @@ var ad = mdns.createAdvertisement(mdns.tcp('http'), 4321, {txtRecord: txt_record
 <h4>browser.stop()</h4>
 <p>Stop the browser.</p>
 <h4>mdns.Browser.defaultResolverSequence</h4>
-<p>This is the resolver sequence used by all browser objects that do not override it. It contains two steps. On platforms that have <code>DNSServiceGetAddrInfo(...)</code> it has the following items:</p>
+<p>This is the resolver sequence used by all browser objects that do not override it. It contains three steps. On platforms that have <code>DNSServiceGetAddrInfo(...)</code> it has the following items:</p>
 <pre><code>var default_sequence = [
     mdns.rst.DNSServiceResolve()
   , mdns.rst.DNSServiceGetAddrInfo()
   , mdns.rst.makeAddressesUnique()
 ];</code></pre>
 <p>On platforms that don&#8217;t, <code>mdns.rst.getaddrinfo(...)</code> is used instead. You could modify the default sequence but you shouldn&#8217;t.</p>
-<h3 id="rst">Resolve sequence tasks</h3>
+<h3 id="rst">Resolver Sequence Tasks</h3>
 <h4>mdns.rst.DNSServiceResolve(options)</h4>
 <p>Resolve host name and port. Probably all but the empty sequence start with this task. The <code>options</code> object may have the following properties:</p>
 <dl>
@@ -296,17 +352,22 @@ var ad = mdns.createAdvertisement(mdns.tcp('http'), 4321, {txtRecord: txt_record
 <p>Fill in a <code>service</code> object by running a resolver <code>sequence</code>. If no sequence is given the <code>Browser.defaultResolverSequence</code> is used. The callback has the signature <code>(error, service)</code>.</p>
 <h4>mdns.browseThemAll(options)</h4>
 <p>Creates a browser initialized with the wildcard service type. When started the browser emits events for each <em>service type</em> instead of each service instance. The <code>service</code> objects have no <code>name</code> property. By default the browser has an empty resolver sequence. You still can set one using the <code>options</code> object.</p>
+<h4>mdns.loopbackInterface()</h4>
+<p>Returns the platform and version dependent constant to set up a browser or advertisement for local operation. See <a href="#network_interfaces">Network Interfaces</a> for details.</p>
 <h3 id="constants">Constants</h3>
-<p>All dns_sd constants (supported by the implementation) are exposed on the <code>mdns</code> object. Refer to the <a href="http://developer.apple.com/library/mac/#documentation/Networking/Reference/DNSServiceDiscovery_CRef/dns_sd_h/">dns_sd <span class="caps">API</span> documentation</a> for a list.</p>
+<p>All dns_sd constants (supported by the implementation) are exposed on the <code>mdns</code> object. Refer to the <a href="http://developer.apple.com/library/mac/documentation/Networking/Reference/DNSServiceDiscovery_CRef/index.html">dns_sd <span class="caps">API</span> documentation</a> for a list.</p>
+<h4>mdns.isAvahi</h4>
+<p>A boolean that is true when running on avahi. It&#8217;s a kludge though.</p>
 <h3 id="dns_sd">mdns.dns_sd</h3>
 <p><code>mdns.dns_sd</code> contains the native functions and data structures. The functions are bound to javascript using the exact C names and arguments. This breaks with the usual node convention of lower-case function names.</p>
 <h2 id="design_notes">Design Notes</h2>
 <p>The implementation has two layers: A low-level <span class="caps">API</span> and a more user friendly object based <span class="caps">API</span>. The low-level <span class="caps">API</span> is implemented in C++ and just wraps functions, data structures and constants from <code>dns_sd.h</code>. Most of the code deals with argument conversion and error handling. A smaller portion deals with callbacks from C(++) to javascript.</p>
-<p>The high-level <span class="caps">API</span> is written in javascript. It connects the low-level <span class="caps">API</span> to nodes non-blocking IO infrastructure, namely <code>process.IOWatcher</code>. This results in excellent separation of concerns and leads to a very robust design&#8230; because Ryan is doing all the work.</p>
+<p>The high-level <span class="caps">API</span> is written in javascript. It connects the low-level <span class="caps">API</span> to nodes non-blocking IO infrastructure.</p>
 <h2 id="compatibility">Compatibility Notes</h2>
+<p><span class="caps">TBD</span>.</p>
 <h2 id="further_reading">Further Reading</h2>
 <ul>
-	<li><a href="http://developer.apple.com/library/mac/#documentation/Networking/Reference/DNSServiceDiscovery_CRef/dns_sd_h/">dns_sd <span class="caps">API</span> documentation</a></li>
+	<li><a href="http://developer.apple.com/library/mac/documentation/Networking/Reference/DNSServiceDiscovery_CRef/index.html">dns_sd <span class="caps">API</span> documentation</a></li>
 	<li><a href="http://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/NetServices/Introduction.html">Bonjour Overview</a></li>
 	<li><a href="http://developer.apple.com/library/mac/#documentation/Networking/Conceptual/dns_discovery_api/Introduction.html"><span class="caps">DNS</span> Service Discovery Programming Guide</a></li>
 	<li><a href="http://files.dns-sd.org/draft-cheshire-dnsext-dns-sd.txt">Internet Draft: <span class="caps">DNS</span>-Based Service Discovery</a></li>
