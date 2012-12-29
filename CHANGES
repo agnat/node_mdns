@@ -1,5 +1,10 @@
 CHANGES
 
+Version 1.0.0 to 1.1.0
+
+   - better handling of network interfaces
+   - error handling: exceptions/errors contain the numeric error code now
+
 Version 0.0.7 to 1.0.0
 
    - replaced IOWatcher with a libuv based SocketWatcher (Tony Ealden)

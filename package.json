@@ -1,5 +1,5 @@
 { "name": "mdns"
-, "version": "1.1.0-dev"
+, "version": "1.1.0"
 , "description": "multicast DNS service discovery"
 , "main": "./lib/mdns.js"
 , "scripts":
