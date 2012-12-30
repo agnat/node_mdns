@@ -2,7 +2,7 @@ h1. mdns -- node.js Service Discovery
 
 |_. Package:       | mdns |
 |_. Description:   | multicast DNS service discovery |
-|_. Version:       | 1.1.0 |
+|_. Version:       | 2.0.0-dev |
 |_. Installation:  | @npm install mdns@ (see below) |
 |_. Documentation: | "mdns user guide":http://agnat.github.com/node_mdns/user_guide.html |
 |_. License:       | "MIT":http://github.com/agnat/node_mdns/blob/master/LICENSE |
@@ -44,9 +44,19 @@ bc. npm install mdns
 
 If you want to play with the latest source code, here is a more manual approach:
 
-bc.. git clone http://github.com/agnat/node_mdns
+bc. git clone http://github.com/agnat/node_mdns
 cd node_mdns
 npm link && npm test
+
+In case you want to run or even publish your package using the development version of mdns you may set the version field to a tarball URL:
+
+bc. { "name": "discomvobulator"
+, "version": "0.0.1"
+, "description": "covers all your discomvobulation needs"
+, "dependencies":
+  { "mdns": "https://github.com/agnat/node_mdns/tarball/master"
+  }
+}
 
 h2. Documentation
 
