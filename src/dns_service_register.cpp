@@ -69,10 +69,10 @@ DNSServiceRegister(Arguments const& args) {
     }
     DNSServiceFlags flags = args[1]->ToInteger()->Int32Value();
 
-    if ( ! args[2]->IsInt32()) {
+    if ( ! args[2]->IsUint32()) {
         return throwTypeError("argument 3 must be an integer (interfaceIndex)");
     }
-    uint32_t interfaceIndex = args[2]->ToInteger()->Int32Value();
+    uint32_t interfaceIndex = args[2]->ToInteger()->Uint32Value();
 
     bool has_name = false;
     if ( ! args[3]->IsNull() && ! args[3]->IsUndefined()) {
