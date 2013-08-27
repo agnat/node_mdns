@@ -1,12 +1,12 @@
 { "name": "mdns"
-, "version": "2.0.0-dev"
+, "version": "2.1.0"
 , "description": "multicast DNS service discovery"
 , "main": "./lib/mdns.js"
 , "scripts":
   { "test": "node utils/testrun"
   }
 , "keywords": ["zeroconf", "bonjour", "dns_sd", "mDNSResponder"]
-, "devDependencies": 
+, "devDependencies":
   { "ejs":       "*"
   , "less":      "*"
   , "mkdirp":    "*"
