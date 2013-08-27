@@ -1,5 +1,14 @@
 CHANGES
 
+Version 2.0.0-dev to 2.1.0
+
+   - errno was broken in Node v0.10 (mrose17)
+   - allow interfaceIndex to be "really big" (mrose17)
+
+Version 1.1.0 to 2.0.0-dev
+
+   - empty version release (agnat)
+
 Version 1.0.0 to 1.1.0
 
    - better handling of network interfaces
