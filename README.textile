@@ -46,11 +46,11 @@ On Windows you are going to need Apples "Bonjour SDK for Windows". You can downl
 
 mdns is available as a npm package:
 
-bc. npm install mdns
+bc. npm install mdns2
 
 If you want to play with the latest source code, here is a more manual approach:
 
-bc. git clone http://github.com/agnat/node_mdns
+bc. git clone http://github.com/Wizcorp/node_mdns
 cd node_mdns
 npm link && npm test
 
@@ -60,7 +60,7 @@ bc. { "name": "discomvobulator"
 , "version": "0.0.1"
 , "description": "covers all your discomvobulation needs"
 , "dependencies":
-  { "mdns": "https://github.com/agnat/node_mdns/tarball/master"
+  { "mdns": "https://github.com/Wizcorp/node_mdns/tarball/master"
   }
 }
 
@@ -82,6 +82,6 @@ Your name is missing on the list? Shame on me. Please open an issue.
 
 h2. Bugs and Contributions
 
-If you find a bug, please report it using the "issue tracker":http://github.com/agnat/node_mdns/issues.
+If you find a bug, please report it using the "issue tracker":http://github.com/Wizcorp/node_mdns/issues.
 
 <!-- vim: set linebreak filetype=textile spell spelllang=en_us : -->
