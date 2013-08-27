@@ -1,9 +1,15 @@
 h1. mdns -- node.js Service Discovery
 
+THIS IS A FORK OF "agnat/node_mdns":https://github.com/agnat/node_mdns WITH ADDITIONAL PATCHES.
+THE MOMENT agnat/node_mdns BECOMES ACTIVE AGAIN, WE WILL SYNC UP AND REMOVE THIS REPOSITORY.
+
+THE NAME OF THIS FORK ON NPM IS @mdns2@
+
+
 |_. Package:       | mdns |
 |_. Description:   | multicast DNS service discovery |
 |_. Version:       | 2.0.0-dev |
-|_. Installation:  | @npm install mdns@ (see below) |
+|_. Installation:  | @npm install mdns2@ (see below) |
 |_. Documentation: | "mdns user guide":http://agnat.github.com/node_mdns/user_guide.html |
 |_. License:       | "MIT":http://github.com/agnat/node_mdns/blob/master/LICENSE |
 |_. Donations:     | !http://api.flattr.com/button/flattr-badge-large.png(Flattr this git repository)!:https://flattr.com/submit/auto?user_id=agnat&url=https://github.com/agnat/node_mdns&title=node_mdns&tags=github&category=software |
