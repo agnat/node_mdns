@@ -1,5 +1,9 @@
 CHANGES
 
+Version 2.1.0 to 2.1.1
+
+   - undid the interfaceIndex patch as it was breaking the -1 case (ronkorving)
+
 Version 2.0.0-dev to 2.1.0
 
    - errno was broken in Node v0.10 (mrose17)
