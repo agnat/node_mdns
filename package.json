@@ -15,6 +15,7 @@
   , "glob":      "*"
   , "ncp":       "*"
   , "minimatch": "*"
+  , "proxyquire": "~0.5"
   }
 , "repository":
   { "type": "git"
