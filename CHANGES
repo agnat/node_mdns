@@ -1,5 +1,9 @@
 CHANGES
 
+Version 2.1.1 to 2.1.2
+
+   - fixed an exception that was thrown when a service went down along with its network interface (achingbrain)
+
 Version 2.1.0 to 2.1.1
 
    - fixed the interfaceIndex patch by mrose17 as it was breaking on Node 0.8 (ronkorving)
