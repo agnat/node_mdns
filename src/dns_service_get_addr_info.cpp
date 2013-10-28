@@ -36,7 +36,7 @@ OnAddressInfo(DNSServiceRef sdRef, DNSServiceFlags flags,
     Local<Value> args[argc];
     args[0] = Local<Object>::New(serviceRef->handle_);
     args[1] = Integer::New(flags);
-    args[2] = Integer::New(interfaceIndex);
+    args[2] = Integer::NewFromUnsigned(interfaceIndex);
     args[3] = Integer::New(errorCode);
     args[4] = stringOrUndefined(hostname);
     args[5] = String::Empty();
@@ -89,10 +89,10 @@ DNSServiceGetAddrInfo(Arguments const& args) {
     }
     DNSServiceFlags flags = args[1]->ToInteger()->Int32Value();
 
-    if ( ! args[2]->IsInt32()) {
-        return throwTypeError("argument 3 must be an integer (interfaceIndex)");
+    if ( ! args[2]->IsUint32() && ! args[2]->IsInt32()) {
+       return throwTypeError("argument 3 must be an integer (interfaceIndex)");
     }
-    uint32_t interfaceIndex = args[2]->ToInteger()->Int32Value();
+    uint32_t interfaceIndex = args[2]->ToInteger()->Uint32Value();
 
     if ( ! args[3]->IsInt32()) {
         return throwTypeError("argument 4 must be an integer (DNSServiceProtocol)");
