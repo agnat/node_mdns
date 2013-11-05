@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var mdns    = require('/home/peter/stateful-osc-relay/node_modules/mdns2')
+var mdns    = require('../lib/mdns')
   , listOfOscDevices = { /*name: {adresses: ['192.168.0.24', 'fe80::0:18'], port: 10001}}*/ }
   ;
 
