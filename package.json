@@ -1,4 +1,4 @@
-{ "name": "mdns2"
+{ "name": "mdns"
 , "version": "2.1.4"
 , "description": "multicast DNS service discovery"
 , "main": "./lib/mdns.js"

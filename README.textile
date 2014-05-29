@@ -1,15 +1,9 @@
 h1. mdns -- node.js Service Discovery
 
-THIS IS A FORK OF "agnat/node_mdns":https://github.com/agnat/node_mdns WITH ADDITIONAL PATCHES.
-THE MOMENT agnat/node_mdns BECOMES ACTIVE AGAIN, WE WILL SYNC UP AND REMOVE THIS REPOSITORY.
-
-THE NAME OF THIS FORK ON NPM IS @mdns2@
-
-
 |_. Package:       | mdns |
 |_. Description:   | multicast DNS service discovery |
-|_. Version:       | 2.1.0 |
-|_. Installation:  | @npm install mdns2@ (see below) |
+|_. Version:       | 2.1.4 |
+|_. Installation:  | @npm install mdns@ (see below) |
 |_. Documentation: | "mdns user guide":http://agnat.github.com/node_mdns/user_guide.html |
 |_. License:       | "MIT":http://github.com/agnat/node_mdns/blob/master/LICENSE |
 |_. Donations:     | !http://api.flattr.com/button/flattr-badge-large.png(Flattr this git repository)!:https://flattr.com/submit/auto?user_id=agnat&url=https://github.com/agnat/node_mdns&title=node_mdns&tags=github&category=software |
@@ -46,11 +40,11 @@ On Windows you are going to need Apples "Bonjour SDK for Windows". You can downl
 
 mdns is available as a npm package:
 
-bc. npm install mdns2
+bc. npm install mdns
 
 If you want to play with the latest source code, here is a more manual approach:
 
-bc. git clone http://github.com/Wizcorp/node_mdns
+bc. git clone http://github.com/agnat/node_mdns
 cd node_mdns
 npm link && npm test
 
@@ -60,7 +54,7 @@ bc. { "name": "discomvobulator"
 , "version": "0.0.1"
 , "description": "covers all your discomvobulation needs"
 , "dependencies":
-  { "mdns": "https://github.com/Wizcorp/node_mdns/tarball/master"
+  { "mdns": "https://github.com/agnat/node_mdns/tarball/master"
   }
 }
 
@@ -82,6 +76,6 @@ Your name is missing on the list? Shame on me. Please open an issue.
 
 h2. Bugs and Contributions
 
-If you find a bug, please report it using the "issue tracker":http://github.com/Wizcorp/node_mdns/issues.
+If you find a bug, please report it using the "issue tracker":http://github.com/agnat/node_mdns/issues.
 
 <!-- vim: set linebreak filetype=textile spell spelllang=en_us : -->
