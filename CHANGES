@@ -1,5 +1,34 @@
 CHANGES
 
+Version 2.1.4 to 2.2.0
+
+   - moved the repository back from Wizcorp/node_mdns to agnat/node_mdns
+
+Version 2.1.3 to 2.1.4
+
+   - added service to errors from the resolver (bjornstar)
+
+Version 2.1.2 to 2.1.3
+
+   - applied the fix from 2.1.0 to remaining parts of the code base (achingbrain)
+
+Version 2.1.1 to 2.1.2
+
+   - fixed an exception that was thrown when a service went down along with its network interface (achingbrain)
+
+Version 2.1.0 to 2.1.1
+
+   - fixed the interfaceIndex patch by mrose17 as it was breaking on Node 0.8 (ronkorving)
+
+Version 2.0.0-dev to 2.1.0
+
+   - errno was broken in Node v0.10 (mrose17)
+   - allow interfaceIndex to be "really big" (mrose17)
+
+Version 1.1.0 to 2.0.0-dev
+
+   - empty version release (agnat)
+
 Version 1.0.0 to 1.1.0
 
    - better handling of network interfaces
