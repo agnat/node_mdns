@@ -1,5 +1,9 @@
 CHANGES
 
+Version 2.1.4 to 2.2.0
+
+   - moved the repository back from Wizcorp/node_mdns to agnat/node_mdns
+
 Version 2.1.3 to 2.1.4
 
    - added service to errors from the resolver (bjornstar)
