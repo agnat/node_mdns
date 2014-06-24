@@ -10,23 +10,22 @@ using namespace node;
 
 namespace node_mdns {
 
-Handle<Value>
-DNSServiceProcessResult(Arguments const& args) {
-    HandleScope scope;
+NAN_METHOD(DNSServiceProcessResult) {
+    NanScope();
     if (argumentCountMismatch(args, 1)) {
-        return throwArgumentCountMismatchException(args, 1);
+        NanReturnValue(throwArgumentCountMismatchException(args, 1));
     }
     if ( ! args[0]->IsObject()) {
-        return throwTypeError("argument 1 must be a DNSServiceRef object");
+        NanReturnValue(throwTypeError("argument 1 must be a DNSServiceRef object"));
     }
 
     ServiceRef * ref = ObjectWrap::Unwrap<ServiceRef>(args[0]->ToObject());
     ref->SetThis(args.This());
     DNSServiceErrorType error = DNSServiceProcessResult(ref->GetServiceRef());
     if (error != kDNSServiceErr_NoError) {
-        return throwMdnsError(error);
+        NanReturnValue(throwMdnsError(error));
     }
-    return Undefined();
+    NanReturnUndefined();
 }
 
 } // end of namespace node_mdns

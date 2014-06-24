@@ -9,14 +9,14 @@ class TxtRecordRef : public node::ObjectWrap {
         ~TxtRecordRef();
 
         static void Initialize(v8::Handle<v8::Object> target);
-        static v8::Handle<v8::Value> New(const v8::Arguments & args);
+        static NAN_METHOD(New);
 
         //inline bool IsInitialized() const { return ref_ != NULL; }
 
         static inline bool HasInstance(v8::Handle<v8::Value> value) {
             if ( ! value->IsObject() ) return false;
             v8::Local<v8::Object> object = value->ToObject();
-            return constructor_template->HasInstance( object );
+            return NanHasInstance(constructor_template, object );
         }
 
         TXTRecordRef & GetTxtRecordRef() { return ref_; }

@@ -27,14 +27,14 @@ OnAddressInfo(DNSServiceRef sdRef, DNSServiceFlags flags,
 {
     if ( ! context) return;
 
-    HandleScope scope;
+    NanScope();
     ServiceRef * serviceRef = static_cast<ServiceRef*>(context);
     Handle<Function> callback = serviceRef->GetCallback();
     Handle<Object> this_ = serviceRef->GetThis();
 
     const size_t argc(8);
     Local<Value> args[argc];
-    args[0] = Local<Object>::New(serviceRef->handle_);
+    args[0] = NanNewLocal<Object>(NanObjectWrapHandle(serviceRef));
     args[1] = Integer::New(flags);
     args[2] = Integer::NewFromUnsigned(interfaceIndex);
     args[3] = Integer::New(errorCode);
@@ -61,51 +61,50 @@ OnAddressInfo(DNSServiceRef sdRef, DNSServiceFlags flags,
     args[6] = Integer::New(ttl);
 
     if (serviceRef->GetContext().IsEmpty()) {
-        args[7] = Local<Value>::New(Undefined());
+        args[7] = NanNewLocal<Value>(Undefined());
     } else {
-        args[7] = Local<Value>::New(serviceRef->GetContext());
+        args[7] = NanNewLocal<Value>(serviceRef->GetContext());
     }
     callback->Call(this_, argc, args);
 }
 
-Handle<Value>
-DNSServiceGetAddrInfo(Arguments const& args) {
-    HandleScope scope;
+NAN_METHOD(DNSServiceGetAddrInfo) {
+    NanScope();
 
     if (argumentCountMismatch(args, 7)) {
-        return throwArgumentCountMismatchException(args, 7);
+        NanReturnValue(throwArgumentCountMismatchException(args, 7));
     }
 
     if ( ! ServiceRef::HasInstance(args[0])) {
-        return throwTypeError("argument 1 must be a DNSServiceRef (sdRef)");
+        NanReturnValue(throwTypeError("argument 1 must be a DNSServiceRef (sdRef)"));
     }
     ServiceRef * serviceRef = ObjectWrap::Unwrap<ServiceRef>(args[0]->ToObject());
     if (serviceRef->IsInitialized()) {
-        return throwError("DNSServiceRef is already initialized");
+        NanReturnValue(throwError("DNSServiceRef is already initialized"));
     }
 
     if ( ! args[1]->IsInt32()) {
-        return throwError("argument 2 must be an integer (DNSServiceFlags)");
+        NanReturnValue(throwError("argument 2 must be an integer (DNSServiceFlags)"));
     }
     DNSServiceFlags flags = args[1]->ToInteger()->Int32Value();
 
     if ( ! args[2]->IsUint32() && ! args[2]->IsInt32()) {
-       return throwTypeError("argument 3 must be an integer (interfaceIndex)");
+       NanReturnValue(throwTypeError("argument 3 must be an integer (interfaceIndex)"));
     }
     uint32_t interfaceIndex = args[2]->ToInteger()->Uint32Value();
 
     if ( ! args[3]->IsInt32()) {
-        return throwTypeError("argument 4 must be an integer (DNSServiceProtocol)");
+        NanReturnValue(throwTypeError("argument 4 must be an integer (DNSServiceProtocol)"));
     }
     uint32_t protocol = args[3]->ToInteger()->Int32Value();
 
     if ( ! args[4]->IsString()) {
-        return throwTypeError("argument 5 must be a string (hostname)");
+        NanReturnValue(throwTypeError("argument 5 must be a string (hostname)"));
     }
     String::Utf8Value hostname(args[4]->ToString());
 
     if ( ! args[5]->IsFunction()) {
-        return throwTypeError("argument 6 must be a function (callBack)");
+        NanReturnValue(throwTypeError("argument 6 must be a function (callBack)"));
     }
     serviceRef->SetCallback(Local<Function>::Cast(args[5]));
 
@@ -117,13 +116,13 @@ DNSServiceGetAddrInfo(Arguments const& args) {
             flags, interfaceIndex, protocol, *hostname, OnAddressInfo, serviceRef);
 
     if (error != kDNSServiceErr_NoError) {
-        return throwMdnsError(error);
+        NanReturnValue(throwMdnsError(error));
     }
     if ( ! serviceRef->SetSocketFlags()) {
-        return throwError("Failed to set socket flags (O_NONBLOCK, FD_CLOEXEC)");
+        NanReturnValue(throwError("Failed to set socket flags (O_NONBLOCK, FD_CLOEXEC)"));
     }
 
-    return Undefined();
+    NanReturnUndefined();
 }
 
 #endif // HAVE_DNSSERVICEGETADDRINFO

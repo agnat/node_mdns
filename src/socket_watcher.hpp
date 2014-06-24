@@ -14,10 +14,10 @@ class SocketWatcher : public node::ObjectWrap {
         int fd_;
         int events_;
 
-        static v8::Handle<v8::Value> New(const v8::Arguments & args);
-        static v8::Handle<v8::Value> Set(const v8::Arguments & args);
-        static v8::Handle<v8::Value> Start(const v8::Arguments& args);
-        static v8::Handle<v8::Value> Stop(const v8::Arguments& args);
+        static NAN_METHOD(New);
+        static NAN_METHOD(Set);
+        static NAN_METHOD(Start);
+        static NAN_METHOD(Stop);
         
         void Start();
         void Stop();

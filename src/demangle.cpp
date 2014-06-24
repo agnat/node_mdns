@@ -10,7 +10,7 @@ namespace {
 
 Handle<Value>
 demangle(Arguments const& args) {
-    HandleScope scope;  
+    NanScope();  
     String::Utf8Value str(args[0]->ToString());
 #ifdef __GNUC__
     int status;
@@ -18,7 +18,7 @@ demangle(Arguments const& args) {
     Local<String> demangled = String::New(ret);
     ::free(ret);
 #endif
-    return scope.Close(demangled);
+    NanReturnValue(demangled);
 }
 
 } // end of anaonymous namespace
@@ -26,6 +26,6 @@ demangle(Arguments const& args) {
 extern "C"
 void
 init(Handle<Object> target) {
-    target->Set(String::NewSymbol("demangle"),
+    target->Set(NanSymbol("demangle"),
             FunctionTemplate::New(demangle)->GetFunction());
 }

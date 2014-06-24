@@ -12,14 +12,13 @@ using namespace node;
 
 namespace node_mdns {
 
-Handle<Value>
-txtRecordBufferToObject(Arguments const& args) {
-    HandleScope scope;
+NAN_METHOD(txtRecordBufferToObject) {
+    NanScope();
     if (argumentCountMismatch(args, 1)) {
-        return throwArgumentCountMismatchException(args, 1);
+        NanReturnValue(throwArgumentCountMismatchException(args, 1));
     }
     if ( ! args[0]->IsObject() || ! Buffer::HasInstance(args[0]->ToObject())) {
-        return throwTypeError("argument 1 must be a buffer (txtRecord)");
+        NanReturnValue(throwTypeError("argument 1 must be a buffer (txtRecord)"));
     }
     Local<Object> buffer = args[0]->ToObject();
 
@@ -39,14 +38,16 @@ txtRecordBufferToObject(Arguments const& args) {
             key.resize(key.size() * 2);
         }
         if (error != kDNSServiceErr_NoError) {
-            return throwMdnsError(error);
+            NanReturnValue(throwMdnsError(error));
         }
-        result->Set(String::New(&*key.begin()),
-                value_ptr ? 
-                String::New(static_cast<const char*>(value_ptr), value_length) :
-                Undefined());
+        if (value_ptr) {
+            result->Set(String::New(&*key.begin()),
+                String::New(static_cast<const char*>(value_ptr), value_length));
+        } else {
+            result->Set(String::New(&*key.begin()), Undefined());
+        }
     }
-    return scope.Close(result);
+    NanReturnValue(result);
 }
 
 } // end of namespace node_mdns

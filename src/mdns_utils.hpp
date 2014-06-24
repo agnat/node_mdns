@@ -30,13 +30,13 @@ throwMdnsError(DNSServiceErrorType error_code) {
 
 inline
 bool
-argumentCountMismatch(v8::Arguments const& args, int expectedCount) {
+argumentCountMismatch(_NAN_METHOD_ARGS, int expectedCount) {
     return args.Length() != expectedCount;
 }
 
 inline
 v8::Handle<v8::Value>
-throwArgumentCountMismatchException(v8::Arguments const& args, size_t expectedCount) {
+throwArgumentCountMismatchException(_NAN_METHOD_ARGS, size_t expectedCount) {
     std::ostringstream msg;
     msg << "argument count mismatch: expected " << expectedCount 
         << ", but got " <<  args.Length() << " arguments.";
@@ -46,7 +46,11 @@ throwArgumentCountMismatchException(v8::Arguments const& args, size_t expectedCo
 inline
 v8::Local<v8::Value>
 stringOrUndefined(const char * str) {
-    return v8::Local<v8::Value>::New(str ? v8::String::New(str) : v8::Undefined());
+    if (str) {
+        return NanNewLocal<v8::Value>(v8::String::New(str));
+    } else {
+        return NanNewLocal<v8::Value>(v8::Undefined());
+    }
 }
 
 } // end of namespace node_mdns

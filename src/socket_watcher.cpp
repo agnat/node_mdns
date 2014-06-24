@@ -18,7 +18,7 @@ Handle<Value>
 MakeCallback(const Handle<Object> object, const Handle<Function> callback,
         int argc, Handle<Value> argv[])
 {
-    HandleScope scope;
+    NanScope();
 
     // TODO Hook for long stack traces to be made here.
 
@@ -28,10 +28,10 @@ MakeCallback(const Handle<Object> object, const Handle<Function> callback,
 
     if (try_catch.HasCaught()) {
         FatalException(try_catch);
-        return Undefined();
+        NanReturnUndefined();
     }
 
-    return scope.Close(ret);
+    NanReturnValue(ret);
 }
 
 }  // end of namespace node
@@ -39,7 +39,7 @@ MakeCallback(const Handle<Object> object, const Handle<Function> callback,
 
 namespace node_mdns {
 
-    Persistent<String> callback_symbol;
+    // Persistent<String> callback_symbol;
 
     SocketWatcher::SocketWatcher() : poll_(NULL), fd_(0), events_(0) {
     }
@@ -48,7 +48,7 @@ namespace node_mdns {
     SocketWatcher::Initialize(Handle<Object> target) {
         Local<FunctionTemplate> t = FunctionTemplate::New(New);
 
-        Local<String> symbol = String::NewSymbol("SocketWatcher");
+        Local<String> symbol = NanSymbol("SocketWatcher");
         t->SetClassName(symbol);
         t->InstanceTemplate()->SetInternalFieldCount(1);
 
@@ -58,15 +58,14 @@ namespace node_mdns {
 
         target->Set(symbol, t->GetFunction());
 
-        callback_symbol = NODE_PSYMBOL("callback");
+        // NanAssignPersistent(String, callback_symbol, NanSymbol("callback"));
     }
 
-    Handle<Value>
-    SocketWatcher::Start(const Arguments& args) {
-        HandleScope scope;
+    NAN_METHOD(SocketWatcher::Start) {
+        NanScope();
         SocketWatcher *watcher = ObjectWrap::Unwrap<SocketWatcher>(args.Holder());
         watcher->Start();
-        return Undefined();
+        NanReturnUndefined();
     }
 
     void
@@ -87,12 +86,12 @@ namespace node_mdns {
 
     void
     SocketWatcher::Callback(uv_poll_t *w, int status, int revents) {
-        HandleScope scope;
+        NanScope();
 
         SocketWatcher *watcher = static_cast<SocketWatcher*>(w->data);
         assert(w == watcher->poll_);
 
-        Local<Value> callback_v = watcher->handle_->Get(callback_symbol);
+        Local<Value> callback_v = NanObjectWrapHandle(watcher)->Get(NanSymbol("callback"));
         if (!callback_v->IsFunction()) {
             watcher->Stop();
             return;
@@ -101,18 +100,17 @@ namespace node_mdns {
         Local<Function> callback = Local<Function>::Cast(callback_v);
 
         Local<Value> argv[2];
-        argv[0] = Local<Value>::New(revents & UV_READABLE ? True() : False());
-        argv[1] = Local<Value>::New(revents & UV_WRITABLE ? True() : False());
+        argv[0] = NanNewLocal<Value>(revents & UV_READABLE ? True() : False());
+        argv[1] = NanNewLocal<Value>(revents & UV_WRITABLE ? True() : False());
 
-        node::MakeCallback(watcher->handle_, callback, 2, argv);
+        node::MakeCallback(NanObjectWrapHandle(watcher), callback, 2, argv);
     }
 
-    Handle<Value>
-    SocketWatcher::Stop(const Arguments& args) {
-        HandleScope scope;
+    NAN_METHOD(SocketWatcher::Stop) {
+        NanScope();
         SocketWatcher *watcher = ObjectWrap::Unwrap<SocketWatcher>(args.Holder());
         watcher->Stop();
-        return Undefined();
+        NanReturnUndefined();
     }
 
     void
@@ -123,34 +121,32 @@ namespace node_mdns {
         }
     }
 
-    v8::Handle<v8::Value>
-    SocketWatcher::New(const v8::Arguments & args) {
-        HandleScope scope;
+    NAN_METHOD(SocketWatcher::New) {
+        NanScope();
         SocketWatcher *s = new SocketWatcher();
         s->Wrap(args.This());
-        return args.This();
+        NanReturnValue(args.This());
     }
 
-    Handle<Value>
-    SocketWatcher::Set(const Arguments& args) {
-        HandleScope scope;
+    NAN_METHOD(SocketWatcher::Set) {
+        NanScope();
         SocketWatcher *watcher = ObjectWrap::Unwrap<SocketWatcher>(args.Holder());
         if (!args[0]->IsInt32()) {
-            return ThrowException(Exception::TypeError(
-                String::New("First arg should be a file descriptor.")));
+            NanReturnValue(ThrowException(Exception::TypeError(
+                String::New("First arg should be a file descriptor."))));
         }
         int fd = args[0]->Int32Value();
         if (!args[1]->IsBoolean()) {
-            return ThrowException(Exception::TypeError(
-                String::New("Second arg should boolean (readable).")));
+            NanReturnValue(ThrowException(Exception::TypeError(
+                String::New("Second arg should boolean (readable)."))));
         }
         int events = 0;
 
         if (args[1]->IsTrue()) events |= UV_READABLE;
 
         if (!args[2]->IsBoolean()) {
-            return ThrowException(Exception::TypeError(
-                String::New("Third arg should boolean (writable).")));
+            NanReturnValue(ThrowException(Exception::TypeError(
+                String::New("Third arg should boolean (writable)."))));
         }
 
         if (args[2]->IsTrue()) events |= UV_WRITABLE;
@@ -160,7 +156,7 @@ namespace node_mdns {
         watcher->fd_ = fd;
         watcher->events_ = events;
 
-        return Undefined();
+        NanReturnUndefined();
     }
 
 } // end of namespace node_mdns

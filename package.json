@@ -55,5 +55,10 @@
     , "github": "TobyEalden"
     }
   ]
+, "dependencies":
+  { "bindings": "~1.1.1"
+  , "nan": "~0.6.0"
+  }
+, "gypfile": true
 }
 
