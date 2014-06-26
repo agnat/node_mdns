@@ -8,6 +8,13 @@
 # pragma warning( disable: 4251 )
 #endif
 
+// Hack attempt to fix "node.h missing ';' before identifier" build error
+#if defined(_MSC_VER)
+#include <BaseTsd.h>
+typedef SSIZE_T ssize_t;
+#define _SSIZE_T_
+#endif
+
 #include <node.h>
 #include "nan.h"
 
