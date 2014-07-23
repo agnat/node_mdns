@@ -68,7 +68,7 @@ NAN_METHOD(if_nametoindex) {
         NanReturnValue(throwError((std::string("interface '") + *interfaceName +
                     "' does not exist").c_str()));
     }
-    NanReturnValue( Integer::New(index));
+    NanReturnValue( NanNew<Integer>(index));
 }
 
 NAN_METHOD(if_indextoname) {
@@ -104,14 +104,14 @@ NAN_METHOD(if_indextoname) {
         delete [] nameBuffer;
         NanReturnValue(throwError("failed to convert unicode to utf8"));
     }
-    Local<String> name = String::New(nameBuffer);
+    Local<String> name = NanNew(nameBuffer);
     delete [] nameBuffer;
 #else
     char nameBuffer[IFNAMSIZ];
     if ( ! ::if_indextoname(args[0]->Uint32Value(), nameBuffer)) {
         NanReturnValue(throwError("index has no corresponding interface"));
     }
-    Local<String> name = String::New(nameBuffer);
+    Local<String> name = NanNew(nameBuffer);
 #endif
     NanReturnValue(name);
 }

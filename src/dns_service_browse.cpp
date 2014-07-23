@@ -24,17 +24,17 @@ OnServiceChanged(DNSServiceRef sdRef, DNSServiceFlags flags,
 
     const size_t argc(8);
     Local<Value> args[argc];
-    args[0] = NanNewLocal<Object>(NanObjectWrapHandle(serviceRef));
-    args[1] = Integer::New(flags);
-    args[2] = Integer::NewFromUnsigned(interfaceIndex);
-    args[3] = Integer::New(errorCode);
+    args[0] = NanNew(NanObjectWrapHandle(serviceRef));
+    args[1] = NanNew<Integer>(flags);
+    args[2] = NanNew<Integer>(interfaceIndex);
+    args[3] = NanNew<Integer>(errorCode);
     args[4] = stringOrUndefined(serviceName);
     args[5] = stringOrUndefined(serviceType);
     args[6] = stringOrUndefined(replyDomain);
     if (serviceRef->GetContext().IsEmpty()) {
-        args[7] = NanNewLocal<Value>(Undefined());
+        args[7] = NanUndefined();
     } else {
-        args[7] = NanNewLocal<Value>(serviceRef->GetContext());
+        args[7] = NanNew<Value>(serviceRef->GetContext());
     }
     callback->Call(this_, argc, args);
 }

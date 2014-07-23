@@ -20,12 +20,12 @@ OnEnumeration(DNSServiceRef sdRef, DNSServiceFlags flags, uint32_t interfaceInde
 
     const size_t argc(6);
     Local<Value> args[argc];
-    args[0] = NanNewLocal<Object>(NanObjectWrapHandle(serviceRef));
-    args[1] = Integer::New(flags);
-    args[2] = Integer::NewFromUnsigned(interfaceIndex);
-    args[3] = Integer::New(errorCode);
+    args[0] = NanNew(NanObjectWrapHandle(serviceRef));
+    args[1] = NanNew<Integer>(flags);
+    args[2] = NanNew<Integer>(interfaceIndex);
+    args[3] = NanNew<Integer>(errorCode);
     args[4] = stringOrUndefined(replyDomain);
-    args[5] = NanNewLocal<Value>(serviceRef->GetContext());
+    args[5] = NanNew<Value>(serviceRef->GetContext());
     callback->Call(this_, argc, args);
 }
 

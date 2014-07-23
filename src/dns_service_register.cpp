@@ -34,16 +34,16 @@ OnServiceRegistered(DNSServiceRef sdRef, DNSServiceFlags flags,
     if ( ! callback.IsEmpty() && ! this_.IsEmpty()) {
         const size_t argc(7);
         Local<Value> args[argc];
-        args[0] = NanNewLocal<Object>(NanObjectWrapHandle(serviceRef));
-        args[1] = Integer::New(flags);
-        args[2] = Integer::New(errorCode);
+        args[0] = NanNew(NanObjectWrapHandle(serviceRef));
+        args[1] = NanNew<Integer>(flags);
+        args[2] = NanNew<Integer>(errorCode);
         args[3] = stringOrUndefined(name);
         args[4] = stringOrUndefined(serviceType);
         args[5] = stringOrUndefined(domain);
         if (serviceRef->GetContext().IsEmpty()) {
-            args[6] = NanNewLocal<Value>(Undefined());
+            args[6] = NanUndefined();
         } else {
-            args[6] = NanNewLocal<Value>(serviceRef->GetContext());
+            args[6] = NanNew<Value>(serviceRef->GetContext());
         }
         callback->Call(this_, argc, args);
     }

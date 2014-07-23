@@ -13,19 +13,22 @@ v8::Local<v8::Value> buildException(DNSServiceErrorType error_code);
 inline
 v8::Handle<v8::Value>
 throwError(const char * message) {
-    return ThrowException( v8::Exception::Error( v8::String::New( message )));
+    NanThrowError( NanError(message) );
+    return NanUndefined();
 }
 
 inline
 v8::Handle<v8::Value>
 throwTypeError(const char * message) {
-    return ThrowException( v8::Exception::TypeError( v8::String::New( message )));
+    NanThrowTypeError( message );
+    return NanUndefined();
 }
 
 inline
 v8::Handle<v8::Value>
 throwMdnsError(DNSServiceErrorType error_code) {
-    return ThrowException(buildException(error_code));
+    NanThrowError( buildException(error_code) );
+    return NanUndefined();
 }
 
 inline
@@ -47,9 +50,9 @@ inline
 v8::Local<v8::Value>
 stringOrUndefined(const char * str) {
     if (str) {
-        return NanNewLocal<v8::Value>(v8::String::New(str));
+        return NanNew(str);
     } else {
-        return NanNewLocal<v8::Value>(v8::Undefined());
+        return NanUndefined();
     }
 }
 

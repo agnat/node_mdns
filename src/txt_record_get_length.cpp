@@ -18,7 +18,7 @@ NAN_METHOD(TXTRecordGetLength) {
     }
     TxtRecordRef * ref = ObjectWrap::Unwrap<TxtRecordRef>(args[0]->ToObject());
     uint16_t result = ::TXTRecordGetLength( & ref->GetTxtRecordRef());
-    NanReturnValue(Integer::New(result));
+    NanReturnValue(NanNew<Integer>(result));
 }
 
 } // end of namespace node_mdns

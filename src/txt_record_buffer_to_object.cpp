@@ -22,7 +22,7 @@ NAN_METHOD(txtRecordBufferToObject) {
     }
     Local<Object> buffer = args[0]->ToObject();
 
-    Local<Object> result = Object::New();
+    Local<Object> result = NanNew<Object>();
     std::vector<char> key(16);
     size_t buffer_length = Buffer::Length(buffer);
     void * data = Buffer::Data(buffer);
@@ -41,10 +41,10 @@ NAN_METHOD(txtRecordBufferToObject) {
             NanReturnValue(throwMdnsError(error));
         }
         if (value_ptr) {
-            result->Set(String::New(&*key.begin()),
-                String::New(static_cast<const char*>(value_ptr), value_length));
+            result->Set(NanNew(&*key.begin()),
+                NanNew(static_cast<const char*>(value_ptr), value_length));
         } else {
-            result->Set(String::New(&*key.begin()), Undefined());
+            result->Set(NanNew(&*key.begin()), NanUndefined());
         }
     }
     NanReturnValue(result);

@@ -19,12 +19,12 @@ TxtRecordRef::~TxtRecordRef() {
 
 void
 TxtRecordRef::Initialize(Handle<Object> target) {
-    Local<FunctionTemplate> t = FunctionTemplate::New(New);
-    NanAssignPersistent(FunctionTemplate, constructor_template, t);
+    Local<FunctionTemplate> t = NanNew<FunctionTemplate>(New);
+    NanAssignPersistent(constructor_template, t);
     t->InstanceTemplate()->SetInternalFieldCount(1);
-    t->SetClassName(NanSymbol("TXTRecordRef"));
+    t->SetClassName(NanNew("TXTRecordRef"));
 
-    target->Set(NanSymbol("TXTRecordRef"),
+    target->Set(NanNew("TXTRecordRef"),
             t->GetFunction());
 }
 

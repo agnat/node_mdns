@@ -27,7 +27,7 @@ NAN_METHOD(DNSServiceRefSockFD) {
     if (fd == -1) {
         NanReturnValue(throwError("failed to get socket file descriptor"));
     }
-    NanReturnValue( Integer::New( fd ));
+    NanReturnValue( NanNew<Integer>( fd ));
 }
 
 } // end of namespace node_mdns

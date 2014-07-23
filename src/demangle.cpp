@@ -15,7 +15,7 @@ demangle(Arguments const& args) {
 #ifdef __GNUC__
     int status;
     char * ret = abi::__cxa_demangle(*str, NULL, NULL, & status);
-    Local<String> demangled = String::New(ret);
+    Local<String> demangled = NanNew(ret);
     ::free(ret);
 #endif
     NanReturnValue(demangled);
@@ -26,6 +26,6 @@ demangle(Arguments const& args) {
 extern "C"
 void
 init(Handle<Object> target) {
-    target->Set(NanSymbol("demangle"),
-            FunctionTemplate::New(demangle)->GetFunction());
+    target->Set(NanNew("demangle"),
+            NanNew<FunctionTemplate>(demangle)->GetFunction());
 }

@@ -46,9 +46,9 @@ namespace node_mdns {
 
     void
     SocketWatcher::Initialize(Handle<Object> target) {
-        Local<FunctionTemplate> t = FunctionTemplate::New(New);
+        Local<FunctionTemplate> t = NanNew<FunctionTemplate>(New);
 
-        Local<String> symbol = NanSymbol("SocketWatcher");
+        Local<String> symbol = NanNew("SocketWatcher");
         t->SetClassName(symbol);
         t->InstanceTemplate()->SetInternalFieldCount(1);
 
@@ -58,7 +58,7 @@ namespace node_mdns {
 
         target->Set(symbol, t->GetFunction());
 
-        // NanAssignPersistent(String, callback_symbol, NanSymbol("callback"));
+        // NanAssignPersistent(callback_symbol, NanNew("callback"));
     }
 
     NAN_METHOD(SocketWatcher::Start) {
@@ -91,7 +91,7 @@ namespace node_mdns {
         SocketWatcher *watcher = static_cast<SocketWatcher*>(w->data);
         assert(w == watcher->poll_);
 
-        Local<Value> callback_v = NanObjectWrapHandle(watcher)->Get(NanSymbol("callback"));
+        Local<Value> callback_v = NanObjectWrapHandle(watcher)->Get(NanNew("callback"));
         if (!callback_v->IsFunction()) {
             watcher->Stop();
             return;
@@ -100,10 +100,10 @@ namespace node_mdns {
         Local<Function> callback = Local<Function>::Cast(callback_v);
 
         Local<Value> argv[2];
-        argv[0] = NanNewLocal<Value>(revents & UV_READABLE ? True() : False());
-        argv[1] = NanNewLocal<Value>(revents & UV_WRITABLE ? True() : False());
+        argv[0] = revents & UV_READABLE ? NanTrue() : NanFalse();
+        argv[1] = revents & UV_WRITABLE ? NanTrue() : NanFalse();
 
-        node::MakeCallback(NanObjectWrapHandle(watcher), callback, 2, argv);
+        NanMakeCallback(NanObjectWrapHandle(watcher), callback, 2, argv);
     }
 
     NAN_METHOD(SocketWatcher::Stop) {
@@ -132,21 +132,21 @@ namespace node_mdns {
         NanScope();
         SocketWatcher *watcher = ObjectWrap::Unwrap<SocketWatcher>(args.Holder());
         if (!args[0]->IsInt32()) {
-            NanReturnValue(ThrowException(Exception::TypeError(
-                String::New("First arg should be a file descriptor."))));
+            NanThrowTypeError("First arg should be a file descriptor.");
+            NanReturnUndefined();
         }
         int fd = args[0]->Int32Value();
         if (!args[1]->IsBoolean()) {
-            NanReturnValue(ThrowException(Exception::TypeError(
-                String::New("Second arg should boolean (readable)."))));
+            NanThrowTypeError("Second arg should boolean (readable).");
+            NanReturnUndefined();
         }
         int events = 0;
 
         if (args[1]->IsTrue()) events |= UV_READABLE;
 
         if (!args[2]->IsBoolean()) {
-            NanReturnValue(ThrowException(Exception::TypeError(
-                String::New("Third arg should boolean (writable)."))));
+            NanThrowTypeError("Third arg should boolean (writable).");
+            NanReturnUndefined();
         }
 
         if (args[2]->IsTrue()) events |= UV_WRITABLE;

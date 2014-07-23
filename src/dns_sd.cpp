@@ -97,8 +97,8 @@ defineFunction(Handle<Object> target, const char * name, FunctionCallback f) {
 #else
 defineFunction(Handle<Object> target, const char * name, InvocationCallback f) {
 #endif
-    target->Set(NanSymbol(name),
-            FunctionTemplate::New(f)->GetFunction());
+    target->Set(NanNew(name),
+            NanNew<FunctionTemplate>(f)->GetFunction());
 }
 
 NAN_METHOD(buildException) {
