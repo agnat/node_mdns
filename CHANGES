@@ -1,5 +1,9 @@
 CHANGES
 
+Version 2.2.0 to 2.2.1
+
+   - changed uncatchable error into "error" event on the browser (marcooliveira)
+
 Version 2.1.4 to 2.2.0
 
    - moved the repository back from Wizcorp/node_mdns to agnat/node_mdns
