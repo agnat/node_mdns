@@ -45,7 +45,7 @@ OnServiceRegistered(DNSServiceRef sdRef, DNSServiceFlags flags,
         } else {
             args[6] = NanNew<Value>(serviceRef->GetContext());
         }
-        callback->Call(this_, argc, args);
+        NanMakeCallback(this_, callback, argc, args);
     }
 }
 

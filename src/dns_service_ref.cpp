@@ -9,9 +9,6 @@ namespace node_mdns {
 
 Persistent<FunctionTemplate> ServiceRef::constructor_template;
 
-// static Persistent<String> fd_symbol;
-// static Persistent<String> initialized_symbol;
-
 ServiceRef::ServiceRef() : ref_(), callback_(), context_() {}
 
 ServiceRef::~ServiceRef() {
@@ -34,10 +31,7 @@ ServiceRef::Initialize(Handle<Object> target) {
     NanAssignPersistent(constructor_template, t);
     t->InstanceTemplate()->SetInternalFieldCount(1);
     t->SetClassName(NanNew("DNSServiceRef"));
-
-    // NanAssignPersistent(fd_symbol, NanNew("fd"));
-    // NanAssignPersistent(initialized_symbol, NanNew("initialized"));
-
+    
     t->InstanceTemplate()->SetAccessor(NanNew("fd"), fd_getter);
     t->InstanceTemplate()->SetAccessor( NanNew("initialized"), initialized_getter);
     target->Set(NanNew("DNSServiceRef"), t->GetFunction());

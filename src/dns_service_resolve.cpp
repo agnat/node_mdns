@@ -35,14 +35,11 @@ OnResolve(DNSServiceRef sdRef, DNSServiceFlags flags,
     Local<Value> args[argc];
     args[0] = NanNew(NanObjectWrapHandle(serviceRef));
     args[1] = NanNew<Integer>(flags);
-    args[2] = NanNew<Integer>(interfaceIndex);
+    args[2] = NanNew<Uint32>(interfaceIndex);
     args[3] = NanNew<Integer>(errorCode);
     args[4] = stringOrUndefined(fullname);
     args[5] = stringOrUndefined(hosttarget);
     args[6] = NanNew<Integer>( ntohs(port) );
-    // Buffer * buffer = Buffer::New(txtLen);
-    // memcpy(Buffer::Data(NanObjectWrapHandle(buffer)), txtRecord, txtLen);
-    // args[7] = NanNew<Value>(NanObjectWrapHandle(buffer));
     Local<Object> buffer = NanNewBufferHandle(txtLen);
     memcpy(Buffer::Data(buffer), txtRecord, txtLen);
     args[7] = buffer;
@@ -51,7 +48,7 @@ OnResolve(DNSServiceRef sdRef, DNSServiceFlags flags,
     } else {
         args[8] = NanNew<Value>(serviceRef->GetContext());
     }
-    callback->Call(this_, argc, args);
+    NanMakeCallback(this_, callback, argc, args);
 }
 
 NAN_METHOD(DNSServiceResolve) {

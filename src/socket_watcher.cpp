@@ -23,8 +23,8 @@ MakeCallback(const Handle<Object> object, const Handle<Function> callback,
     // TODO Hook for long stack traces to be made here.
 
     TryCatch try_catch;
-
-    Local<Value> ret = callback->Call(object, argc, argv);
+    
+    Local<Value> ret = NanMakeCallback(object, callback, argc, args);
 
     if (try_catch.HasCaught()) {
         FatalException(try_catch);
@@ -38,8 +38,6 @@ MakeCallback(const Handle<Object> object, const Handle<Function> callback,
 #endif
 
 namespace node_mdns {
-
-    // Persistent<String> callback_symbol;
 
     SocketWatcher::SocketWatcher() : poll_(NULL), fd_(0), events_(0) {
     }
@@ -57,8 +55,6 @@ namespace node_mdns {
         NODE_SET_PROTOTYPE_METHOD(t, "stop", SocketWatcher::Stop);
 
         target->Set(symbol, t->GetFunction());
-
-        // NanAssignPersistent(callback_symbol, NanNew("callback"));
     }
 
     NAN_METHOD(SocketWatcher::Start) {
@@ -137,7 +133,7 @@ namespace node_mdns {
         }
         int fd = args[0]->Int32Value();
         if (!args[1]->IsBoolean()) {
-            NanThrowTypeError("Second arg should boolean (readable).");
+            NanThrowTypeError("Second arg should be a boolean (readable).");
             NanReturnUndefined();
         }
         int events = 0;
@@ -145,7 +141,7 @@ namespace node_mdns {
         if (args[1]->IsTrue()) events |= UV_READABLE;
 
         if (!args[2]->IsBoolean()) {
-            NanThrowTypeError("Third arg should boolean (writable).");
+            NanThrowTypeError("Third arg should be a boolean (writable).");
             NanReturnUndefined();
         }
 

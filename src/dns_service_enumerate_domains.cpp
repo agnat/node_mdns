@@ -22,11 +22,11 @@ OnEnumeration(DNSServiceRef sdRef, DNSServiceFlags flags, uint32_t interfaceInde
     Local<Value> args[argc];
     args[0] = NanNew(NanObjectWrapHandle(serviceRef));
     args[1] = NanNew<Integer>(flags);
-    args[2] = NanNew<Integer>(interfaceIndex);
+    args[2] = NanNew<Uint32>(interfaceIndex);
     args[3] = NanNew<Integer>(errorCode);
     args[4] = stringOrUndefined(replyDomain);
     args[5] = NanNew<Value>(serviceRef->GetContext());
-    callback->Call(this_, argc, args);
+    NanMakeCallback(this_, callback, argc, args);
 }
 
 NAN_METHOD(DNSServiceEnumerateDomains) {

@@ -44,11 +44,7 @@ NAN_METHOD(buildException);
 
 // === locals ===========================================
 
-#if (NODE_MODULE_VERSION > 0x000B)
-void defineFunction(Handle<Object> target, const char * name, FunctionCallback f);
-#else
-void defineFunction(Handle<Object> target, const char * name, InvocationCallback f);
-#endif
+void defineFunction(Handle<Object> target, const char * name, NanFunctionCallback f);
 void addConstants(Handle<Object> target);
 
 void
@@ -92,11 +88,7 @@ init(Handle<Object> target) {
 
 inline
 void
-#if (NODE_MODULE_VERSION > 0x000B)
-defineFunction(Handle<Object> target, const char * name, FunctionCallback f) {
-#else
-defineFunction(Handle<Object> target, const char * name, InvocationCallback f) {
-#endif
+defineFunction(Handle<Object> target, const char * name, NanFunctionCallback f) {
     target->Set(NanNew(name),
             NanNew<FunctionTemplate>(f)->GetFunction());
 }

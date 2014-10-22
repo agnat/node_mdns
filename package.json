@@ -57,7 +57,7 @@
   ]
 , "dependencies":
   { "bindings": "*"
-  , "nan": "*"
+  , "nan": "git://github.com/rvagg/nan.git"
   }
 , "gypfile": true
 }

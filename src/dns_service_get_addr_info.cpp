@@ -36,7 +36,7 @@ OnAddressInfo(DNSServiceRef sdRef, DNSServiceFlags flags,
     Local<Value> args[argc];
     args[0] = NanNew(NanObjectWrapHandle(serviceRef));
     args[1] = NanNew<Integer>(flags);
-    args[2] = NanNew<Integer>(interfaceIndex);
+    args[2] = NanNew<Uint32>(interfaceIndex);
     args[3] = NanNew<Integer>(errorCode);
     args[4] = stringOrUndefined(hostname);
     args[5] = NanNew<String>();
@@ -65,7 +65,7 @@ OnAddressInfo(DNSServiceRef sdRef, DNSServiceFlags flags,
     } else {
         args[7] = NanNew<Value>(serviceRef->GetContext());
     }
-    callback->Call(this_, argc, args);
+    NanMakeCallback(this_, callback, argc, args);
 }
 
 NAN_METHOD(DNSServiceGetAddrInfo) {
