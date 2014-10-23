@@ -34,7 +34,7 @@ OnServiceRegistered(DNSServiceRef sdRef, DNSServiceFlags flags,
     if ( ! callback.IsEmpty() && ! this_.IsEmpty()) {
         const size_t argc(7);
         Local<Value> args[argc];
-        args[0] = NanNew(NanObjectWrapHandle(serviceRef));
+        args[0] = NanObjectWrapHandle(serviceRef);
         args[1] = NanNew<Integer>(flags);
         args[2] = NanNew<Integer>(errorCode);
         args[3] = stringOrUndefined(name);
