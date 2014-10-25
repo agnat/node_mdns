@@ -11,7 +11,7 @@ class ServiceRef : public node::ObjectWrap {
         ~ServiceRef();
 
         static void Initialize(v8::Handle<v8::Object> target);
-        static v8::Handle<v8::Value> New(const v8::Arguments & args);
+        static NAN_METHOD(New);
 
         bool IsInitialized() const;
 
@@ -33,10 +33,8 @@ class ServiceRef : public node::ObjectWrap {
         bool SetSocketFlags();
 
     private:
-        static v8::Handle<v8::Value> fd_getter(v8::Local<v8::String> property,
-                v8::AccessorInfo const& info);
-        static v8::Handle<v8::Value> initialized_getter(v8::Local<v8::String> property,
-                v8::AccessorInfo const& info);
+        static NAN_PROPERTY_GETTER(fd_getter);
+        static NAN_PROPERTY_GETTER(initialized_getter);
 
         DNSServiceRef ref_;
         v8::Persistent<v8::Function> callback_;

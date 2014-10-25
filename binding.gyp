@@ -40,6 +40,7 @@
                          ]
         }]
       ]
+    , "include_dirs": [ "<!(node -e \"require('nan')\")" ]
     # The following breaks the debug build, so just ignore the warning for now.
     #, 'msbuild_settings': {
     #    'ClCompile': { 'ExceptionHandling': 'Sync' }

@@ -8,19 +8,18 @@ using namespace node;
 
 namespace node_mdns {
 
-Handle<Value>
-TXTRecordDeallocate(Arguments const& args) {
-    HandleScope scope;
+NAN_METHOD(TXTRecordDeallocate) {
+    NanScope();
     if (argumentCountMismatch(args, 1)) {
-        return throwArgumentCountMismatchException(args, 1);
+        NanReturnValue(throwArgumentCountMismatchException(args, 1));
     }
     if ( ! args[0]->IsObject() || ! TxtRecordRef::HasInstance(args[0]->ToObject())) {
-        return throwTypeError("argument 1 must be a TXTRecordRef object");
+        NanReturnValue(throwTypeError("argument 1 must be a TXTRecordRef object"));
     }
 
     TxtRecordRef * ref = ObjectWrap::Unwrap<TxtRecordRef>(args[0]->ToObject());
     TXTRecordDeallocate( & ref->GetTxtRecordRef());
-    return Undefined();
+    NanReturnUndefined();
 }
 
 } // end of namespace node_mdns

@@ -13,30 +13,33 @@ v8::Local<v8::Value> buildException(DNSServiceErrorType error_code);
 inline
 v8::Handle<v8::Value>
 throwError(const char * message) {
-    return ThrowException( v8::Exception::Error( v8::String::New( message )));
+    NanThrowError( NanError(message) );
+    return NanUndefined();
 }
 
 inline
 v8::Handle<v8::Value>
 throwTypeError(const char * message) {
-    return ThrowException( v8::Exception::TypeError( v8::String::New( message )));
+    NanThrowTypeError( message );
+    return NanUndefined();
 }
 
 inline
 v8::Handle<v8::Value>
 throwMdnsError(DNSServiceErrorType error_code) {
-    return ThrowException(buildException(error_code));
+    NanThrowError( buildException(error_code) );
+    return NanUndefined();
 }
 
 inline
 bool
-argumentCountMismatch(v8::Arguments const& args, int expectedCount) {
+argumentCountMismatch(_NAN_METHOD_ARGS, int expectedCount) {
     return args.Length() != expectedCount;
 }
 
 inline
 v8::Handle<v8::Value>
-throwArgumentCountMismatchException(v8::Arguments const& args, size_t expectedCount) {
+throwArgumentCountMismatchException(_NAN_METHOD_ARGS, size_t expectedCount) {
     std::ostringstream msg;
     msg << "argument count mismatch: expected " << expectedCount 
         << ", but got " <<  args.Length() << " arguments.";
@@ -46,7 +49,11 @@ throwArgumentCountMismatchException(v8::Arguments const& args, size_t expectedCo
 inline
 v8::Local<v8::Value>
 stringOrUndefined(const char * str) {
-    return v8::Local<v8::Value>::New(str ? v8::String::New(str) : v8::Undefined());
+    if (str) {
+        return NanNew(str);
+    } else {
+        return NanUndefined();
+    }
 }
 
 } // end of namespace node_mdns

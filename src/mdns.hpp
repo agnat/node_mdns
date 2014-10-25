@@ -9,6 +9,7 @@
 #endif
 
 #include <node.h>
+#include "nan.h"
 
 #ifdef WIN32
 # pragma warning( pop )

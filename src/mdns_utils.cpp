@@ -11,15 +11,15 @@ using namespace v8;
 Local<Value>
 buildException(DNSServiceErrorType error_code) {
     if (error_code == kDNSServiceErr_NoError) {
-        return Local<Value>::New(Undefined());
+        return NanUndefined();
     }
 
     std::string error_str("dns service error: ");
     error_str += errorString(error_code);
-    Local<String> error_msg = String::New(error_str.c_str());
+    Local<String> error_msg = NanNew(error_str.c_str());
     Local<Value> error_v = Exception::Error(error_msg);
     Local<Object> error = error_v->ToObject();
-    error->Set(String::NewSymbol("errorCode"), Integer::New(error_code));
+    error->Set(NanNew("errorCode"), NanNew<Integer>(error_code));
     return error_v;
 }
 

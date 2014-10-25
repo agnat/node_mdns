@@ -10,25 +10,24 @@ using namespace node;
 
 namespace node_mdns {
 
-Handle<Value>
-DNSServiceRefSockFD(Arguments const& args) {
-    HandleScope scope;
+NAN_METHOD(DNSServiceRefSockFD) {
+    NanScope();
     if (argumentCountMismatch(args, 1)) {
-        return throwArgumentCountMismatchException(args, 1);
+        NanReturnValue(throwArgumentCountMismatchException(args, 1));
     }
     if ( ! args[0]->IsObject() || ! ServiceRef::HasInstance(args[0]->ToObject())) {
-        return throwTypeError("argument 1 must be a DNSServiceRef object");
+        NanReturnValue(throwTypeError("argument 1 must be a DNSServiceRef object"));
     }
 
     ServiceRef * ref = ObjectWrap::Unwrap<ServiceRef>(args[0]->ToObject());
     if ( ! ref->IsInitialized()) {
-        return throwError("DNSServiceRef is not initialized");
+        NanReturnValue(throwError("DNSServiceRef is not initialized"));
     }
     int fd = DNSServiceRefSockFD( ref->GetServiceRef());
     if (fd == -1) {
-        return throwError("failed to get socket file descriptor");
+        NanReturnValue(throwError("failed to get socket file descriptor"));
     }
-    return scope.Close( Integer::New( fd ));
+    NanReturnValue( NanNew<Integer>( fd ));
 }
 
 } // end of namespace node_mdns

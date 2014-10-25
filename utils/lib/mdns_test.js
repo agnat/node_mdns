@@ -12,7 +12,7 @@ exports.require = function _require(what) {
 
 var mdns  = exports.require('mdns');
 
-var legal_chars = "abcefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+var legal_chars = "abcefghijklmnopqrstuvwxyz0123456789"
 
 exports.suffixedServiceType = function suffixedServiceType(serviceName, protocol) {
   serviceName += '-';

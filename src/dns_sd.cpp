@@ -15,40 +15,41 @@ using namespace node;
 namespace node_mdns {
 
 // === dns_sd ===========================================
-Handle<Value> DNSServiceRegister(Arguments const& args); 
-Handle<Value> DNSServiceRefSockFD(Arguments const& args); 
-Handle<Value> DNSServiceProcessResult(Arguments const& args); 
-Handle<Value> DNSServiceBrowse(Arguments const& args); 
-Handle<Value> DNSServiceRefDeallocate(Arguments const& args); 
-Handle<Value> DNSServiceResolve(Arguments const& args); 
-Handle<Value> DNSServiceEnumerateDomains(Arguments const& args); 
+NAN_METHOD(DNSServiceRegister);
+NAN_METHOD(DNSServiceRefSockFD);
+NAN_METHOD(DNSServiceProcessResult);
+NAN_METHOD(DNSServiceBrowse);
+NAN_METHOD(DNSServiceRefDeallocate);
+NAN_METHOD(DNSServiceResolve);
+NAN_METHOD(DNSServiceEnumerateDomains);
 #ifdef HAVE_DNSSERVICEGETADDRINFO
-Handle<Value> DNSServiceGetAddrInfo(Arguments const& args); 
+NAN_METHOD(DNSServiceGetAddrInfo); 
 #endif
-Handle<Value> TXTRecordCreate(Arguments const& args); 
-Handle<Value> TXTRecordDeallocate(Arguments const& args); 
-//Handle<Value> TXTRecordGetCount(Arguments const& args); 
-Handle<Value> TXTRecordSetValue(Arguments const& args); 
-Handle<Value> TXTRecordGetLength(Arguments const& args); 
+NAN_METHOD(TXTRecordCreate); 
+NAN_METHOD(TXTRecordDeallocate);
+//NAN_METHOD(TXTRecordGetCount); 
+NAN_METHOD(TXTRecordSetValue); 
+NAN_METHOD(TXTRecordGetLength);
 
 // === posix ============================================
 #ifdef NODE_MDNS_HAVE_INTERFACE_NAME_CONVERSION
-Handle<Value> if_nametoindex(Arguments const& args); 
-Handle<Value> if_indextoname(Arguments const& args); 
+NAN_METHOD(if_nametoindex); 
+NAN_METHOD(if_indextoname);
 #endif
 
 // === additions ========================================
-Handle<Value> txtRecordBufferToObject(Arguments const& args); 
-Handle<Value> exportConstants(Arguments const& args);
-Handle<Value> buildException(Arguments const& args);
+NAN_METHOD(txtRecordBufferToObject);
+NAN_METHOD(exportConstants);
+NAN_METHOD(buildException);
 
 // === locals ===========================================
-void defineFunction(Handle<Object> target, const char * name, InvocationCallback f);
+
+void defineFunction(Handle<Object> target, const char * name, NanFunctionCallback f);
 void addConstants(Handle<Object> target);
 
 void
 init(Handle<Object> target) {
-    HandleScope scope;
+    NanScope();
 
     ServiceRef::Initialize( target );
     TxtRecordRef::Initialize( target );
@@ -87,24 +88,23 @@ init(Handle<Object> target) {
 
 inline
 void
-defineFunction(Handle<Object> target, const char * name, InvocationCallback f) {
-    target->Set(String::NewSymbol(name),
-            FunctionTemplate::New(f)->GetFunction());
+defineFunction(Handle<Object> target, const char * name, NanFunctionCallback f) {
+    target->Set(NanNew(name),
+            NanNew<FunctionTemplate>(f)->GetFunction());
 }
 
-Handle<Value>
-buildException(Arguments const& args) {
-    HandleScope scope;
+NAN_METHOD(buildException) {
+    NanScope();
     if (argumentCountMismatch(args, 1)) {
-        return throwArgumentCountMismatchException(args, 1);
+        NanReturnValue(throwArgumentCountMismatchException(args, 1));
     }
     if ( ! args[0]->IsInt32()) {
-        return throwTypeError("argument 1 must be an integer " 
-                "(DNSServiceErrorType)");
+        NanReturnValue(throwTypeError("argument 1 must be an integer " 
+                "(DNSServiceErrorType)"));
     }
 
     DNSServiceErrorType error = args[0]->Int32Value();
-    return scope.Close(buildException(error));
+    NanReturnValue(buildException(error));
 }
 
 void
@@ -302,18 +302,17 @@ addConstants(Handle<Object> target) {
 #endif
 }
 
-Handle<Value>
-exportConstants(Arguments const& args) {
-    HandleScope scope;
+NAN_METHOD(exportConstants) {
+    NanScope();
     if (argumentCountMismatch(args, 1)) {
-        return throwArgumentCountMismatchException(args, 1);
+        NanReturnValue(throwArgumentCountMismatchException(args, 1));
     }
     if ( ! args[0]->IsObject()) {
-        return throwTypeError("argument 1 must be an object.");
+        NanReturnValue(throwTypeError("argument 1 must be an object."));
     }
 
     addConstants(args[0]->ToObject());
-    return Undefined();
+    NanReturnUndefined();
 }
 
 } // end of namespace node_mdns

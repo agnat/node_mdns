@@ -19,21 +19,20 @@ TxtRecordRef::~TxtRecordRef() {
 
 void
 TxtRecordRef::Initialize(Handle<Object> target) {
-    Local<FunctionTemplate> t = FunctionTemplate::New(New);
-    constructor_template = Persistent<FunctionTemplate>::New(t);
-    constructor_template->InstanceTemplate()->SetInternalFieldCount(1);
-    constructor_template->SetClassName(String::NewSymbol("TXTRecordRef"));
+    Local<FunctionTemplate> t = NanNew<FunctionTemplate>(New);
+    NanAssignPersistent(constructor_template, t);
+    t->InstanceTemplate()->SetInternalFieldCount(1);
+    t->SetClassName(NanNew("TXTRecordRef"));
 
-    target->Set(String::NewSymbol("TXTRecordRef"),
-            constructor_template->GetFunction());
+    target->Set(NanNew("TXTRecordRef"),
+            t->GetFunction());
 }
 
-Handle<Value>
-TxtRecordRef::New(const Arguments & args) {
-    HandleScope scope;
+NAN_METHOD(TxtRecordRef::New) {
+    NanScope();
     TxtRecordRef * o = new TxtRecordRef();
     o->Wrap(args.Holder());
-    return args.This();
+    NanReturnValue(args.This());
 }
 
 } // end of namespace node_mdns
