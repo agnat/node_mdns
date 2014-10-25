@@ -71,6 +71,8 @@ h2. Contributors
 * Dominic Tarr ("@dominictarr":http://github.com/dominictarr)
 * Emil Stenqvist ("@emilisto":http://github.com/emilisto)
 * Toby Ealden ("@TobyEalden":http://github.com/TobyEalden)
+* Ron Korving ("@ronkorving":https://github.com/ronkorving)
+* Don Park ("@donpark":https://github.com/donpark)
 
 Your name is missing on the list? Shame on me. Please open an issue.
 
