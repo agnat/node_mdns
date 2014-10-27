@@ -46,6 +46,7 @@ NAN_METHOD(if_nametoindex) {
     if (MultiByteToWideChar(CP_UTF8, 0, *interfaceName, -1, alias,
                 aliasLength) == 0)
     {
+        delete [] alias;
         NanReturnValue(throwError("failed to convert utf8 to unicode"));
     }
 
