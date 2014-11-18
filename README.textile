@@ -2,7 +2,6 @@ h1. mdns -- node.js Service Discovery
 
 |_. Package:       | mdns |
 |_. Description:   | multicast DNS service discovery |
-|_. Version:       | 2.2.0 |
 |_. Installation:  | @npm install mdns@ (see below) |
 |_. Documentation: | "mdns user guide":http://agnat.github.com/node_mdns/user_guide.html |
 |_. License:       | "MIT":http://github.com/agnat/node_mdns/blob/master/LICENSE |
