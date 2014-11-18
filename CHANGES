@@ -1,5 +1,9 @@
 CHANGES
 
+Version 2.2.1 to 2.2.2
+
+   - node-mdns now uses NAN for compatibility across a wide range of Node.js versions (incl 0.11) (donpark)
+
 Version 2.2.0 to 2.2.1
 
    - changed uncatchable error into "error" event on the browser (marcooliveira)
