@@ -38,6 +38,7 @@
                          , '-lws2_32.lib'
                          , '-liphlpapi.lib'
                          ]
+          , 'library_dirs': ['$(WindowsSdkDir)lib/winv6.3/um/<(PLATFORM)']
         }]
       ]
     , "include_dirs": [ "<!(node -e \"require('nan')\")" ]
