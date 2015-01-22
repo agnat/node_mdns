@@ -68,5 +68,31 @@ module.exports["Browser"] = {
     // simulate two MDNS events, this will trigger the serviceDown event we listen for above.
     callback();
     callback();
+  },
+
+  "Should survive invalid MDNS advert": function(test) {
+    var callback = null
+      , serviceName = "_foo._tcp.";
+
+    var mock_dns_sd = {
+      kDNSServiceErr_NoError: dns_sd.kDNSServiceErr_NoError,
+
+      // and stub DNSServiceBrowse to expose a reference to the passed callback
+      DNSServiceBrowse: function(sdRef, flags, ifaceIdx, serviceType, domain, on_service_changed, context) {
+        callback = function() {
+          // pass 1 as the interface index so we don't try to find the name for loopback
+          on_service_changed(sdRef, flags, 1, dns_sd.kDNSServiceErr_NoError, '', '', domain, context);
+        };
+      }
+    };
+
+    // create the browser with our mock of dns_sd
+    var browser = proxyquire('../lib/browser.js', { './dns_sd': mock_dns_sd }).Browser.create(serviceName);
+    browser.on('error', function(error) {
+      test.equal(error.message, "protocol must be either '_tcp' or '_udp' but is 'undefined'");
+      test.done();
+    });
+
+    callback();
   }
 }

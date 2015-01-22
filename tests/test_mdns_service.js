@@ -22,7 +22,7 @@ module.exports["MDNSService"] = {
       test.done();
     });
     service.watcher.start = function() {
-      process.nextTick(this.callback.bind(null))
+      process.nextTick(this.callback.bind(null));
     }
     service.start();
   }
