@@ -1,5 +1,13 @@
 CHANGES
 
+Version 2.2.3 to 2.2.4
+
+   - changed Readme from textile to markdown, since npmjs.org doesn't render textfile well (ronkorving)
+
+Version 2.2.2 to 2.2.3
+
+   - errors that could be thrown asynchronously are now emitted as "error" (achingbrain)
+
 Version 2.2.1 to 2.2.2
 
    - node-mdns now uses NAN for compatibility across a wide range of Node.js versions (incl 0.11) (donpark)
