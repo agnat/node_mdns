@@ -1,5 +1,5 @@
 { "name": "mdns"
-, "version": "2.2.4"
+, "version": "2.2.5"
 , "description": "multicast DNS service discovery"
 , "main": "./lib/mdns.js"
 , "scripts":
@@ -57,7 +57,7 @@
   ]
 , "dependencies":
   { "bindings": "~1.2.1"
-  , "nan": "~1.4.0"
+  , "nan": "~1.5.0"
   }
 , "gypfile": true
 }
