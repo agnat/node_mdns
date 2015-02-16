@@ -69,7 +69,7 @@ NAN_METHOD(if_nametoindex) {
         NanReturnValue(throwError((std::string("interface '") + *interfaceName +
                     "' does not exist").c_str()));
     }
-    NanReturnValue( NanNew<Integer>(index));
+    NanReturnValue( NanNew<Integer>(static_cast<uint32_t>(index)));
 }
 
 NAN_METHOD(if_indextoname) {
