@@ -22,7 +22,8 @@
                  ]
     , 'conditions': [
         [ 'OS!="mac" and OS!="win"', {
-            'libraries': [ '-ldns_sd' ]
+            'defines': [ 'HAVE_DNSSERVICEGETADDRINFO' ]
+          , 'libraries': [ '-ldns_sd' ]
         }]
       , [ 'OS=="mac"', {
             'defines': [ 'HAVE_DNSSERVICEGETADDRINFO' ]
