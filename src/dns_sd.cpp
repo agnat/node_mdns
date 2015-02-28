@@ -23,17 +23,17 @@ NAN_METHOD(DNSServiceRefDeallocate);
 NAN_METHOD(DNSServiceResolve);
 NAN_METHOD(DNSServiceEnumerateDomains);
 #ifdef HAVE_DNSSERVICEGETADDRINFO
-NAN_METHOD(DNSServiceGetAddrInfo); 
+NAN_METHOD(DNSServiceGetAddrInfo);
 #endif
-NAN_METHOD(TXTRecordCreate); 
+NAN_METHOD(TXTRecordCreate);
 NAN_METHOD(TXTRecordDeallocate);
-//NAN_METHOD(TXTRecordGetCount); 
-NAN_METHOD(TXTRecordSetValue); 
+//NAN_METHOD(TXTRecordGetCount);
+NAN_METHOD(TXTRecordSetValue);
 NAN_METHOD(TXTRecordGetLength);
 
 // === posix ============================================
 #ifdef NODE_MDNS_HAVE_INTERFACE_NAME_CONVERSION
-NAN_METHOD(if_nametoindex); 
+NAN_METHOD(if_nametoindex);
 NAN_METHOD(if_indextoname);
 #endif
 
@@ -99,7 +99,7 @@ NAN_METHOD(buildException) {
         NanReturnValue(throwArgumentCountMismatchException(args, 1));
     }
     if ( ! args[0]->IsInt32()) {
-        NanReturnValue(throwTypeError("argument 1 must be an integer " 
+        NanReturnValue(throwTypeError("argument 1 must be an integer "
                 "(DNSServiceErrorType)"));
     }
 
@@ -300,6 +300,8 @@ addConstants(Handle<Object> target) {
 #ifdef kDNSServiceFlagsSuppressUnusable
     NODE_DEFINE_CONSTANT(target, kDNSServiceFlagsSuppressUnusable);
 #endif
+    NODE_DEFINE_CONSTANT(target, kDNSServiceProtocol_IPv4);
+    NODE_DEFINE_CONSTANT(target, kDNSServiceProtocol_IPv6);
 }
 
 NAN_METHOD(exportConstants) {
