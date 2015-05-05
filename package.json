@@ -60,6 +60,10 @@
   , { "name":   "Tian Zhang"
     , "github": "KhaosT"
     }
+  , { "name":   "Chris Ye"
+    , "email": "xyezir@gmail.com"
+    , "github": "xyezir"
+    }
   ]
 , "dependencies":
   { "bindings": "~1.2.1"
@@ -67,4 +71,3 @@
   }
 , "gypfile": true
 }
-
