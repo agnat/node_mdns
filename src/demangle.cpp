@@ -9,16 +9,16 @@ using namespace v8;
 namespace {
 
 Handle<Value>
-demangle(Arguments const& args) {
-    NanScope();  
-    String::Utf8Value str(args[0]->ToString());
+demangle(Arguments const& info) {
+    Nan::HandleScope scope;  
+    String::Utf8Value str(info[0]->ToString());
 #ifdef __GNUC__
     int status;
     char * ret = abi::__cxa_demangle(*str, NULL, NULL, & status);
-    Local<String> demangled = NanNew(ret);
+    Local<String> demangled = Nan::New(ret);
     ::free(ret);
 #endif
-    NanReturnValue(demangled);
+    info.GetReturnValue().Set(demangled);
 }
 
 } // end of anaonymous namespace
@@ -26,6 +26,6 @@ demangle(Arguments const& args) {
 extern "C"
 void
 init(Handle<Object> target) {
-    target->Set(NanNew("demangle"),
-            NanNew<FunctionTemplate>(demangle)->GetFunction());
+    Nan::Set(target, Nan::New("demangle").ToLocalChecked(),
+            Nan::GetFunction(Nan::New<FunctionTemplate>(demangle)));
 }

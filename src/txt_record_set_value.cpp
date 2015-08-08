@@ -21,33 +21,31 @@ size_t length(Handle<Value> v) {
 }
 
 NAN_METHOD(TXTRecordSetValue) {
-    NanScope();
-    if (argumentCountMismatch(args, 3)) {
-        NanReturnValue(throwArgumentCountMismatchException(args, 3));
+    if (argumentCountMismatch(info, 3)) {
+        return throwArgumentCountMismatchException(info, 3);
     }
-    if ( ! args[0]->IsObject() || ! TxtRecordRef::HasInstance(args[0]->ToObject())) {
-        NanReturnValue(throwTypeError("argument 1 must be a TXTRecordRef object"));
+    if ( ! info[0]->IsObject() || ! TxtRecordRef::HasInstance(info[0]->ToObject())) {
+        return throwTypeError("argument 1 must be a TXTRecordRef object");
     }
-    TxtRecordRef * ref = ObjectWrap::Unwrap<TxtRecordRef>(args[0]->ToObject());
+    TxtRecordRef * ref = Nan::ObjectWrap::Unwrap<TxtRecordRef>(info[0]->ToObject());
 
-    if ( ! args[1]->IsString()) {
-        NanReturnValue(throwTypeError("argument 1 must be a string (key)"));
+    if ( ! info[1]->IsString()) {
+        return throwTypeError("argument 1 must be a string (key)");
     }
-    String::Utf8Value key(args[1]);
+    String::Utf8Value key(info[1]);
     
-    if ( ! (args[2]->IsNull() || args[2]->IsUndefined() ||
-        Buffer::HasInstance(args[2]) || args[2]->IsString())) {
-        NanReturnValue(throwTypeError("argument 1 must be null, undefined, a buffer or a string (value)"));
+    if ( ! (info[2]->IsNull() || info[2]->IsUndefined() ||
+        Buffer::HasInstance(info[2]) || info[2]->IsString())) {
+        return throwTypeError("argument 1 must be null, undefined, a buffer or a string (value)");
     }
     DNSServiceErrorType code = TXTRecordSetValue( & ref->GetTxtRecordRef(), *key,
-            length(args[2]),
-            ((args[2]->IsNull()||args[2]->IsUndefined()) 
-                ? NULL : args[2]->IsString() ? *String::Utf8Value(args[2]->ToString()) : Buffer::Data(args[2]->ToObject())));
+            length(info[2]),
+            ((info[2]->IsNull()||info[2]->IsUndefined()) 
+                ? NULL : info[2]->IsString() ? *String::Utf8Value(info[2]->ToString()) : Buffer::Data(info[2]->ToObject())));
 
     if (code != kDNSServiceErr_NoError) {
-        NanReturnValue(throwMdnsError(code));
+        return throwMdnsError(code);
     }
-    NanReturnUndefined();
 }
 
 } // end of namespace node_mdns

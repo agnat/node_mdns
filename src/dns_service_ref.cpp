@@ -7,7 +7,7 @@ using namespace v8;
 
 namespace node_mdns {
 
-Persistent<FunctionTemplate> ServiceRef::constructor_template;
+Nan::Persistent<FunctionTemplate> ServiceRef::constructor_template;
 
 ServiceRef::ServiceRef() : ref_(), callback_(), context_() {}
 
@@ -18,55 +18,54 @@ ServiceRef::~ServiceRef() {
     }
     // Then release the js objects.
     if ( ! callback_.IsEmpty()) {
-        NanDisposePersistent(callback_);
+        callback_.Reset();
     }
     if ( ! context_.IsEmpty()) {
-        NanDisposePersistent(context_);
+        context_.Reset();
     }
 }
 
 void
-ServiceRef::Initialize(Handle<Object> target) {
-    Local<FunctionTemplate> t = NanNew<FunctionTemplate>(New);
-    NanAssignPersistent(constructor_template, t);
+ServiceRef::Initialize(Local<Object> target) {
+    Local<FunctionTemplate> t = Nan::New<FunctionTemplate>(New);
+    constructor_template.Reset(t);
     t->InstanceTemplate()->SetInternalFieldCount(1);
-    t->SetClassName(NanNew("DNSServiceRef"));
+    t->SetClassName(Nan::New("DNSServiceRef").ToLocalChecked());
     
-    t->InstanceTemplate()->SetAccessor(NanNew("fd"), fd_getter);
-    t->InstanceTemplate()->SetAccessor( NanNew("initialized"), initialized_getter);
-    target->Set(NanNew("DNSServiceRef"), t->GetFunction());
+    Nan::SetAccessor(t->InstanceTemplate(), Nan::New("fd").ToLocalChecked(), fd_getter);
+    Nan::SetAccessor(t->InstanceTemplate(),  Nan::New("initialized").ToLocalChecked(), initialized_getter);
+    Nan::Set(target, Nan::New("DNSServiceRef").ToLocalChecked(), Nan::GetFunction(t).ToLocalChecked());
 }
 
 NAN_METHOD(ServiceRef::New) {
-    NanScope();
-    if (argumentCountMismatch(args, 0)) {
-        NanReturnValue(throwArgumentCountMismatchException(args, 0));
+    if (argumentCountMismatch(info, 0)) {
+        return throwArgumentCountMismatchException(info, 0);
     }
     ServiceRef * o = new ServiceRef();
-    o->Wrap(args.Holder());
-    NanReturnValue(args.This());
+    o->Wrap(info.Holder());
+    info.GetReturnValue().Set(info.This());
 }
 
 bool
 ServiceRef::IsInitialized() const { return ref_ != NULL; }
 
 bool
-ServiceRef::HasInstance(v8::Handle<v8::Value> value) {
+ServiceRef::HasInstance(v8::Local<v8::Value> value) {
   if ( ! value->IsObject() ) return false;
   v8::Local<v8::Object> object = value->ToObject();
-  return NanNew(constructor_template)->HasInstance( object );
+  return Nan::New(constructor_template)->HasInstance( object );
 }
 
 void
-ServiceRef::SetCallback(v8::Handle<v8::Function> callback) {
+ServiceRef::SetCallback(v8::Local<v8::Function> callback) {
   if ( ! callback_.IsEmpty()) {
-    NanDisposePersistent(callback_);
+    callback_.Reset();
   }
-  NanAssignPersistent(callback_, callback);
+  callback_.Reset<v8::Function>(callback);
 }
 
-v8::Handle<v8::Function>
-ServiceRef::GetCallback() const { return NanNew(callback_); }
+v8::Local<v8::Function>
+ServiceRef::GetCallback() const { return Nan::New(callback_); }
 
 DNSServiceRef &
 ServiceRef::GetServiceRef() { return ref_; }
@@ -74,18 +73,18 @@ ServiceRef::GetServiceRef() { return ref_; }
 void
 ServiceRef::SetServiceRef(DNSServiceRef ref) { ref_ = ref; }
 
-v8::Handle<v8::Value>
-ServiceRef::GetContext() { return NanNew(context_); }
+v8::Local<v8::Value>
+ServiceRef::GetContext() { return Nan::New(context_); }
 
 void
-ServiceRef::SetContext(v8::Handle<v8::Value> context) {
+ServiceRef::SetContext(v8::Local<v8::Value> context) {
   if ( ! context_.IsEmpty()) {
-    NanDisposePersistent(context_);
+    context_.Reset();
   }
-  NanAssignPersistent(context_, context);
+  context_.Reset<v8::Value>(context);
 }
 
-v8::Handle<v8::Object>
+v8::Local<v8::Object>
 ServiceRef::GetThis() { return this_; }
 
 void
@@ -103,24 +102,21 @@ ServiceRef::SetSocketFlags() {
 }
 
 NAN_PROPERTY_GETTER(ServiceRef::fd_getter) {
-    NanScope();
-    ServiceRef * service_ref = ObjectWrap::Unwrap<ServiceRef>(args.This());
+    ServiceRef * service_ref = Nan::ObjectWrap::Unwrap<ServiceRef>(info.This());
     int fd = -1;
     if (service_ref->ref_) {
         fd = DNSServiceRefSockFD(service_ref->ref_);
         if (fd == -1) {
-            NanThrowError("DNSServiceRefSockFD() failed");
-            NanReturnUndefined();
+            return Nan::ThrowError("DNSServiceRefSockFD() failed");
         }
     }
-    Local<Integer> v = NanNew<Integer>(fd);
-    NanReturnValue(v);
+    Local<Integer> v = Nan::New<Integer>(fd);
+    info.GetReturnValue().Set(v);
 }
 
 NAN_PROPERTY_GETTER(ServiceRef::initialized_getter) {
-    NanScope();
-    ServiceRef * service_ref = ObjectWrap::Unwrap<ServiceRef>(args.This());
-    NanReturnValue(NanNew<Boolean>(service_ref->IsInitialized()));
+    ServiceRef * service_ref = Nan::ObjectWrap::Unwrap<ServiceRef>(info.This());
+    info.GetReturnValue().Set(Nan::New<Boolean>(service_ref->IsInitialized()));
 }
 
 } // end of namespace node_mdns
