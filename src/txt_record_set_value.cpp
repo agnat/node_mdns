@@ -21,31 +21,33 @@ size_t length(Handle<Value> v) {
 }
 
 NAN_METHOD(TXTRecordSetValue) {
+    Nan::HandleScope scope;
     if (argumentCountMismatch(info, 3)) {
-        return throwArgumentCountMismatchException(info, 3);
+        info.GetReturnValue().Set(throwArgumentCountMismatchException(info, 3));
     }
     if ( ! info[0]->IsObject() || ! TxtRecordRef::HasInstance(info[0]->ToObject())) {
-        return throwTypeError("argument 1 must be a TXTRecordRef object");
+        info.GetReturnValue().Set(throwTypeError("argument 1 must be a TXTRecordRef object"));
     }
     TxtRecordRef * ref = Nan::ObjectWrap::Unwrap<TxtRecordRef>(info[0]->ToObject());
 
     if ( ! info[1]->IsString()) {
-        return throwTypeError("argument 1 must be a string (key)");
+        info.GetReturnValue().Set(throwTypeError("argument 1 must be a string (key)"));
     }
     String::Utf8Value key(info[1]);
-    
+
     if ( ! (info[2]->IsNull() || info[2]->IsUndefined() ||
         Buffer::HasInstance(info[2]) || info[2]->IsString())) {
-        return throwTypeError("argument 1 must be null, undefined, a buffer or a string (value)");
+        info.GetReturnValue().Set(throwTypeError("argument 1 must be null, undefined, a buffer or a string (value)"));
     }
     DNSServiceErrorType code = TXTRecordSetValue( & ref->GetTxtRecordRef(), *key,
             length(info[2]),
-            ((info[2]->IsNull()||info[2]->IsUndefined()) 
+            ((info[2]->IsNull()||info[2]->IsUndefined())
                 ? NULL : info[2]->IsString() ? *String::Utf8Value(info[2]->ToString()) : Buffer::Data(info[2]->ToObject())));
 
     if (code != kDNSServiceErr_NoError) {
-        return throwMdnsError(code);
+        info.GetReturnValue().Set(throwMdnsError(code));
     }
+    return;
 }
 
 } // end of namespace node_mdns

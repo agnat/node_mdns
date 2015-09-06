@@ -13,11 +13,12 @@ using namespace node;
 namespace node_mdns {
 
 NAN_METHOD(txtRecordBufferToObject) {
+    Nan::HandleScope scope;
     if (argumentCountMismatch(info, 1)) {
-      return throwArgumentCountMismatchException(info, 1);
+        info.GetReturnValue().Set(throwArgumentCountMismatchException(info, 1));
     }
     if ( ! info[0]->IsObject() || ! Buffer::HasInstance(info[0]->ToObject())) {
-      return throwTypeError("argument 1 must be a buffer (txtRecord)");
+        info.GetReturnValue().Set(throwTypeError("argument 1 must be a buffer (txtRecord)"));
     }
     Local<Object> buffer = info[0]->ToObject();
 
@@ -37,10 +38,10 @@ NAN_METHOD(txtRecordBufferToObject) {
             key.resize(key.size() * 2);
         }
         if (error != kDNSServiceErr_NoError) {
-          return throwMdnsError(error);
+            info.GetReturnValue().Set(throwMdnsError(error));
         }
         if (value_ptr) {
-          Nan::Set(result, Nan::New(&*key.begin()).ToLocalChecked(),
+            Nan::Set(result, Nan::New(&*key.begin()).ToLocalChecked(),
                 Nan::New(static_cast<const char*>(value_ptr), value_length).ToLocalChecked());
         } else {
             Nan::Set(result, Nan::New(&*key.begin()).ToLocalChecked(), Nan::Undefined());

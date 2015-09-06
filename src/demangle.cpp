@@ -10,7 +10,7 @@ namespace {
 
 Handle<Value>
 demangle(Arguments const& info) {
-    Nan::HandleScope scope;  
+    Nan::HandleScope scope;
     String::Utf8Value str(info[0]->ToString());
 #ifdef __GNUC__
     int status;

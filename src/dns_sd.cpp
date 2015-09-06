@@ -45,12 +45,12 @@ NAN_METHOD(buildException);
 
 // === locals ===========================================
 
-void defineFunction(Local<Object> target, const char * name, Nan::FunctionCallback f);
-void addConstants(Local<Object> target);
+void defineFunction(Handle<Object> target, const char * name, Nan::FunctionCallback f);
+void addConstants(Handle<Object> target);
 
 void
-init(Local<Object> target) {
-    Nan::HandleScope scope;
+init(Handle<Object> target) {
+  Nan::HandleScope scope;
 
     ServiceRef::Initialize( target );
     TxtRecordRef::Initialize( target );
@@ -90,19 +90,18 @@ init(Local<Object> target) {
 
 inline
 void
-defineFunction(Local<Object> target, const char * name, Nan::FunctionCallback f) {
+defineFunction(Handle<Object> target, const char * name, Nan::FunctionCallback f) {
     Nan::Set(target, Nan::New(name).ToLocalChecked(),
             Nan::GetFunction(Nan::New<FunctionTemplate>(f)).ToLocalChecked());
 }
 
 NAN_METHOD(buildException) {
     if (argumentCountMismatch(info, 1)) {
-        return throwArgumentCountMismatchException(info, 1);
+        info.GetReturnValue().Set(throwArgumentCountMismatchException(info, 1));
     }
-
     if ( ! info[0]->IsInt32()) {
-        return throwTypeError("argument 1 must be an integer "
-                "(DNSServiceErrorType)");
+        info.GetReturnValue().Set(throwTypeError("argument 1 must be an integer "
+                "(DNSServiceErrorType)"));
     }
 
     DNSServiceErrorType error = Nan::To<int32_t>(info[0]).FromJust();
@@ -308,13 +307,14 @@ addConstants(Local<Object> target) {
 
 NAN_METHOD(exportConstants) {
     if (argumentCountMismatch(info, 1)) {
-        return throwArgumentCountMismatchException(info, 1);
+        info.GetReturnValue().Set(throwArgumentCountMismatchException(info, 1));
     }
     if ( ! info[0]->IsObject()) {
-        return throwTypeError("argument 1 must be an object.");
+        info.GetReturnValue().Set(throwTypeError("argument 1 must be an object."));
     }
 
     addConstants(info[0]->ToObject());
+    return;
 }
 
 } // end of namespace node_mdns

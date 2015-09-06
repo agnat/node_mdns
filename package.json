@@ -1,3 +1,4 @@
+<<<<<<< 4a4af20abb1f8b67699ee415696d2d1f1ee62c28
 { "name": "mdns"
 , "version": "2.3.1"
 , "description": "multicast DNS service discovery"
@@ -15,6 +16,7 @@
   , "glob":      "*"
   , "ncp":       "*"
   , "minimatch": "*"
+  , "pangyp":    "^2.3.0"
   , "proxyquire": "^1.7.3"
   }
 , "repository":
@@ -27,17 +29,37 @@
     { "type": "MIT"
     , "url": "http://github.com/agnat/node_mdns/raw/master/LICENSE"
     }
-  ]
-, "author":
-  { "name":   "David Siegel"
-  , "email":  "david@artcom.de"
-  , "github": "agnat"
-  }
-, "contributors": [
-    { "name":   "Orlando Vazquez"
-    , "email":  "ovazquez@gmail.com"
-    , "url":    "http://or.lan.do/"
-    , "github": "orlandov"
+  ],
+  "author": {
+    "name": "David Siegel",
+    "email": "david@artcom.de",
+    "github": "agnat"
+  },
+  "contributors": [
+    {
+      "name": "Orlando Vazquez",
+      "email": "ovazquez@gmail.com",
+      "url": "http://or.lan.do/",
+      "github": "orlandov"
+    },
+    {
+      "name": "Ryan Dahl",
+      "email": "ry at tiny clouds dot org",
+      "url": "http://four.livejournal.com/",
+      "github": "ry"
+    },
+    {
+      "name": "Dominic Tarr",
+      "url": "http://twitter.com/dominictarr",
+      "github": "dominictarr"
+    },
+    {
+      "name": "Emil Stenqvist",
+      "github": "emilisto"
+    },
+    {
+      "name": "Toby Ealden",
+      "github": "TobyEalden"
     }
   , { "name":   "Ryan Dahl"
     , "email":  "ry at tiny clouds dot org"

@@ -23,7 +23,7 @@ MakeCallback(const Handle<Object> object, const Handle<Function> callback,
     // TODO Hook for long stack traces to be made here.
 
     NanTryCatch try_catch;
-    
+
     Local<Value> ret = Nan::MakeCallback(object, callback, argc, info);
 
     if (try_catch.HasCaught()) {
@@ -58,8 +58,10 @@ namespace node_mdns {
     }
 
     NAN_METHOD(SocketWatcher::Start) {
+        Nan::HandleScope scope;
         SocketWatcher *watcher = Nan::ObjectWrap::Unwrap<SocketWatcher>(info.Holder());
         watcher->Start();
+        return;
     }
 
     void
@@ -101,8 +103,10 @@ namespace node_mdns {
     }
 
     NAN_METHOD(SocketWatcher::Stop) {
+        Nan::HandleScope scope;
         SocketWatcher *watcher = Nan::ObjectWrap::Unwrap<SocketWatcher>(info.Holder());
         watcher->Stop();
+        return;
     }
 
     void
@@ -114,26 +118,31 @@ namespace node_mdns {
     }
 
     NAN_METHOD(SocketWatcher::New) {
+        Nan::HandleScope scope;
         SocketWatcher *s = new SocketWatcher();
         s->Wrap(info.This());
         info.GetReturnValue().Set(info.This());
     }
 
     NAN_METHOD(SocketWatcher::Set) {
+        Nan::HandleScope scope;
         SocketWatcher *watcher = Nan::ObjectWrap::Unwrap<SocketWatcher>(info.Holder());
         if (!info[0]->IsInt32()) {
-            return Nan::ThrowTypeError("First arg should be a file descriptor.");
+            Nan::ThrowTypeError("First arg should be a file descriptor.");
+            return;
         }
         int fd = Nan::To<int32_t>(info[0]).FromJust();
         if (!info[1]->IsBoolean()) {
-            return Nan::ThrowTypeError("Second arg should be a boolean (readable).");
+            Nan::ThrowTypeError("Second arg should be a boolean (readable).");
+            return;
         }
         int events = 0;
 
         if (info[1]->IsTrue()) events |= UV_READABLE;
 
         if (!info[2]->IsBoolean()) {
-            return Nan::ThrowTypeError("Third arg should be a boolean (writable).");
+            Nan::ThrowTypeError("Third arg should be a boolean (writable).");
+            return;
         }
 
         if (info[2]->IsTrue()) events |= UV_WRITABLE;
@@ -142,6 +151,8 @@ namespace node_mdns {
 
         watcher->fd_ = fd;
         watcher->events_ = events;
+
+        return;
     }
 
 } // end of namespace node_mdns
