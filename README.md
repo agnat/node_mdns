@@ -82,6 +82,7 @@ In random order:
 * Don Park ([donpark](https://github.com/donpark))
 * Cong Liu ([ghostoy](https://github.com/ghostoy))
 * Tian Zhang ([KhaosT](https://github.com/KhaosT))
+* Chris Ye ([xyezir](https://github.com/xyezir))
 
 Your name is missing on the list? Shame on me. Please open an issue.
 
