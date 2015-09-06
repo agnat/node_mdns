@@ -1,64 +1,78 @@
-{ "name": "mdns"
-, "version": "2.2.8"
-, "description": "multicast DNS service discovery"
-, "main": "./lib/mdns.js"
-, "scripts":
-  { "test": "node utils/testrun"
-  }
-, "keywords": ["zeroconf", "bonjour", "dns_sd", "mDNSResponder"]
-, "devDependencies":
-  { "ejs":       "*"
-  , "less":      "*"
-  , "mkdirp":    "*"
-  , "nopt":      "*"
-  , "slide":     "*"
-  , "glob":      "*"
-  , "ncp":       "*"
-  , "minimatch": "*"
-  , "proxyquire": "~0.5"
-  }
-, "repository":
-  { "type": "git"
-  , "url":  "http://github.com/agnat/node_mdns.git"
-  }
-, "homepage": "http://agnat.github.com/node_mdns"
-, "bugs": { "url": "http://github.com/agnat/node_mdns/issues" }
-, "licenses": [
-    { "type": "MIT"
-    , "url": "http://github.com/agnat/node_mdns/raw/master/LICENSE"
+{
+  "name": "mdns",
+  "version": "2.2.8",
+  "description": "multicast DNS service discovery",
+  "main": "./lib/mdns.js",
+  "scripts": {
+    "test": "node utils/testrun"
+  },
+  "keywords": [
+    "zeroconf",
+    "bonjour",
+    "dns_sd",
+    "mDNSResponder"
+  ],
+  "devDependencies": {
+    "ejs": "*",
+    "glob": "*",
+    "less": "*",
+    "minimatch": "*",
+    "mkdirp": "*",
+    "ncp": "*",
+    "nopt": "*",
+    "pangyp": "^2.3.0",
+    "proxyquire": "~0.5",
+    "slide": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/agnat/node_mdns.git"
+  },
+  "homepage": "http://agnat.github.com/node_mdns",
+  "bugs": {
+    "url": "http://github.com/agnat/node_mdns/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com/agnat/node_mdns/raw/master/LICENSE"
     }
-  ]
-, "author":
-  { "name":   "David Siegel"
-  , "email":  "david@artcom.de"
-  , "github": "agnat"
-  }
-, "contributors": [
-    { "name":   "Orlando Vazquez"
-    , "email":  "ovazquez@gmail.com"
-    , "url":    "http://or.lan.do/"
-    , "github": "orlandov"
+  ],
+  "author": {
+    "name": "David Siegel",
+    "email": "david@artcom.de",
+    "github": "agnat"
+  },
+  "contributors": [
+    {
+      "name": "Orlando Vazquez",
+      "email": "ovazquez@gmail.com",
+      "url": "http://or.lan.do/",
+      "github": "orlandov"
+    },
+    {
+      "name": "Ryan Dahl",
+      "email": "ry at tiny clouds dot org",
+      "url": "http://four.livejournal.com/",
+      "github": "ry"
+    },
+    {
+      "name": "Dominic Tarr",
+      "url": "http://twitter.com/dominictarr",
+      "github": "dominictarr"
+    },
+    {
+      "name": "Emil Stenqvist",
+      "github": "emilisto"
+    },
+    {
+      "name": "Toby Ealden",
+      "github": "TobyEalden"
     }
-  , { "name":   "Ryan Dahl"
-    , "email":  "ry at tiny clouds dot org"
-    , "url":    "http://four.livejournal.com/"
-    , "github": "ry"
-    }
-  , { "name":   "Dominic Tarr"
-    , "url":    "http://twitter.com/dominictarr"
-    , "github": "dominictarr"
-    }
-  , { "name":   "Emil Stenqvist"
-    , "github": "emilisto"
-    }
-  , { "name":   "Toby Ealden"
-    , "github": "TobyEalden"
-    }
-  ]
-, "dependencies":
-  { "bindings": "~1.2.1"
-  , "nan": "~1.8.0"
-  }
-, "gypfile": true
+  ],
+  "dependencies": {
+    "bindings": "~1.2.1",
+    "nan": "^2.0.8"
+  },
+  "gypfile": true
 }
-

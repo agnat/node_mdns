@@ -13,16 +13,16 @@ using namespace node;
 namespace node_mdns {
 
 NAN_METHOD(txtRecordBufferToObject) {
-    NanScope();
-    if (argumentCountMismatch(args, 1)) {
-        NanReturnValue(throwArgumentCountMismatchException(args, 1));
+    Nan::HandleScope scope;
+    if (argumentCountMismatch(info, 1)) {
+        info.GetReturnValue().Set(throwArgumentCountMismatchException(info, 1));
     }
-    if ( ! args[0]->IsObject() || ! Buffer::HasInstance(args[0]->ToObject())) {
-        NanReturnValue(throwTypeError("argument 1 must be a buffer (txtRecord)"));
+    if ( ! info[0]->IsObject() || ! Buffer::HasInstance(info[0]->ToObject())) {
+        info.GetReturnValue().Set(throwTypeError("argument 1 must be a buffer (txtRecord)"));
     }
-    Local<Object> buffer = args[0]->ToObject();
+    Local<Object> buffer = info[0]->ToObject();
 
-    Local<Object> result = NanNew<Object>();
+    Local<Object> result = Nan::New<Object>();
     std::vector<char> key(16);
     size_t buffer_length = Buffer::Length(buffer);
     void * data = Buffer::Data(buffer);
@@ -38,16 +38,16 @@ NAN_METHOD(txtRecordBufferToObject) {
             key.resize(key.size() * 2);
         }
         if (error != kDNSServiceErr_NoError) {
-            NanReturnValue(throwMdnsError(error));
+            info.GetReturnValue().Set(throwMdnsError(error));
         }
         if (value_ptr) {
-            result->Set(NanNew(&*key.begin()),
-                NanNew(static_cast<const char*>(value_ptr), value_length));
+            Nan::Set(result, Nan::New(&*key.begin()).ToLocalChecked(),
+                Nan::New(static_cast<const char*>(value_ptr), value_length).ToLocalChecked());
         } else {
-            result->Set(NanNew(&*key.begin()), NanUndefined());
+            Nan::Set(result, Nan::New(&*key.begin()).ToLocalChecked(), Nan::Undefined());
         }
     }
-    NanReturnValue(result);
+    info.GetReturnValue().Set(result);
 }
 
 } // end of namespace node_mdns

@@ -11,22 +11,22 @@ using namespace node;
 namespace node_mdns {
 
 NAN_METHOD(DNSServiceRefDeallocate) {
-    NanScope();
-    if (argumentCountMismatch(args, 1)) {
-        NanReturnValue(throwArgumentCountMismatchException(args, 1));
+    Nan::HandleScope scope;
+    if (argumentCountMismatch(info, 1)) {
+        info.GetReturnValue().Set(throwArgumentCountMismatchException(info, 1));
     }
-    if ( ! args[0]->IsObject() || ! ServiceRef::HasInstance(args[0]->ToObject())) {
-        NanReturnValue(throwTypeError("argument 1 must be a DNSServiceRef object"));
+    if ( ! info[0]->IsObject() || ! ServiceRef::HasInstance(info[0]->ToObject())) {
+        info.GetReturnValue().Set(throwTypeError("argument 1 must be a DNSServiceRef object"));
     }
 
-    ServiceRef * ref = ObjectWrap::Unwrap<ServiceRef>(args[0]->ToObject());
+    ServiceRef * ref = Nan::ObjectWrap::Unwrap<ServiceRef>(info[0]->ToObject());
     if ( ! ref->IsInitialized()) {
-        NanReturnValue(throwError("DNSServiceRef is not initialized"));
+        info.GetReturnValue().Set(throwError("DNSServiceRef is not initialized"));
     }
     DNSServiceRefDeallocate( ref->GetServiceRef());
     ref->SetServiceRef(NULL);
 
-    NanReturnUndefined();
+    return;
 }
 
 } // end of namespace node_mdns

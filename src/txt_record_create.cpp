@@ -11,28 +11,28 @@ using namespace node;
 namespace node_mdns {
 
 NAN_METHOD(TXTRecordCreate) {
-    NanScope();
-    if (argumentCountMismatch(args, 2)) {
-        NanReturnValue(throwArgumentCountMismatchException(args, 2));
+    Nan::HandleScope scope;
+    if (argumentCountMismatch(info, 2)) {
+        info.GetReturnValue().Set(throwArgumentCountMismatchException(info, 2));
     }
-    if ( ! args[0]->IsObject() || ! TxtRecordRef::HasInstance(args[0]->ToObject())) {
-        NanReturnValue(throwTypeError("argument 1 must be a TXTRecordRef object"));
+    if ( ! info[0]->IsObject() || ! TxtRecordRef::HasInstance(info[0]->ToObject())) {
+        info.GetReturnValue().Set(throwTypeError("argument 1 must be a TXTRecordRef object"));
     }
 
     void * buffer = NULL;
     uint16_t buffer_length = 0;
-    if ( ! args[1]->IsUndefined() && ! args[1]->IsNull()) {
-        if ( ! args[1]->IsObject() || ! Buffer::HasInstance(args[1]->ToObject())) {
-            NanReturnValue(throwTypeError("argument 1 must be a buffer"));
+    if ( ! info[1]->IsUndefined() && ! info[1]->IsNull()) {
+        if ( ! info[1]->IsObject() || ! Buffer::HasInstance(info[1]->ToObject())) {
+            info.GetReturnValue().Set(throwTypeError("argument 1 must be a buffer"));
         }
-        Local<Object> buffer_object = args[1]->ToObject();
+        Local<Object> buffer_object = info[1]->ToObject();
         buffer = Buffer::Data(buffer_object);
         buffer_length = Buffer::Length(buffer_object);
     }
 
-    TxtRecordRef * ref = ObjectWrap::Unwrap<TxtRecordRef>(args[0]->ToObject());
+    TxtRecordRef * ref = Nan::ObjectWrap::Unwrap<TxtRecordRef>(info[0]->ToObject());
     TXTRecordCreate( & ref->GetTxtRecordRef(), buffer_length, buffer);
-    NanReturnUndefined();
+    return;
 }
 
 } // end of namespace node_mdns

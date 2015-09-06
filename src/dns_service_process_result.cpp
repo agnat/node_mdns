@@ -11,21 +11,21 @@ using namespace node;
 namespace node_mdns {
 
 NAN_METHOD(DNSServiceProcessResult) {
-    NanScope();
-    if (argumentCountMismatch(args, 1)) {
-        NanReturnValue(throwArgumentCountMismatchException(args, 1));
+    Nan::HandleScope scope;
+    if (argumentCountMismatch(info, 1)) {
+        info.GetReturnValue().Set(throwArgumentCountMismatchException(info, 1));
     }
-    if ( ! args[0]->IsObject()) {
-        NanReturnValue(throwTypeError("argument 1 must be a DNSServiceRef object"));
+    if ( ! info[0]->IsObject()) {
+        info.GetReturnValue().Set(throwTypeError("argument 1 must be a DNSServiceRef object"));
     }
 
-    ServiceRef * ref = ObjectWrap::Unwrap<ServiceRef>(args[0]->ToObject());
-    ref->SetThis(args.This());
+    ServiceRef * ref = Nan::ObjectWrap::Unwrap<ServiceRef>(info[0]->ToObject());
+    ref->SetThis(info.This());
     DNSServiceErrorType error = DNSServiceProcessResult(ref->GetServiceRef());
     if (error != kDNSServiceErr_NoError) {
-        NanReturnValue(throwMdnsError(error));
+        info.GetReturnValue().Set(throwMdnsError(error));
     }
-    NanReturnUndefined();
+    return;
 }
 
 } // end of namespace node_mdns

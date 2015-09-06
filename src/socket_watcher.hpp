@@ -3,7 +3,7 @@
 
 namespace node_mdns {
 
-class SocketWatcher : public node::ObjectWrap {
+class SocketWatcher : public Nan::ObjectWrap {
     public:
         SocketWatcher();
 
@@ -18,7 +18,7 @@ class SocketWatcher : public node::ObjectWrap {
         static NAN_METHOD(Set);
         static NAN_METHOD(Start);
         static NAN_METHOD(Stop);
-        
+
         void Start();
         void Stop();
         static void Callback(uv_poll_t *w, int status, int events);

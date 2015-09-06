@@ -11,38 +11,38 @@ const char * errorString(DNSServiceErrorType error);
 v8::Local<v8::Value> buildException(DNSServiceErrorType error_code);
 
 inline
-v8::Handle<v8::Value>
+v8::Local<v8::Value>
 throwError(const char * message) {
-    NanThrowError( NanError(message) );
-    return NanUndefined();
+    Nan::ThrowError( Nan::Error(message) );
+    return Nan::Undefined();
 }
 
 inline
-v8::Handle<v8::Value>
+v8::Local<v8::Value>
 throwTypeError(const char * message) {
-    NanThrowTypeError( message );
-    return NanUndefined();
+    Nan::ThrowTypeError( message );
+    return Nan::Undefined();
 }
 
 inline
-v8::Handle<v8::Value>
+v8::Local<v8::Value>
 throwMdnsError(DNSServiceErrorType error_code) {
-    NanThrowError( buildException(error_code) );
-    return NanUndefined();
+    Nan::ThrowError( buildException(error_code) );
+    return Nan::Undefined();
 }
 
 inline
 bool
-argumentCountMismatch(_NAN_METHOD_ARGS, int expectedCount) {
-    return args.Length() != expectedCount;
+argumentCountMismatch(Nan::NAN_METHOD_ARGS_TYPE info, int expectedCount) {
+    return info.Length() != expectedCount;
 }
 
 inline
-v8::Handle<v8::Value>
-throwArgumentCountMismatchException(_NAN_METHOD_ARGS, size_t expectedCount) {
+v8::Local<v8::Value>
+throwArgumentCountMismatchException(Nan::NAN_METHOD_ARGS_TYPE info, size_t expectedCount) {
     std::ostringstream msg;
-    msg << "argument count mismatch: expected " << expectedCount 
-        << ", but got " <<  args.Length() << " arguments.";
+    msg << "argument count mismatch: expected " << expectedCount
+        << ", but got " <<  info.Length() << " arguments.";
     return throwError(msg.str().c_str());
 }
 
@@ -50,9 +50,9 @@ inline
 v8::Local<v8::Value>
 stringOrUndefined(const char * str) {
     if (str) {
-        return NanNew(str);
+        return Nan::New(str).ToLocalChecked();
     } else {
-        return NanUndefined();
+        return Nan::Undefined();
     }
 }
 

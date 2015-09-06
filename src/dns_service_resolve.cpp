@@ -26,91 +26,91 @@ OnResolve(DNSServiceRef sdRef, DNSServiceFlags flags,
         uint16_t txtLen, const unsigned char * txtRecord, void * context)
 {
 
-    NanScope();
+    Nan::HandleScope scope;
     ServiceRef * serviceRef = static_cast<ServiceRef*>(context);
-    Handle<Function> callback = serviceRef->GetCallback();
+    Local<Function> callback = serviceRef->GetCallback();
     Handle<Object> this_ = serviceRef->GetThis();
 
     const size_t argc(9);
-    Local<Value> args[argc];
-    args[0] = NanObjectWrapHandle(serviceRef);
-    args[1] = NanNew<Integer>(flags);
-    args[2] = NanNew<Uint32>(interfaceIndex);
-    args[3] = NanNew<Integer>(errorCode);
-    args[4] = stringOrUndefined(fullname);
-    args[5] = stringOrUndefined(hosttarget);
-    args[6] = NanNew<Integer>( ntohs(port) );
-    Local<Object> buffer = NanNewBufferHandle(txtLen);
+    Local<Value> info[argc];
+    info[0] = serviceRef->handle();
+    info[1] = Nan::New<Integer>(flags);
+    info[2] = Nan::New<Uint32>(interfaceIndex);
+    info[3] = Nan::New<Integer>(errorCode);
+    info[4] = stringOrUndefined(fullname);
+    info[5] = stringOrUndefined(hosttarget);
+    info[6] = Nan::New<Integer>( ntohs(port) );
+    Local<Object> buffer = Nan::NewBuffer(txtLen).ToLocalChecked();
     memcpy(Buffer::Data(buffer), txtRecord, txtLen);
-    args[7] = buffer;
+    info[7] = buffer;
     if (serviceRef->GetContext().IsEmpty()) {
-        args[8] = NanUndefined();
+        info[8] = Nan::Undefined();
     } else {
-        args[8] = NanNew<Value>(serviceRef->GetContext());
+        info[8] = serviceRef->GetContext();
     }
-    NanMakeCallback(this_, callback, argc, args);
+    Nan::MakeCallback(this_, callback, argc, info);
 }
 
 NAN_METHOD(DNSServiceResolve) {
-    NanScope();
+    Nan::HandleScope scope;
 
-    if (argumentCountMismatch(args, 8)) {
-        NanReturnValue(throwArgumentCountMismatchException(args, 8));
+    if (argumentCountMismatch(info, 8)) {
+        info.GetReturnValue().Set(throwArgumentCountMismatchException(info, 8));
     }
 
-    if ( ! ServiceRef::HasInstance(args[0])) {
-        NanReturnValue(throwTypeError("argument 1 must be a DNSServiceRef (sdRef)"));
+    if ( ! ServiceRef::HasInstance(info[0])) {
+        info.GetReturnValue().Set(throwTypeError("argument 1 must be a DNSServiceRef (sdRef)"));
     }
-    ServiceRef * serviceRef = ObjectWrap::Unwrap<ServiceRef>(args[0]->ToObject());
+    ServiceRef * serviceRef = Nan::ObjectWrap::Unwrap<ServiceRef>(info[0]->ToObject());
     if (serviceRef->IsInitialized()) {
-        NanReturnValue(throwError("DNSServiceRef is already initialized"));
+        info.GetReturnValue().Set(throwError("DNSServiceRef is already initialized"));
     }
 
-    if ( ! args[1]->IsInt32()) {
-        NanReturnValue(throwError("argument 2 must be an integer (DNSServiceFlags)"));
+    if ( ! info[1]->IsInt32()) {
+        info.GetReturnValue().Set(throwError("argument 2 must be an integer (DNSServiceFlags)"));
     }
-    DNSServiceFlags flags = args[1]->ToInteger()->Int32Value();
+    DNSServiceFlags flags = info[1]->ToInteger()->Int32Value();
 
-    if ( ! args[2]->IsUint32() && ! args[2]->IsInt32()) {
-        NanReturnValue(throwTypeError("argument 3 must be an integer (interfaceIndex)"));
+    if ( ! info[2]->IsUint32() && ! info[2]->IsInt32()) {
+        info.GetReturnValue().Set(throwTypeError("argument 3 must be an integer (interfaceIndex)"));
     }
-    uint32_t interfaceIndex = args[2]->ToInteger()->Uint32Value();
+    uint32_t interfaceIndex = info[2]->ToInteger()->Uint32Value();
 
-    if ( ! args[3]->IsString()) {
-        NanReturnValue(throwTypeError("argument 4 must be a string (name)"));
+    if ( ! info[3]->IsString()) {
+        info.GetReturnValue().Set(throwTypeError("argument 4 must be a string (name)"));
     }
-    String::Utf8Value name(args[3]->ToString());
+    String::Utf8Value name(info[3]->ToString());
 
-    if ( ! args[4]->IsString()) {
-        NanReturnValue(throwTypeError("argument 5 must be a string (service type)"));
+    if ( ! info[4]->IsString()) {
+        info.GetReturnValue().Set(throwTypeError("argument 5 must be a string (service type)"));
     }
-    String::Utf8Value serviceType(args[4]->ToString());
+    String::Utf8Value serviceType(info[4]->ToString());
 
-    if ( ! args[5]->IsString()) {
-        NanReturnValue(throwTypeError("argument 6 must be a string (domain)"));
+    if ( ! info[5]->IsString()) {
+        info.GetReturnValue().Set(throwTypeError("argument 6 must be a string (domain)"));
     }
-    String::Utf8Value domain(args[5]->ToString());
+    String::Utf8Value domain(info[5]->ToString());
 
-    if ( ! args[6]->IsFunction()) {
-        NanReturnValue(throwTypeError("argument 7 must be a function (callBack)"));
+    if ( ! info[6]->IsFunction()) {
+        info.GetReturnValue().Set(throwTypeError("argument 7 must be a function (callBack)"));
     }
-    serviceRef->SetCallback(Local<Function>::Cast(args[6]));
+    serviceRef->SetCallback(Local<Function>::Cast(info[6]));
 
-    if ( ! args[7]->IsNull() && ! args[7]->IsUndefined()) {
-        serviceRef->SetContext(args[7]);
+    if ( ! info[7]->IsNull() && ! info[7]->IsUndefined()) {
+        serviceRef->SetContext(info[7]);
     }
 
     DNSServiceErrorType error = DNSServiceResolve( & serviceRef->GetServiceRef(),
             flags, interfaceIndex, *name, *serviceType, *domain, OnResolve, serviceRef);
 
     if (error != kDNSServiceErr_NoError) {
-        NanReturnValue(throwMdnsError(error));
+        info.GetReturnValue().Set(throwMdnsError(error));
     }
     if ( ! serviceRef->SetSocketFlags()) {
-        NanReturnValue(throwError("Failed to set socket flags (O_NONBLOCK, FD_CLOEXEC)"));
+        info.GetReturnValue().Set(throwError("Failed to set socket flags (O_NONBLOCK, FD_CLOEXEC)"));
     }
 
-    NanReturnUndefined();
+    return;
 }
 
 } // end of namespace node_mdns

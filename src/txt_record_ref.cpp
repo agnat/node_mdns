@@ -6,7 +6,7 @@ using namespace v8;
 
 namespace node_mdns {
 
-Persistent<FunctionTemplate> TxtRecordRef::constructor_template;
+Nan::Persistent<FunctionTemplate> TxtRecordRef::constructor_template;
 
 TxtRecordRef::TxtRecordRef() :
     ref_()
@@ -19,20 +19,20 @@ TxtRecordRef::~TxtRecordRef() {
 
 void
 TxtRecordRef::Initialize(Handle<Object> target) {
-    Local<FunctionTemplate> t = NanNew<FunctionTemplate>(New);
-    NanAssignPersistent(constructor_template, t);
+    Local<FunctionTemplate> t = Nan::New<FunctionTemplate>(New);
+    constructor_template.Reset( t);
     t->InstanceTemplate()->SetInternalFieldCount(1);
-    t->SetClassName(NanNew("TXTRecordRef"));
+    t->SetClassName(Nan::New("TXTRecordRef").ToLocalChecked());
 
-    target->Set(NanNew("TXTRecordRef"),
-            t->GetFunction());
+    Nan::Set(target, Nan::New("TXTRecordRef").ToLocalChecked(),
+            Nan::GetFunction(t).ToLocalChecked());
 }
 
 NAN_METHOD(TxtRecordRef::New) {
-    NanScope();
+    Nan::HandleScope scope;
     TxtRecordRef * o = new TxtRecordRef();
-    o->Wrap(args.Holder());
-    NanReturnValue(args.This());
+    o->Wrap(info.Holder());
+    info.GetReturnValue().Set(info.This());
 }
 
 } // end of namespace node_mdns

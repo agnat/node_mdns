@@ -3,7 +3,7 @@
 
 namespace node_mdns {
 
-class TxtRecordRef : public node::ObjectWrap {
+class TxtRecordRef : public Nan::ObjectWrap {
     public:
         TxtRecordRef();
         ~TxtRecordRef();
@@ -16,7 +16,7 @@ class TxtRecordRef : public node::ObjectWrap {
         static inline bool HasInstance(v8::Handle<v8::Value> value) {
             if ( ! value->IsObject() ) return false;
             v8::Local<v8::Object> object = value->ToObject();
-            return NanHasInstance(constructor_template, object );
+            return Nan::New(constructor_template)->HasInstance(object);
         }
 
         TXTRecordRef & GetTxtRecordRef() { return ref_; }
@@ -25,7 +25,7 @@ class TxtRecordRef : public node::ObjectWrap {
     private:
         TXTRecordRef ref_;
 
-        static v8::Persistent<v8::FunctionTemplate> constructor_template;
+        static Nan::Persistent<v8::FunctionTemplate> constructor_template;
 };
 
 } // end of namespace node_mdns

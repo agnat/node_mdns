@@ -44,12 +44,11 @@ NAN_METHOD(buildException);
 
 // === locals ===========================================
 
-void defineFunction(Handle<Object> target, const char * name, NanFunctionCallback f);
+void defineFunction(Handle<Object> target, const char * name, Nan::FunctionCallback f);
 void addConstants(Handle<Object> target);
 
 void
 init(Handle<Object> target) {
-    NanScope();
 
     ServiceRef::Initialize( target );
     TxtRecordRef::Initialize( target );
@@ -88,23 +87,22 @@ init(Handle<Object> target) {
 
 inline
 void
-defineFunction(Handle<Object> target, const char * name, NanFunctionCallback f) {
-    target->Set(NanNew(name),
-            NanNew<FunctionTemplate>(f)->GetFunction());
+defineFunction(Handle<Object> target, const char * name, Nan::FunctionCallback f) {
+    Nan::Set(target, Nan::New(name).ToLocalChecked(),
+            Nan::GetFunction(Nan::New<FunctionTemplate>(f)).ToLocalChecked());
 }
 
 NAN_METHOD(buildException) {
-    NanScope();
-    if (argumentCountMismatch(args, 1)) {
-        NanReturnValue(throwArgumentCountMismatchException(args, 1));
+    if (argumentCountMismatch(info, 1)) {
+        info.GetReturnValue().Set(throwArgumentCountMismatchException(info, 1));
     }
-    if ( ! args[0]->IsInt32()) {
-        NanReturnValue(throwTypeError("argument 1 must be an integer "
+    if ( ! info[0]->IsInt32()) {
+        info.GetReturnValue().Set(throwTypeError("argument 1 must be an integer "
                 "(DNSServiceErrorType)"));
     }
 
-    DNSServiceErrorType error = args[0]->Int32Value();
-    NanReturnValue(buildException(error));
+    DNSServiceErrorType error = Nan::To<int32_t>(info[0]).FromJust();
+    info.GetReturnValue().Set(buildException(error));
 }
 
 void
@@ -305,16 +303,15 @@ addConstants(Handle<Object> target) {
 }
 
 NAN_METHOD(exportConstants) {
-    NanScope();
-    if (argumentCountMismatch(args, 1)) {
-        NanReturnValue(throwArgumentCountMismatchException(args, 1));
+    if (argumentCountMismatch(info, 1)) {
+        info.GetReturnValue().Set(throwArgumentCountMismatchException(info, 1));
     }
-    if ( ! args[0]->IsObject()) {
-        NanReturnValue(throwTypeError("argument 1 must be an object."));
+    if ( ! info[0]->IsObject()) {
+        info.GetReturnValue().Set(throwTypeError("argument 1 must be an object."));
     }
 
-    addConstants(args[0]->ToObject());
-    NanReturnUndefined();
+    addConstants(info[0]->ToObject());
+    return;
 }
 
 } // end of namespace node_mdns
