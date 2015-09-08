@@ -26,119 +26,118 @@ OnServiceRegistered(DNSServiceRef sdRef, DNSServiceFlags flags,
 {
     if ( ! context) return;
 
-    NanScope();
+    Nan::HandleScope scope;
     ServiceRef * serviceRef = static_cast<ServiceRef*>(context);
-    Handle<Function> callback = serviceRef->GetCallback();
-    Handle<Object> this_ = serviceRef->GetThis();
+    Local<Function> callback = serviceRef->GetCallback();
+    Local<Object> this_ = serviceRef->GetThis();
 
     if ( ! callback.IsEmpty() && ! this_.IsEmpty()) {
         const size_t argc(7);
-        Local<Value> args[argc];
-        args[0] = NanObjectWrapHandle(serviceRef);
-        args[1] = NanNew<Integer>(flags);
-        args[2] = NanNew<Integer>(errorCode);
-        args[3] = stringOrUndefined(name);
-        args[4] = stringOrUndefined(serviceType);
-        args[5] = stringOrUndefined(domain);
+        Local<Value> info[argc];
+        info[0] = serviceRef->handle();
+        info[1] = Nan::New<Integer>(flags);
+        info[2] = Nan::New<Integer>(errorCode);
+        info[3] = stringOrUndefined(name);
+        info[4] = stringOrUndefined(serviceType);
+        info[5] = stringOrUndefined(domain);
         if (serviceRef->GetContext().IsEmpty()) {
-            args[6] = NanUndefined();
+            info[6] = Nan::Undefined();
         } else {
-            args[6] = NanNew<Value>(serviceRef->GetContext());
+            info[6] = serviceRef->GetContext();
         }
-        NanMakeCallback(this_, callback, argc, args);
+        Nan::MakeCallback(this_, callback, argc, info);
     }
 }
 
 NAN_METHOD(DNSServiceRegister) {
-    NanScope();
-    if (argumentCountMismatch(args, 11)) {
-        NanReturnValue(throwArgumentCountMismatchException(args, 11));
+    if (argumentCountMismatch(info, 11)) {
+      return throwArgumentCountMismatchException(info, 11);
     }
 
-    if ( ! ServiceRef::HasInstance(args[0])) {
-        NanReturnValue(throwTypeError("argument 1 must be a DNSServiceRef (sdRef)"));
+    if ( ! ServiceRef::HasInstance(info[0])) {
+      return throwTypeError("argument 1 must be a DNSServiceRef (sdRef)");
     }
-    ServiceRef * serviceRef = ObjectWrap::Unwrap<ServiceRef>(args[0]->ToObject());
+    ServiceRef * serviceRef = Nan::ObjectWrap::Unwrap<ServiceRef>(info[0]->ToObject());
     if (serviceRef->IsInitialized()) {
-        NanReturnValue(throwError("DNSServiceRef is already initialized"));
+      return throwError("DNSServiceRef is already initialized");
     }
 
-    if ( ! args[1]->IsInt32()) {
-        NanReturnValue(throwError("argument 2 must be an integer (DNSServiceFlags)"));
+    if ( ! info[1]->IsInt32()) {
+      return throwError("argument 2 must be an integer (DNSServiceFlags)");
     }
-    DNSServiceFlags flags = args[1]->ToInteger()->Int32Value();
+    DNSServiceFlags flags = info[1]->ToInteger()->Int32Value();
 
-    if ( ! args[2]->IsUint32() && ! args[2]->IsInt32()) {
-        NanReturnValue(throwTypeError("argument 3 must be an integer (interfaceIndex)"));
+    if ( ! info[2]->IsUint32() && ! info[2]->IsInt32()) {
+      return throwTypeError("argument 3 must be an integer (interfaceIndex)");
     }
-    uint32_t interfaceIndex = args[2]->ToInteger()->Uint32Value();
+    uint32_t interfaceIndex = info[2]->ToInteger()->Uint32Value();
 
     bool has_name = false;
-    if ( ! args[3]->IsNull() && ! args[3]->IsUndefined()) {
-        if ( ! args[3]->IsString()) {
-            NanReturnValue(throwTypeError("argument 4 must be a string (name)"));
+    if ( ! info[3]->IsNull() && ! info[3]->IsUndefined()) {
+        if ( ! info[3]->IsString()) {
+          return throwTypeError("argument 4 must be a string (name)");
         }
         has_name = true;
     }
-    String::Utf8Value name(args[3]);
+    String::Utf8Value name(info[3]);
 
-    if ( ! args[4]->IsString()) {
-        NanReturnValue(throwTypeError("argument 5 must be a string (service type)"));
+    if ( ! info[4]->IsString()) {
+      return throwTypeError("argument 5 must be a string (service type)");
     }
-    String::Utf8Value serviceType(args[4]->ToString());
+    String::Utf8Value serviceType(info[4]->ToString());
 
     bool has_domain = false;
-    if ( ! args[5]->IsNull() && ! args[5]->IsUndefined()) {
-        if ( ! args[5]->IsString()) {
-            NanReturnValue(throwTypeError("argument 6 must be a string (domain)"));
+    if ( ! info[5]->IsNull() && ! info[5]->IsUndefined()) {
+        if ( ! info[5]->IsString()) {
+          return throwTypeError("argument 6 must be a string (domain)");
         }
         has_domain = true;
     }
-    String::Utf8Value domain(args[5]);
+    String::Utf8Value domain(info[5]);
 
     bool has_host = false;
-    if ( ! args[6]->IsNull() && ! args[6]->IsUndefined()) {
-        if ( ! args[6]->IsString()) {
-            NanReturnValue(throwTypeError("argument 7 must be a string (host)"));
+    if ( ! info[6]->IsNull() && ! info[6]->IsUndefined()) {
+        if ( ! info[6]->IsString()) {
+          return throwTypeError("argument 7 must be a string (host)");
         }
         has_host = true;
     }
-    String::Utf8Value host(args[6]);
+    String::Utf8Value host(info[6]);
 
-    if ( ! args[7]->IsInt32()) {
-        NanReturnValue(throwTypeError("argument 8 must be an integer (port)"));
+    if ( ! info[7]->IsInt32()) {
+      return throwTypeError("argument 8 must be an integer (port)");
     }
-    int raw_port = args[7]->ToInteger()->Int32Value();
+    int raw_port = info[7]->ToInteger()->Int32Value();
     if (raw_port > std::numeric_limits<uint16_t>::max() || raw_port < 0) {
-        NanReturnValue(throwError("argument 8: port number is out of bounds."));
+      return throwError("argument 8: port number is out of bounds.");
     }
     uint16_t port = static_cast<uint16_t>(raw_port);
 
     uint16_t txtLen(0);
     const void * txtRecord(NULL);
-    if ( ! args[8]->IsNull() && ! args[8]->IsUndefined()) {
-        if (Buffer::HasInstance(args[8])) {
-            Local<Object> bufferObject = args[8]->ToObject();
+    if ( ! info[8]->IsNull() && ! info[8]->IsUndefined()) {
+        if (Buffer::HasInstance(info[8])) {
+            Local<Object> bufferObject = info[8]->ToObject();
             txtRecord = Buffer::Data(bufferObject);
             txtLen = Buffer::Length(bufferObject);
-        } else if (TxtRecordRef::HasInstance(args[8])) {
-            TxtRecordRef * ref = ObjectWrap::Unwrap<TxtRecordRef>(args[8]->ToObject());
+        } else if (TxtRecordRef::HasInstance(info[8])) {
+            TxtRecordRef * ref = Nan::ObjectWrap::Unwrap<TxtRecordRef>(info[8]->ToObject());
             txtLen = TXTRecordGetLength( & ref->GetTxtRecordRef());
             txtRecord = TXTRecordGetBytesPtr( & ref->GetTxtRecordRef());
         } else {
-            NanReturnValue(throwTypeError("argument 9 must be a buffer or a dns_sd.TXTRecordRef"));
+          return throwTypeError("argument 9 must be a buffer or a dns_sd.TXTRecordRef");
         }
     }
 
-    if ( ! args[9]->IsNull() && ! args[9]->IsUndefined()) {
-        if ( ! args[9]->IsFunction()) {
-            NanReturnValue(throwTypeError("argument 10 must be a function (callBack)"));
+    if ( ! info[9]->IsNull() && ! info[9]->IsUndefined()) {
+        if ( ! info[9]->IsFunction()) {
+          return throwTypeError("argument 10 must be a function (callBack)");
         }
-        serviceRef->SetCallback(Local<Function>::Cast(args[9]));
+        serviceRef->SetCallback(Local<Function>::Cast(info[9]));
     }
 
-    if ( ! args[10]->IsNull() && ! args[10]->IsUndefined()) {
-        serviceRef->SetContext(args[10]);
+    if ( ! info[10]->IsNull() && ! info[10]->IsUndefined()) {
+        serviceRef->SetContext(info[10]);
     }
 
     // eleven arguments ... srsly?
@@ -153,15 +152,14 @@ NAN_METHOD(DNSServiceRegister) {
             htons(port),
             txtLen,
             txtRecord,
-            args[9]->IsFunction() ? OnServiceRegistered : NULL,
+            info[9]->IsFunction() ? OnServiceRegistered : NULL,
             serviceRef);
     if (error != kDNSServiceErr_NoError) {
-        NanReturnValue(throwMdnsError(error));
+      return throwMdnsError(error);
     }
     if ( ! serviceRef->SetSocketFlags()) {
-        NanReturnValue(throwError("Failed to set socket flags (O_NONBLOCK, FD_CLOEXEC)"));
+      return throwError("Failed to set socket flags (O_NONBLOCK, FD_CLOEXEC)");
     }
-    NanReturnUndefined();
 }
 
 } // end of namespace node_mdns

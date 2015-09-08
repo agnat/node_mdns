@@ -3,7 +3,7 @@
 
 namespace node_mdns {
 
-class SocketWatcher : public node::ObjectWrap {
+class SocketWatcher : public Nan::ObjectWrap {
     public:
         SocketWatcher();
 
