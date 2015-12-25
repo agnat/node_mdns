@@ -1,5 +1,5 @@
 {
-  "name": "mdns",
+  "name": "@xyezir/mdns",
   "version": "2.2.9",
   "description": "multicast DNS service discovery",
   "main": "./lib/mdns.js",
