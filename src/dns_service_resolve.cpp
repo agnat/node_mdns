@@ -78,11 +78,7 @@ NAN_METHOD(DNSServiceResolve) {
     uint32_t interfaceIndex = info[2]->ToInteger()->Uint32Value();
 
     if ( ! info[3]->IsString()) {
-<<<<<<< 4a4af20abb1f8b67699ee415696d2d1f1ee62c28
-        return throwTypeError("argument 4 must be a string (name)");
-=======
         info.GetReturnValue().Set(throwTypeError("argument 4 must be a string (name)"));
->>>>>>> on the way to completing
     }
     String::Utf8Value name(info[3]->ToString());
 
