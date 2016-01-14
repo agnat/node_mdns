@@ -51,6 +51,7 @@ def build(bld):
                , 'src/dns_service_register.cpp'
                , 'src/dns_service_resolve.cpp'
                , 'src/dns_service_get_addr_info.cpp'
+               , 'src/dns_service_update_record.cpp'
                , 'src/mdns_utils.cpp'
                , 'src/network_interface.cpp'
                , 'src/txt_record_ref.cpp'

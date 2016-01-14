@@ -10,6 +10,7 @@
                  , 'src/dns_service_ref_sock_fd.cpp'
                  , 'src/dns_service_register.cpp'
                  , 'src/dns_service_resolve.cpp'
+                 , 'src/dns_service_update_record.cpp'
                  , 'src/mdns_utils.cpp'
                  , 'src/network_interface.cpp'
                  , 'src/socket_watcher.cpp'

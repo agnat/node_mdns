@@ -225,6 +225,72 @@ exports['create ads'] = function(t) {
 
 }
 
+exports['update ad record'] = function(t) {
+  var timeout = 5000
+    , port = 4321
+    , service_type = mdns_test.suffixedServiceType('mdns-test', 'tcp');
+    ;
+
+  var timeoutId = setTimeout(function() {
+    t.fail("test did not finish within " + (timeout / 1000) + " seconds.");
+    browser.stop();
+    browser2.stop();
+    ad.stop();
+    t.done();
+  }, timeout)
+
+  var browser = mdns.createBrowser(service_type, {context: {some: 'context'}});
+  var browser2 = mdns.createBrowser(service_type, {context: {some: 'context'}});
+
+  function stopBrowserIfDone() {
+    if (changedCount == 2)
+    {
+      browser.stop();
+      browser2.stop();
+      ad.stop();
+      clearTimeout(timeoutId);
+      t.done();
+    }
+  }
+
+  function browserOnServiceChanged(service, ctx) {
+    t.ok('rawTxtRecord' in service,
+        "'service' must have a rawTxtRecord property");
+    t.ok(service.rawTxtRecord,
+        "'rawTxtRecord' must be truthy");
+    t.ok(service.txtRecord,
+        "'txtRecord' must be truthy");
+
+    if (changedCount === 0) {
+      t.strictEqual(service.txtRecord['value'], '1',
+          "'txtRecord' doesn\'t match");
+      browser.stop();
+    } else {
+      t.strictEqual(service.txtRecord['value'], '2',
+          "'txtRecord' doesn\'t match");
+    }
+
+    changedCount += 1;
+    stopBrowserIfDone();
+  }
+
+  var changedCount = 0;
+  browser.on('serviceChanged', browserOnServiceChanged);
+  browser2.on('serviceChanged', browserOnServiceChanged);
+
+  browser.start();
+
+  var ad = mdns.createAdvertisement(service_type, port, {name: 'foobar', txtRecord: {value: '1'}}, function(error, service) {
+    if (error) t.fail(error);
+
+    setTimeout(function(){
+      ad.updateTXTRecord({value: '2'});
+      setTimeout(function(){browser2.start();}, 3000);
+    }, 1000);
+  });
+  ad.start();
+}
+
 exports['browseThemAll()'] = function(t) {
   var browser = new mdns.browseThemAll()
     , up = 0
