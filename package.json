@@ -57,6 +57,9 @@
   , { "name":   "Cong Liu"
     , "github": "ghostoy"
     }
+  , { "name":   "Tian Zhang"
+    , "github": "KhaosT"
+    }
   ]
 , "dependencies":
   { "bindings": "~1.2.1"

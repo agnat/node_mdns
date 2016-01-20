@@ -81,6 +81,7 @@ In random order:
 * Ron Korving ([ronkorving](https://github.com/ronkorving))
 * Don Park ([donpark](https://github.com/donpark))
 * Cong Liu ([ghostoy](https://github.com/ghostoy))
+* Tian Zhang ([KhaosT](https://github.com/KhaosT))
 
 Your name is missing on the list? Shame on me. Please open an issue.
 
