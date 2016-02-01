@@ -226,9 +226,11 @@ exports['create ads'] = function(t) {
 }
 
 exports['update ad record'] = function(t) {
-  var timeout = 5000
+  var timeout = 10000
     , port = 4321
-    , service_type = mdns_test.suffixedServiceType('mdns-test', 'tcp');
+    , service_type = mdns_test.suffixedServiceType('test-adu', 'tcp')
+    , registered = false
+    , updated = false
     ;
 
   var timeoutId = setTimeout(function() {
@@ -243,7 +245,7 @@ exports['update ad record'] = function(t) {
   var browser2 = mdns.createBrowser(service_type, {context: {some: 'context'}});
 
   function stopBrowserIfDone() {
-    if (changedCount == 2)
+    if (changedCount == 2 && updated)
     {
       browser.stop();
       browser2.stop();
@@ -264,13 +266,16 @@ exports['update ad record'] = function(t) {
     if (changedCount === 0) {
       t.strictEqual(service.txtRecord['value'], '1',
           "'txtRecord' doesn\'t match");
+      changedCount += 1;
       browser.stop();
     } else {
-      t.strictEqual(service.txtRecord['value'], '2',
+      if(updated) {
+        changedCount += 1;
+        t.strictEqual(service.txtRecord['value'], '2',
           "'txtRecord' doesn\'t match");
+      }
     }
 
-    changedCount += 1;
     stopBrowserIfDone();
   }
 
@@ -282,11 +287,16 @@ exports['update ad record'] = function(t) {
 
   var ad = mdns.createAdvertisement(service_type, port, {name: 'foobar', txtRecord: {value: '1'}}, function(error, service) {
     if (error) t.fail(error);
-
-    setTimeout(function(){
-      ad.updateTXTRecord({value: '2'});
-      setTimeout(function(){browser2.start();}, 3000);
-    }, 1000);
+    if (registered === false) {
+      registered = true;
+      setTimeout(function(){
+        if (ad.serviceRef !== null) {
+          ad.updateTXTRecord({value: '2'});
+          updated = true;
+          setTimeout(function(){browser2.start();}, 3000);
+        }
+      }, 1000);
+    }
   });
   ad.start();
 }
