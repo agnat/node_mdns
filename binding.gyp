@@ -28,6 +28,10 @@
       , [ 'OS=="mac"', {
             'defines': [ 'HAVE_DNSSERVICEGETADDRINFO' ]
         }]
+      , ['OS=="freebsd"', {
+            'include_dirs': [ '/usr/local/include' ]
+          , 'libraries': [ '-L/usr/local/lib' ]
+        }]
       , ['OS=="win"', {
             'variables': {
                 'BONJOUR_SDK_DIR': '$(BONJOUR_SDK_HOME)', # Preventing path resolution problems by saving the env var in variable first 
