@@ -1,0 +1,36 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/Users/pumpkin/.nvm/versions/node/v5.6.0/bin/node',
+1 verbose cli   '/Users/pumpkin/.nvm/versions/node/v5.6.0/bin/npm',
+1 verbose cli   'publish',
+1 verbose cli   '--access=public' ]
+2 info using npm@3.6.0
+3 info using node@v5.6.0
+4 verbose publish [ '.' ]
+5 verbose stack Error: Failed to parse json
+5 verbose stack Unexpected token '<' at 63:1
+5 verbose stack <<<<<<< HEAD
+5 verbose stack ^
+5 verbose stack     at parseError (/Users/pumpkin/.nvm/versions/node/v5.6.0/lib/node_modules/npm/node_modules/read-package-json/read-json.js:379:11)
+5 verbose stack     at parseJson (/Users/pumpkin/.nvm/versions/node/v5.6.0/lib/node_modules/npm/node_modules/read-package-json/read-json.js:68:23)
+5 verbose stack     at /Users/pumpkin/.nvm/versions/node/v5.6.0/lib/node_modules/npm/node_modules/read-package-json/read-json.js:48:5
+5 verbose stack     at /Users/pumpkin/.nvm/versions/node/v5.6.0/lib/node_modules/npm/node_modules/graceful-fs/graceful-fs.js:76:16
+5 verbose stack     at tryToString (fs.js:414:3)
+5 verbose stack     at FSReqWrap.readFileAfterClose [as oncomplete] (fs.js:401:12)
+6 verbose cwd /project/xyezir/node_mdns
+7 error Darwin 15.3.0
+8 error argv "/Users/pumpkin/.nvm/versions/node/v5.6.0/bin/node" "/Users/pumpkin/.nvm/versions/node/v5.6.0/bin/npm" "publish" "--access=public"
+9 error node v5.6.0
+10 error npm  v3.6.0
+11 error file /project/xyezir/node_mdns/package.json
+12 error code EJSONPARSE
+13 error Failed to parse json
+13 error Unexpected token '<' at 63:1
+13 error <<<<<<< HEAD
+13 error ^
+14 error File: /project/xyezir/node_mdns/package.json
+15 error Failed to parse package.json data.
+15 error package.json must be actual JSON, not just JavaScript.
+15 error
+15 error This is not a bug in npm.
+15 error Tell the package author to fix their package.json file. JSON.parse
+16 verbose exit [ 1, true ]
