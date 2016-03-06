@@ -52,7 +52,6 @@ OnResolve(DNSServiceRef sdRef, DNSServiceFlags flags,
 }
 
 NAN_METHOD(DNSServiceResolve) {
-
     Nan::HandleScope scope;
 
     if (argumentCountMismatch(info, 8)) {

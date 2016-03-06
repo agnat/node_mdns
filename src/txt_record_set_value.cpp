@@ -41,7 +41,7 @@ NAN_METHOD(TXTRecordSetValue) {
     }
     DNSServiceErrorType code = TXTRecordSetValue( & ref->GetTxtRecordRef(), *key,
             length(info[2]),
-            ((info[2]->IsNull()||info[2]->IsUndefined())
+            ((info[2]->IsNull()||info[2]->IsUndefined()) 
                 ? NULL : info[2]->IsString() ? *String::Utf8Value(info[2]->ToString()) : Buffer::Data(info[2]->ToObject())));
 
     if (code != kDNSServiceErr_NoError) {
