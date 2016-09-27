@@ -1,18 +1,17 @@
 #!/usr/bin/env node
 var mdns    = require('../lib/mdns')
-  , app     = express.createServer()
-  ;
+    ,express = require('express');
 
-
-try {
-  var express = require('express');
-} catch (e) {
-  console.log('please install express manualy: npm install express');
-}
-app.get('/', function() { return "Hello World"; });
-
-app.on('listening', function() {
-  mdns.createAdvertisement(mdns.tcp('http') , app.address().port ).start();
+var app = express();
+app.get('/', function(req, res){
+  res.send('Hello World');
 });
 
-app.listen(4321);
+var listener = app.listen(4321, function() {
+    var port = listener.address().port;
+    mdns.createAdvertisement(mdns.tcp('http') , port, {
+        name: 'MyService',
+        host: 'myservice.local'
+    }).start();
+    console.log('Listening on port', port);
+});
