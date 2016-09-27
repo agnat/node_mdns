@@ -9,9 +9,6 @@ app.get('/', function(req, res){
 
 var listener = app.listen(4321, function() {
     var port = listener.address().port;
-    mdns.createAdvertisement(mdns.tcp('http') , port, {
-        name: 'MyService',
-        host: 'myservice.local'
-    }).start();
+    mdns.createAdvertisement(mdns.tcp('http') , port).start();
     console.log('Listening on port', port);
 });
