@@ -104,6 +104,10 @@ errorString(DNSServiceErrorType error) {
         case kDNSServiceErr_PollingMode:
             return "polling mode";
 #endif
+#ifdef kDNSServiceErr_Timeout
+        case kDNSServiceErr_Timeout:
+            return "timeout";
+#endif
         default:
             return "unknown error code";
     }
