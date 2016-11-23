@@ -24,17 +24,17 @@ NAN_METHOD(DNSServiceRefDeallocate);
 NAN_METHOD(DNSServiceResolve);
 NAN_METHOD(DNSServiceEnumerateDomains);
 #ifdef HAVE_DNSSERVICEGETADDRINFO
-NAN_METHOD(DNSServiceGetAddrInfo); 
+NAN_METHOD(DNSServiceGetAddrInfo);
 #endif
-NAN_METHOD(TXTRecordCreate); 
+NAN_METHOD(TXTRecordCreate);
 NAN_METHOD(TXTRecordDeallocate);
-//NAN_METHOD(TXTRecordGetCount); 
-NAN_METHOD(TXTRecordSetValue); 
+//NAN_METHOD(TXTRecordGetCount);
+NAN_METHOD(TXTRecordSetValue);
 NAN_METHOD(TXTRecordGetLength);
 
 // === posix ============================================
 #ifdef NODE_MDNS_HAVE_INTERFACE_NAME_CONVERSION
-NAN_METHOD(if_nametoindex); 
+NAN_METHOD(if_nametoindex);
 NAN_METHOD(if_indextoname);
 #endif
 
@@ -45,12 +45,12 @@ NAN_METHOD(buildException);
 
 // === locals ===========================================
 
-void defineFunction(Local<Object> target, const char * name, Nan::FunctionCallback f);
-void addConstants(Local<Object> target);
+void defineFunction(Handle<Object> target, const char * name, Nan::FunctionCallback f);
+void addConstants(Handle<Object> target);
 
 void
-init(Local<Object> target) {
-    Nan::HandleScope scope;
+init(Handle<Object> target) {
+  Nan::HandleScope scope;
 
     ServiceRef::Initialize( target );
     TxtRecordRef::Initialize( target );
@@ -90,18 +90,18 @@ init(Local<Object> target) {
 
 inline
 void
-defineFunction(Local<Object> target, const char * name, Nan::FunctionCallback f) {
+defineFunction(Handle<Object> target, const char * name, Nan::FunctionCallback f) {
     Nan::Set(target, Nan::New(name).ToLocalChecked(),
             Nan::GetFunction(Nan::New<FunctionTemplate>(f)).ToLocalChecked());
 }
 
 NAN_METHOD(buildException) {
     if (argumentCountMismatch(info, 1)) {
-        return throwArgumentCountMismatchException(info, 1);
+        info.GetReturnValue().Set(throwArgumentCountMismatchException(info, 1));
     }
     if ( ! info[0]->IsInt32()) {
-        return throwTypeError("argument 1 must be an integer " 
-                "(DNSServiceErrorType)");
+        info.GetReturnValue().Set(throwTypeError("argument 1 must be an integer "
+                "(DNSServiceErrorType)"));
     }
 
     DNSServiceErrorType error = Nan::To<int32_t>(info[0]).FromJust();
@@ -301,17 +301,20 @@ addConstants(Local<Object> target) {
 #ifdef kDNSServiceFlagsSuppressUnusable
     NODE_DEFINE_CONSTANT(target, kDNSServiceFlagsSuppressUnusable);
 #endif
+    NODE_DEFINE_CONSTANT(target, kDNSServiceProtocol_IPv4);
+    NODE_DEFINE_CONSTANT(target, kDNSServiceProtocol_IPv6);
 }
 
 NAN_METHOD(exportConstants) {
     if (argumentCountMismatch(info, 1)) {
-        return throwArgumentCountMismatchException(info, 1);
+        info.GetReturnValue().Set(throwArgumentCountMismatchException(info, 1));
     }
     if ( ! info[0]->IsObject()) {
-        return throwTypeError("argument 1 must be an object.");
+        info.GetReturnValue().Set(throwTypeError("argument 1 must be an object."));
     }
 
     addConstants(info[0]->ToObject());
+    return;
 }
 
 } // end of namespace node_mdns

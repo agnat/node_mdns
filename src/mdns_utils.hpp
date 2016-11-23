@@ -11,21 +11,24 @@ const char * errorString(DNSServiceErrorType error);
 v8::Local<v8::Value> buildException(DNSServiceErrorType error_code);
 
 inline
-void
+v8::Local<v8::Value>
 throwError(const char * message) {
     Nan::ThrowError( Nan::Error(message) );
+    return Nan::Undefined();
 }
 
 inline
-void
+v8::Local<v8::Value>
 throwTypeError(const char * message) {
     Nan::ThrowTypeError( message );
+    return Nan::Undefined();
 }
 
 inline
-void
+v8::Local<v8::Value>
 throwMdnsError(DNSServiceErrorType error_code) {
     Nan::ThrowError( buildException(error_code) );
+    return Nan::Undefined();
 }
 
 inline
@@ -35,10 +38,10 @@ argumentCountMismatch(Nan::NAN_METHOD_ARGS_TYPE info, int expectedCount) {
 }
 
 inline
-void
+v8::Local<v8::Value>
 throwArgumentCountMismatchException(Nan::NAN_METHOD_ARGS_TYPE info, size_t expectedCount) {
     std::ostringstream msg;
-    msg << "argument count mismatch: expected " << expectedCount 
+    msg << "argument count mismatch: expected " << expectedCount
         << ", but got " <<  info.Length() << " arguments.";
     return throwError(msg.str().c_str());
 }

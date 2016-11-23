@@ -16,7 +16,7 @@ class TxtRecordRef : public Nan::ObjectWrap {
         static inline bool HasInstance(v8::Handle<v8::Value> value) {
             if ( ! value->IsObject() ) return false;
             v8::Local<v8::Object> object = value->ToObject();
-            return Nan::New(constructor_template)->HasInstance( object );
+            return Nan::New(constructor_template)->HasInstance(object);
         }
 
         TXTRecordRef & GetTxtRecordRef() { return ref_; }

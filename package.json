@@ -15,6 +15,7 @@
   , "glob":      "*"
   , "ncp":       "*"
   , "minimatch": "*"
+  , "pangyp":    "^2.3.0"
   , "proxyquire": "^1.7.3"
   }
 , "repository":
@@ -27,17 +28,37 @@
     { "type": "MIT"
     , "url": "http://github.com/agnat/node_mdns/raw/master/LICENSE"
     }
-  ]
-, "author":
-  { "name":   "David Siegel"
-  , "email":  "david@artcom.de"
-  , "github": "agnat"
-  }
-, "contributors": [
-    { "name":   "Orlando Vazquez"
-    , "email":  "ovazquez@gmail.com"
-    , "url":    "http://or.lan.do/"
-    , "github": "orlandov"
+  ],
+  "author": {
+    "name": "David Siegel",
+    "email": "david@artcom.de",
+    "github": "agnat"
+  },
+  "contributors": [
+    {
+      "name": "Orlando Vazquez",
+      "email": "ovazquez@gmail.com",
+      "url": "http://or.lan.do/",
+      "github": "orlandov"
+    },
+    {
+      "name": "Ryan Dahl",
+      "email": "ry at tiny clouds dot org",
+      "url": "http://four.livejournal.com/",
+      "github": "ry"
+    },
+    {
+      "name": "Dominic Tarr",
+      "url": "http://twitter.com/dominictarr",
+      "github": "dominictarr"
+    },
+    {
+      "name": "Emil Stenqvist",
+      "github": "emilisto"
+    },
+    {
+      "name": "Toby Ealden",
+      "github": "TobyEalden"
     }
   , { "name":   "Ryan Dahl"
     , "email":  "ry at tiny clouds dot org"
@@ -60,6 +81,10 @@
   , { "name":   "Tian Zhang"
     , "github": "KhaosT"
     }
+  , { "name":   "Chris Ye"
+    , "email": "xyezir@gmail.com"
+    , "github": "xyezir"
+    }
   ]
 , "dependencies":
   { "bindings": "~1.2.1"
@@ -67,4 +92,3 @@
   }
 , "gypfile": true
 }
-

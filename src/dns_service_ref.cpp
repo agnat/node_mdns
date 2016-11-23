@@ -28,18 +28,19 @@ ServiceRef::~ServiceRef() {
 void
 ServiceRef::Initialize(Local<Object> target) {
     Local<FunctionTemplate> t = Nan::New<FunctionTemplate>(New);
-    constructor_template.Reset(t);
+    constructor_template.Reset( t);
     t->InstanceTemplate()->SetInternalFieldCount(1);
     t->SetClassName(Nan::New("DNSServiceRef").ToLocalChecked());
-    
+
     Nan::SetAccessor(t->InstanceTemplate(), Nan::New("fd").ToLocalChecked(), fd_getter);
     Nan::SetAccessor(t->InstanceTemplate(),  Nan::New("initialized").ToLocalChecked(), initialized_getter);
     Nan::Set(target, Nan::New("DNSServiceRef").ToLocalChecked(), Nan::GetFunction(t).ToLocalChecked());
 }
 
 NAN_METHOD(ServiceRef::New) {
+    Nan::HandleScope scope;
     if (argumentCountMismatch(info, 0)) {
-        return throwArgumentCountMismatchException(info, 0);
+        info.GetReturnValue().Set(throwArgumentCountMismatchException(info, 0));
     }
     ServiceRef * o = new ServiceRef();
     o->Wrap(info.Holder());
@@ -102,12 +103,14 @@ ServiceRef::SetSocketFlags() {
 }
 
 NAN_PROPERTY_GETTER(ServiceRef::fd_getter) {
+    Nan::HandleScope scope;
     ServiceRef * service_ref = Nan::ObjectWrap::Unwrap<ServiceRef>(info.This());
     int fd = -1;
     if (service_ref->ref_) {
         fd = DNSServiceRefSockFD(service_ref->ref_);
         if (fd == -1) {
-            return Nan::ThrowError("DNSServiceRefSockFD() failed");
+            Nan::ThrowError("DNSServiceRefSockFD() failed");
+            return;
         }
     }
     Local<Integer> v = Nan::New<Integer>(fd);
@@ -115,6 +118,7 @@ NAN_PROPERTY_GETTER(ServiceRef::fd_getter) {
 }
 
 NAN_PROPERTY_GETTER(ServiceRef::initialized_getter) {
+    Nan::HandleScope scope;
     ServiceRef * service_ref = Nan::ObjectWrap::Unwrap<ServiceRef>(info.This());
     info.GetReturnValue().Set(Nan::New<Boolean>(service_ref->IsInitialized()));
 }
