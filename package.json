@@ -1,5 +1,5 @@
 { "name": "mdns"
-, "version": "2.3.3"
+, "version": "2.3.4"
 , "description": "multicast DNS service discovery"
 , "main": "./lib/mdns.js"
 , "scripts":
@@ -30,7 +30,7 @@
   ]
 , "author":
   { "name":   "David Siegel"
-  , "email":  "david@artcom.de"
+  , "email":  "agnat@me.com"
   , "github": "agnat"
   }
 , "contributors": [
