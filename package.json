@@ -14,14 +14,14 @@
   ],
   "devDependencies": {
     "ejs": "*",
-    "less": "*",
-    "mkdirp": "*",
-    "nopt": "*",
-    "slide": "*",
     "glob": "*",
-    "ncp": "*",
+    "less": "*",
     "minimatch": "*",
-    "proxyquire": "^1.7.3"
+    "mkdirp": "*",
+    "ncp": "*",
+    "nopt": "*",
+    "proxyquire": "^2.0.0",
+    "slide": "*"
   },
   "repository": {
     "type": "git",
