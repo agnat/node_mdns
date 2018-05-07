@@ -78,17 +78,17 @@ NAN_METHOD(DNSServiceResolve) {
     if ( ! info[3]->IsString()) {
         return throwTypeError("argument 4 must be a string (name)");
     }
-    String::Utf8Value name(info[3]->ToString());
+    Nan::Utf8String name(info[3]->ToString());
 
     if ( ! info[4]->IsString()) {
         return throwTypeError("argument 5 must be a string (service type)");
     }
-    String::Utf8Value serviceType(info[4]->ToString());
+    Nan::Utf8String serviceType(info[4]->ToString());
 
     if ( ! info[5]->IsString()) {
         return throwTypeError("argument 6 must be a string (domain)");
     }
-    String::Utf8Value domain(info[5]->ToString());
+    Nan::Utf8String domain(info[5]->ToString());
 
     if ( ! info[6]->IsFunction()) {
         return throwTypeError("argument 7 must be a function (callBack)");

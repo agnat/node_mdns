@@ -32,7 +32,7 @@ NAN_METHOD(TXTRecordSetValue) {
     if ( ! info[1]->IsString()) {
         return throwTypeError("argument 1 must be a string (key)");
     }
-    String::Utf8Value key(info[1]);
+    Nan::Utf8String key(info[1]);
     
     if ( ! (info[2]->IsNull() || info[2]->IsUndefined() ||
         Buffer::HasInstance(info[2]) || info[2]->IsString())) {
@@ -41,7 +41,7 @@ NAN_METHOD(TXTRecordSetValue) {
     DNSServiceErrorType code = TXTRecordSetValue( & ref->GetTxtRecordRef(), *key,
             length(info[2]),
             ((info[2]->IsNull()||info[2]->IsUndefined()) 
-                ? NULL : info[2]->IsString() ? *String::Utf8Value(info[2]->ToString()) : Buffer::Data(info[2]->ToObject())));
+                ? NULL : info[2]->IsString() ? *Nan::Utf8String(info[2]->ToString()) : Buffer::Data(info[2]->ToObject())));
 
     if (code != kDNSServiceErr_NoError) {
         return throwMdnsError(code);

@@ -79,12 +79,12 @@ NAN_METHOD(DNSServiceRegister) {
         }
         has_name = true;
     }
-    String::Utf8Value name(info[3]);
+    Nan::Utf8String name(info[3]);
 
     if ( ! info[4]->IsString()) {
       return throwTypeError("argument 5 must be a string (service type)");
     }
-    String::Utf8Value serviceType(info[4]->ToString());
+    Nan::Utf8String serviceType(info[4]->ToString());
 
     bool has_domain = false;
     if ( ! info[5]->IsNull() && ! info[5]->IsUndefined()) {
@@ -93,7 +93,7 @@ NAN_METHOD(DNSServiceRegister) {
         }
         has_domain = true;
     }
-    String::Utf8Value domain(info[5]);
+    Nan::Utf8String domain(info[5]);
 
     bool has_host = false;
     if ( ! info[6]->IsNull() && ! info[6]->IsUndefined()) {
@@ -102,7 +102,7 @@ NAN_METHOD(DNSServiceRegister) {
         }
         has_host = true;
     }
-    String::Utf8Value host(info[6]);
+    Nan::Utf8String host(info[6]);
 
     if ( ! info[7]->IsInt32()) {
       return throwTypeError("argument 8 must be an integer (port)");
