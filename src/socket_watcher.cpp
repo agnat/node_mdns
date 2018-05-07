@@ -39,6 +39,8 @@ MakeCallback(const Handle<Object> object, const Handle<Function> callback,
 
 namespace node_mdns {
 
+    static Nan::AsyncResource* asyncResource;
+
     SocketWatcher::SocketWatcher() : poll_(NULL), fd_(0), events_(0) {
     }
 
@@ -97,7 +99,9 @@ namespace node_mdns {
         argv[0] = revents & UV_READABLE ? Nan::True() : Nan::False();
         argv[1] = revents & UV_WRITABLE ? Nan::True() : Nan::False();
 
-        Nan::MakeCallback(watcher->handle(), callback, 2, argv);
+        asyncResource = new Nan::AsyncResource("node_mdns::SocketWatcher");
+        asyncResource->runInAsyncScope(watcher->handle(), callback, 2, argv);
+        delete asyncResource;
     }
 
     NAN_METHOD(SocketWatcher::Stop) {

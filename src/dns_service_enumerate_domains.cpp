@@ -8,6 +8,8 @@ using namespace node;
 
 namespace node_mdns {
 
+static Nan::AsyncResource* asyncResource;
+
 void
 DNSSD_API
 OnEnumeration(DNSServiceRef sdRef, DNSServiceFlags flags, uint32_t interfaceIndex,
@@ -26,7 +28,9 @@ OnEnumeration(DNSServiceRef sdRef, DNSServiceFlags flags, uint32_t interfaceInde
     info[3] = Nan::New<Integer>(errorCode);
     info[4] = stringOrUndefined(replyDomain);
     info[5] = serviceRef->GetContext();
-    Nan::MakeCallback(this_, callback, argc, info);
+    asyncResource = new Nan::AsyncResource("node_mdns::DNSServiceEnumerateDomains");
+    asyncResource->runInAsyncScope(this_, callback, argc, info);
+    delete asyncResource;
 }
 
 NAN_METHOD(DNSServiceEnumerateDomains) {

@@ -18,6 +18,8 @@ using namespace node;
 
 namespace node_mdns {
 
+static Nan::AsyncResource* asyncResource;
+
 void
 DNSSD_API
 OnResolve(DNSServiceRef sdRef, DNSServiceFlags flags,
@@ -48,7 +50,9 @@ OnResolve(DNSServiceRef sdRef, DNSServiceFlags flags,
     } else {
         info[8] = serviceRef->GetContext();
     }
-    Nan::MakeCallback(this_, callback, argc, info);
+    asyncResource = new Nan::AsyncResource("node_mdns::DNSServiceResolve");
+    asyncResource->runInAsyncScope(this_, callback, argc, info);
+    delete asyncResource;
 }
 
 NAN_METHOD(DNSServiceResolve) {

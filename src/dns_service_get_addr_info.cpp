@@ -18,6 +18,8 @@ namespace node_mdns {
 
 #ifdef HAVE_DNSSERVICEGETADDRINFO
 
+static Nan::AsyncResource* asyncResource;
+
 void
 DNSSD_API
 OnAddressInfo(DNSServiceRef sdRef, DNSServiceFlags flags, 
@@ -65,7 +67,9 @@ OnAddressInfo(DNSServiceRef sdRef, DNSServiceFlags flags,
     } else {
         info[7] = serviceRef->GetContext();
     }
-    Nan::MakeCallback(this_, callback, argc, info);
+    asyncResource = new Nan::AsyncResource("node_mdns::DNSServiceGetAddrInfo");
+    asyncResource->runInAsyncScope(this_, callback, argc, info);
+    delete asyncResource;
 }
 
 NAN_METHOD(DNSServiceGetAddrInfo) {
