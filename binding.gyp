@@ -23,7 +23,8 @@
                  ]
     , 'conditions': [
         [ 'OS!="mac" and OS!="win"', {
-            'libraries': [ '-ldns_sd' ]
+            'include_dirs': [ '/usr/include/avahi-compat-libdns_sd/' ] # dns_sd.h is installed to /usr/include/avahi-compat-libdns_sd/ in Void Linux
+          , 'libraries': [ '-ldns_sd' ]
         }]
       , [ 'OS=="mac"', {
             'defines': [ 'HAVE_DNSSERVICEGETADDRINFO' ]
@@ -34,8 +35,8 @@
         }]
       , ['OS=="win"', {
             'variables': {
-                'BONJOUR_SDK_DIR': '$(BONJOUR_SDK_HOME)', # Preventing path resolution problems by saving the env var in variable first 
-                'PLATFORM': '$(Platform)' # Set  the platform
+                'BONJOUR_SDK_DIR': '$(BONJOUR_SDK_HOME)', # Preventing path resolution problems by saving the env var in variable first
+                'PLATFORM': '$(Platform)' # Set the platform
               }
           , 'include_dirs': [ '<(BONJOUR_SDK_DIR)/Include' ]
           , 'defines': [ 'HAVE_DNSSERVICEGETADDRINFO' ]
