@@ -18,7 +18,7 @@ NAN_METHOD(DNSServiceProcessResult) {
         return throwTypeError("argument 1 must be a DNSServiceRef object");
     }
 
-    ServiceRef * ref = Nan::ObjectWrap::Unwrap<ServiceRef>(info[0]->ToObject());
+    ServiceRef * ref = Nan::ObjectWrap::Unwrap<ServiceRef>(ToObject(info[0]));
     ref->SetThis(info.This());
     DNSServiceErrorType error = DNSServiceProcessResult(ref->GetServiceRef());
     if (error != kDNSServiceErr_NoError) {

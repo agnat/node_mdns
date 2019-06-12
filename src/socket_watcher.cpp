@@ -14,9 +14,9 @@ using namespace v8;
 #if ! NODE_VERSION_AT_LEAST(0, 7, 8)
 namespace node {
 
-Handle<Value>
-MakeCallback(const Handle<Object> object, const Handle<Function> callback,
-        int argc, Handle<Value> argv[])
+Local<Value>
+MakeCallback(const Local<Object> object, const Local<Function> callback,
+        int argc, Local<Value> argv[])
 {
     Nan::HandleScope scope;
 
@@ -43,7 +43,7 @@ namespace node_mdns {
     }
 
     void
-    SocketWatcher::Initialize(Handle<Object> target) {
+    SocketWatcher::Initialize(Local<Object> target) {
         Local<FunctionTemplate> t = Nan::New<FunctionTemplate>(New);
 
         Local<String> symbol = Nan::New("SocketWatcher").ToLocalChecked();

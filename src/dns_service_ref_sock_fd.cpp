@@ -14,11 +14,11 @@ NAN_METHOD(DNSServiceRefSockFD) {
     if (argumentCountMismatch(info, 1)) {
         return throwArgumentCountMismatchException(info, 1);
     }
-    if ( ! info[0]->IsObject() || ! ServiceRef::HasInstance(info[0]->ToObject())) {
+    if ( ! info[0]->IsObject() || ! ServiceRef::HasInstance(ToObject(info[0]))) {
       return throwTypeError("argument 1 must be a DNSServiceRef object");
     }
 
-    ServiceRef * ref = Nan::ObjectWrap::Unwrap<ServiceRef>(info[0]->ToObject());
+    ServiceRef * ref = Nan::ObjectWrap::Unwrap<ServiceRef>(ToObject(info[0]));
     if ( ! ref->IsInitialized()) {
       return throwError("DNSServiceRef is not initialized");
     }

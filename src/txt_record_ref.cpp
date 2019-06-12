@@ -18,7 +18,7 @@ TxtRecordRef::~TxtRecordRef() {
 }
 
 void
-TxtRecordRef::Initialize(Handle<Object> target) {
+TxtRecordRef::Initialize(Local<Object> target) {
     Local<FunctionTemplate> t = Nan::New<FunctionTemplate>(New);
     constructor_template.Reset(t);
     t->InstanceTemplate()->SetInternalFieldCount(1);

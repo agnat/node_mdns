@@ -10,11 +10,11 @@ using namespace node;
 
 namespace node_mdns {
 
-size_t length(Handle<Value> v) {
+size_t length(Local<Value> v) {
     if (v->IsString()) {
-        return v->ToString()->Utf8Length();
+        return Utf8Length(v);
     } else if (Buffer::HasInstance(v)) {
-        return Buffer::Length(v->ToObject());
+        return Buffer::Length(ToObject(v));
     } else {
         return 0;
     }
@@ -24,10 +24,10 @@ NAN_METHOD(TXTRecordSetValue) {
     if (argumentCountMismatch(info, 3)) {
         return throwArgumentCountMismatchException(info, 3);
     }
-    if ( ! info[0]->IsObject() || ! TxtRecordRef::HasInstance(info[0]->ToObject())) {
+    if ( ! info[0]->IsObject() || ! TxtRecordRef::HasInstance(ToObject(info[0]))) {
         return throwTypeError("argument 1 must be a TXTRecordRef object");
     }
-    TxtRecordRef * ref = Nan::ObjectWrap::Unwrap<TxtRecordRef>(info[0]->ToObject());
+    TxtRecordRef * ref = Nan::ObjectWrap::Unwrap<TxtRecordRef>(ToObject(info[0]));
 
     if ( ! info[1]->IsString()) {
         return throwTypeError("argument 1 must be a string (key)");
@@ -41,7 +41,7 @@ NAN_METHOD(TXTRecordSetValue) {
     DNSServiceErrorType code = TXTRecordSetValue( & ref->GetTxtRecordRef(), *key,
             length(info[2]),
             ((info[2]->IsNull()||info[2]->IsUndefined()) 
-                ? NULL : info[2]->IsString() ? *Nan::Utf8String(info[2]->ToString()) : Buffer::Data(info[2]->ToObject())));
+                ? NULL : info[2]->IsString() ? *Nan::Utf8String(info[2]) : Buffer::Data(ToObject(info[2]))));
 
     if (code != kDNSServiceErr_NoError) {
         return throwMdnsError(code);

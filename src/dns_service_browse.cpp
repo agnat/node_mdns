@@ -47,7 +47,7 @@ NAN_METHOD(DNSServiceBrowse) {
     if ( ! ServiceRef::HasInstance(info[0])) {
         return throwTypeError("argument 1 must be a DNSServiceRef (sdRef)");
     }
-    ServiceRef * serviceRef = Nan::ObjectWrap::Unwrap<ServiceRef>(info[0]->ToObject());
+    ServiceRef * serviceRef = Nan::ObjectWrap::Unwrap<ServiceRef>(ToObject(info[0]));
     if (serviceRef->IsInitialized()) {
         return throwError("DNSServiceRef is already initialized");
     }
@@ -55,17 +55,17 @@ NAN_METHOD(DNSServiceBrowse) {
     if ( ! info[1]->IsInt32()) {
         return throwError("argument 2 must be an integer (DNSServiceFlags)");
     }
-    DNSServiceFlags flags = info[1]->ToInteger()->Int32Value();
+    DNSServiceFlags flags = ToInt32(info[1]);
 
     if ( ! info[2]->IsUint32() && ! info[2]->IsInt32()) {
         return throwTypeError("argument 3 must be an integer (interfaceIndex)");
     }
-    uint32_t interfaceIndex = info[2]->ToInteger()->Uint32Value();
+    uint32_t interfaceIndex = ToUint32(info[2]);
 
     if ( ! info[3]->IsString()) {
         return throwTypeError("argument 4 must be a string (service type)");
     }
-    Nan::Utf8String serviceType(info[3]->ToString());
+    Nan::Utf8String serviceType(ToString(info[3]));
 
     bool has_domain = false;
     if ( ! info[4]->IsNull() && ! info[4]->IsUndefined()) {

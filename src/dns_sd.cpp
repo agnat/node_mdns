@@ -311,7 +311,7 @@ NAN_METHOD(exportConstants) {
         return throwTypeError("argument 1 must be an object.");
     }
 
-    addConstants(info[0]->ToObject());
+    addConstants(ToObject(info[0]));
 }
 
 } // end of namespace node_mdns

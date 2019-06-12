@@ -18,7 +18,7 @@ buildException(DNSServiceErrorType error_code) {
     error_str += errorString(error_code);
     Local<String> error_msg = Nan::New(error_str.c_str()).ToLocalChecked();
     Local<Value> error_v = Exception::Error(error_msg);
-    Local<Object> error = error_v->ToObject();
+    Local<Object> error = ToObject(error_v);
     Nan::Set(error, Nan::New("errorCode").ToLocalChecked(), Nan::New<Integer>(error_code));
     return error_v;
 }
