@@ -108,4 +108,6 @@ Utf8Length(v8::Local<v8::Value> v) {
 
 } // end of namespace node_mdns
 
+#define LOC(file, line) \
+  (file ":" NAN_STRINGIZE(line))
 #endif // NODE_MDNS_UTILS_INCLUDED

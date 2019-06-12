@@ -48,7 +48,8 @@ OnResolve(DNSServiceRef sdRef, DNSServiceFlags flags,
     } else {
         info[8] = serviceRef->GetContext();
     }
-    Nan::MakeCallback(this_, callback, argc, info);
+    Nan::AsyncResource asyncResource(LOC(__FILE__, __LINE__));
+    asyncResource.runInAsyncScope(this_, callback, argc, info);
 }
 
 NAN_METHOD(DNSServiceResolve) {

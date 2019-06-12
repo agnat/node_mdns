@@ -26,7 +26,8 @@ OnEnumeration(DNSServiceRef sdRef, DNSServiceFlags flags, uint32_t interfaceInde
     info[3] = Nan::New<Integer>(errorCode);
     info[4] = stringOrUndefined(replyDomain);
     info[5] = serviceRef->GetContext();
-    Nan::MakeCallback(this_, callback, argc, info);
+    Nan::AsyncResource asyncResource(LOC(__FILE__, __LINE__));
+    asyncResource.runInAsyncScope(this_, callback, argc, info);
 }
 
 NAN_METHOD(DNSServiceEnumerateDomains) {

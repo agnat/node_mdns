@@ -3,6 +3,7 @@
 // poor mans conditional compilation. is there a better way to do this with gyp?
 #ifdef NODE_MDNS_USE_SOCKET_WATCHER
 
+#include "mdns_utils.hpp"
 #include "socket_watcher.hpp"
 
 #include <string.h> // needed for memset() with node v0.7.9 on Mac OS
@@ -97,7 +98,8 @@ namespace node_mdns {
         argv[0] = revents & UV_READABLE ? Nan::True() : Nan::False();
         argv[1] = revents & UV_WRITABLE ? Nan::True() : Nan::False();
 
-        Nan::MakeCallback(watcher->handle(), callback, 2, argv);
+        Nan::AsyncResource asyncResource(LOC(__FILE__, __LINE__));
+        asyncResource.runInAsyncScope(watcher->handle(), callback, 2, argv);
     }
 
     NAN_METHOD(SocketWatcher::Stop) {
