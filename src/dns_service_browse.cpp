@@ -65,7 +65,7 @@ NAN_METHOD(DNSServiceBrowse) {
     if ( ! info[3]->IsString()) {
         return throwTypeError("argument 4 must be a string (service type)");
     }
-    String::Utf8Value serviceType(info[3]->ToString());
+    Nan::Utf8String serviceType(info[3]->ToString());
 
     bool has_domain = false;
     if ( ! info[4]->IsNull() && ! info[4]->IsUndefined()) {
@@ -74,7 +74,7 @@ NAN_METHOD(DNSServiceBrowse) {
         }
         has_domain = true;
     }
-    String::Utf8Value domain(info[4]);
+    Nan::Utf8String domain(info[4]);
 
     if ( ! info[5]->IsFunction()) {
         return throwTypeError("argument 6 must be a function (callBack)");

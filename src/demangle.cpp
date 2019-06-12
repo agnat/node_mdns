@@ -11,7 +11,7 @@ namespace {
 Handle<Value>
 demangle(Arguments const& info) {
     Nan::HandleScope scope;  
-    String::Utf8Value str(info[0]->ToString());
+    Nan::Utf8String str(info[0]->ToString());
 #ifdef __GNUC__
     int status;
     char * ret = abi::__cxa_demangle(*str, NULL, NULL, & status);

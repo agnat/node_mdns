@@ -28,7 +28,7 @@ NAN_METHOD(if_nametoindex) {
     if ( ! info[0]->IsString()) {
         return throwTypeError("argument 1 must be a string (interface name)");
     }
-    String::Utf8Value interfaceName(info[0]->ToString());
+    Nan::Utf8String interfaceName(info[0]->ToString());
 
 #ifdef WIN32
     DWORD aliasLength = MultiByteToWideChar(CP_UTF8, 0, *interfaceName, -1,

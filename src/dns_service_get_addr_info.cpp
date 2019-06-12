@@ -100,7 +100,7 @@ NAN_METHOD(DNSServiceGetAddrInfo) {
     if ( ! info[4]->IsString()) {
         return throwTypeError("argument 5 must be a string (hostname)");
     }
-    String::Utf8Value hostname(info[4]->ToString());
+    Nan::Utf8String hostname(info[4]->ToString());
 
     if ( ! info[5]->IsFunction()) {
         return throwTypeError("argument 6 must be a function (callBack)");
