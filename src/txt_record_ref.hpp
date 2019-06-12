@@ -1,6 +1,8 @@
 #ifndef NODE_MDNS_TXT_RECORD_REF_INCLUDED
 #define NODE_MDNS_TXT_RECORD_REF_INCLUDED
 
+#include "mdns_utils.hpp"
+
 namespace node_mdns {
 
 class TxtRecordRef : public Nan::ObjectWrap {
@@ -8,14 +10,14 @@ class TxtRecordRef : public Nan::ObjectWrap {
         TxtRecordRef();
         ~TxtRecordRef();
 
-        static void Initialize(v8::Handle<v8::Object> target);
+        static void Initialize(v8::Local<v8::Object> target);
         static NAN_METHOD(New);
 
         //inline bool IsInitialized() const { return ref_ != NULL; }
 
-        static inline bool HasInstance(v8::Handle<v8::Value> value) {
+        static inline bool HasInstance(v8::Local<v8::Value> value) {
             if ( ! value->IsObject() ) return false;
-            v8::Local<v8::Object> object = value->ToObject();
+            v8::Local<v8::Object> object = ToObject(value);
             return Nan::New(constructor_template)->HasInstance( object );
         }
 

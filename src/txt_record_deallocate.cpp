@@ -12,11 +12,11 @@ NAN_METHOD(TXTRecordDeallocate) {
     if (argumentCountMismatch(info, 1)) {
       return throwArgumentCountMismatchException(info, 1);
     }
-    if ( ! info[0]->IsObject() || ! TxtRecordRef::HasInstance(info[0]->ToObject())) {
+    if ( ! info[0]->IsObject() || ! TxtRecordRef::HasInstance(ToObject(info[0]))) {
       return throwTypeError("argument 1 must be a TXTRecordRef object");
     }
 
-    TxtRecordRef * ref = Nan::ObjectWrap::Unwrap<TxtRecordRef>(info[0]->ToObject());
+    TxtRecordRef * ref = Nan::ObjectWrap::Unwrap<TxtRecordRef>(ToObject(info[0]));
     TXTRecordDeallocate( & ref->GetTxtRecordRef());
 }
 

@@ -7,7 +7,7 @@ class SocketWatcher : public Nan::ObjectWrap {
     public:
         SocketWatcher();
 
-        static void Initialize(v8::Handle<v8::Object> target);
+        static void Initialize(v8::Local<v8::Object> target);
 
     private:
         uv_poll_t* poll_;

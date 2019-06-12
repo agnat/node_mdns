@@ -52,7 +52,7 @@ ServiceRef::IsInitialized() const { return ref_ != NULL; }
 bool
 ServiceRef::HasInstance(v8::Local<v8::Value> value) {
   if ( ! value->IsObject() ) return false;
-  v8::Local<v8::Object> object = value->ToObject();
+  v8::Local<v8::Object> object = ToObject(value);
   return Nan::New(constructor_template)->HasInstance( object );
 }
 

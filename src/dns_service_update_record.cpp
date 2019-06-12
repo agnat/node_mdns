@@ -25,7 +25,7 @@ NAN_METHOD(DNSServiceUpdateRecord) {
     if ( ! ServiceRef::HasInstance(info[0])) {
       return throwTypeError("argument 1 must be a DNSServiceRef (sdRef)");
     }
-    ServiceRef * serviceRef = Nan::ObjectWrap::Unwrap<ServiceRef>(info[0]->ToObject());
+    ServiceRef * serviceRef = Nan::ObjectWrap::Unwrap<ServiceRef>(ToObject(info[0]));
 
     if ( ! info[1]->IsNull()) {
       return throwError("argument 2 must be zero. Custom records are not supported yet.");
@@ -34,17 +34,17 @@ NAN_METHOD(DNSServiceUpdateRecord) {
     if ( ! info[2]->IsInt32()) {
       return throwError("argument 3 must be an integer (DNSServiceFlags)");
     }
-    DNSServiceFlags flags = info[2]->ToInteger()->Int32Value();
+    DNSServiceFlags flags = ToInt32(info[2]);
 
     uint16_t txtLen(0);
     const void * txtRecord(NULL);
     if ( ! info[3]->IsNull() && ! info[3]->IsUndefined()) {
         if (Buffer::HasInstance(info[3])) {
-            Local<Object> bufferObject = info[3]->ToObject();
+            Local<Object> bufferObject = ToObject(info[3]);
             txtRecord = Buffer::Data(bufferObject);
             txtLen = Buffer::Length(bufferObject);
         } else if (TxtRecordRef::HasInstance(info[3])) {
-            TxtRecordRef * ref = Nan::ObjectWrap::Unwrap<TxtRecordRef>(info[3]->ToObject());
+            TxtRecordRef * ref = Nan::ObjectWrap::Unwrap<TxtRecordRef>(ToObject(info[3]));
             txtLen = TXTRecordGetLength( & ref->GetTxtRecordRef());
             txtRecord = TXTRecordGetBytesPtr( & ref->GetTxtRecordRef());
         } else {
@@ -55,7 +55,7 @@ NAN_METHOD(DNSServiceUpdateRecord) {
     if ( ! info[4]->IsInt32()) {
       return throwError("argument 5 must be an integer (ttl)");
     }
-    int ttl = info[4]->ToInteger()->Int32Value();
+    int ttl = ToInt32(info[4]);
 
     DNSServiceErrorType error = DNSServiceUpdateRecord(
             serviceRef->GetServiceRef(),

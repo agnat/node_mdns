@@ -3,6 +3,7 @@
 // poor mans conditional compilation. is there a better way to do this with gyp?
 #ifdef NODE_MDNS_USE_SOCKET_WATCHER
 
+#include "mdns_utils.hpp"
 #include "socket_watcher.hpp"
 
 #include <string.h> // needed for memset() with node v0.7.9 on Mac OS
@@ -14,9 +15,9 @@ using namespace v8;
 #if ! NODE_VERSION_AT_LEAST(0, 7, 8)
 namespace node {
 
-Handle<Value>
-MakeCallback(const Handle<Object> object, const Handle<Function> callback,
-        int argc, Handle<Value> argv[])
+Local<Value>
+MakeCallback(const Local<Object> object, const Local<Function> callback,
+        int argc, Local<Value> argv[])
 {
     Nan::HandleScope scope;
 
@@ -43,7 +44,7 @@ namespace node_mdns {
     }
 
     void
-    SocketWatcher::Initialize(Handle<Object> target) {
+    SocketWatcher::Initialize(Local<Object> target) {
         Local<FunctionTemplate> t = Nan::New<FunctionTemplate>(New);
 
         Local<String> symbol = Nan::New("SocketWatcher").ToLocalChecked();
@@ -97,7 +98,8 @@ namespace node_mdns {
         argv[0] = revents & UV_READABLE ? Nan::True() : Nan::False();
         argv[1] = revents & UV_WRITABLE ? Nan::True() : Nan::False();
 
-        Nan::MakeCallback(watcher->handle(), callback, 2, argv);
+        Nan::AsyncResource asyncResource(LOC(__FILE__, __LINE__));
+        asyncResource.runInAsyncScope(watcher->handle(), callback, 2, argv);
     }
 
     NAN_METHOD(SocketWatcher::Stop) {

@@ -65,7 +65,8 @@ OnAddressInfo(DNSServiceRef sdRef, DNSServiceFlags flags,
     } else {
         info[7] = serviceRef->GetContext();
     }
-    Nan::MakeCallback(this_, callback, argc, info);
+    Nan::AsyncResource asyncResource(LOC(__FILE__, __LINE__));
+    asyncResource.runInAsyncScope(this_, callback, argc, info);
 }
 
 NAN_METHOD(DNSServiceGetAddrInfo) {
@@ -77,7 +78,7 @@ NAN_METHOD(DNSServiceGetAddrInfo) {
     if ( ! ServiceRef::HasInstance(info[0])) {
         return throwTypeError("argument 1 must be a DNSServiceRef (sdRef)");
     }
-    ServiceRef * serviceRef = Nan::ObjectWrap::Unwrap<ServiceRef>(info[0]->ToObject());
+    ServiceRef * serviceRef = Nan::ObjectWrap::Unwrap<ServiceRef>(ToObject(info[0]));
     if (serviceRef->IsInitialized()) {
         return throwError("DNSServiceRef is already initialized");
     }
@@ -85,22 +86,22 @@ NAN_METHOD(DNSServiceGetAddrInfo) {
     if ( ! info[1]->IsInt32()) {
         return throwError("argument 2 must be an integer (DNSServiceFlags)");
     }
-    DNSServiceFlags flags = info[1]->ToInteger()->Int32Value();
+    DNSServiceFlags flags = ToInt32(info[1]);
 
     if ( ! info[2]->IsUint32() && ! info[2]->IsInt32()) {
        return throwTypeError("argument 3 must be an integer (interfaceIndex)");
     }
-    uint32_t interfaceIndex = info[2]->ToInteger()->Uint32Value();
+    uint32_t interfaceIndex = ToUint32(info[2]);
 
     if ( ! info[3]->IsInt32()) {
         return throwTypeError("argument 4 must be an integer (DNSServiceProtocol)");
     }
-    uint32_t protocol = info[3]->ToInteger()->Int32Value();
+    uint32_t protocol = ToInt32(info[3]);
 
     if ( ! info[4]->IsString()) {
         return throwTypeError("argument 5 must be a string (hostname)");
     }
-    Nan::Utf8String hostname(info[4]->ToString());
+    Nan::Utf8String hostname(ToString(info[4]));
 
     if ( ! info[5]->IsFunction()) {
         return throwTypeError("argument 6 must be a function (callBack)");

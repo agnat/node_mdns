@@ -16,10 +16,10 @@ NAN_METHOD(txtRecordBufferToObject) {
     if (argumentCountMismatch(info, 1)) {
       return throwArgumentCountMismatchException(info, 1);
     }
-    if ( ! info[0]->IsObject() || ! Buffer::HasInstance(info[0]->ToObject())) {
+    if ( ! info[0]->IsObject() || ! Buffer::HasInstance(ToObject(info[0]))) {
       return throwTypeError("argument 1 must be a buffer (txtRecord)");
     }
-    Local<Object> buffer = info[0]->ToObject();
+    Local<Object> buffer = ToObject(info[0]);
 
     Local<Object> result = Nan::New<Object>();
     std::vector<char> key(16);
