@@ -56,44 +56,28 @@ stringOrUndefined(const char * str) {
 inline
 v8::Local<v8::Object>
 ToObject(v8::Local<v8::Value> v) {
-#if (NODE_MODULE_VERSION >= NODE_11_0_MODULE_VERSION)
   return v->ToObject(v8::Isolate::GetCurrent()->GetCurrentContext()).ToLocalChecked();
-#else
-  return v->ToObject();
-#endif
 }
 
 inline
 int32_t
 ToInt32(v8::Local<v8::Value> v) {
-#if (NODE_MODULE_VERSION >= NODE_11_0_MODULE_VERSION)
   v8::Local<v8::Context> ctx = v8::Isolate::GetCurrent()->GetCurrentContext();
   return v->ToInt32(ctx).ToLocalChecked()->Value();
-#else
-  return v->ToInteger()->Int32Value();
-#endif
 }
 
 inline
 uint32_t
 ToUint32(v8::Local<v8::Value> v) {
-#if (NODE_MODULE_VERSION >= NODE_11_0_MODULE_VERSION)
   v8::Local<v8::Context> ctx = v8::Isolate::GetCurrent()->GetCurrentContext();
   return v->ToUint32(ctx).ToLocalChecked()->Value();
-#else
-  return v->ToInteger()->Uint32Value();
-#endif
 }
 
 inline
 v8::Local<v8::String>
 ToString(v8::Local<v8::Value> v) {
-#if (NODE_MODULE_VERSION >= NODE_11_0_MODULE_VERSION)
   v8::Local<v8::Context> ctx = v8::Isolate::GetCurrent()->GetCurrentContext();
   return v->ToString(ctx).ToLocalChecked();
-#else
-  return v->ToString();
-#endif
 }
 
 inline
