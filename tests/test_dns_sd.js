@@ -74,7 +74,7 @@ exports['DNSServiceRegister()'] = function(t) {
       , domain = 'somedomain'
       , host   = null /* avahi throws 'bad param'*/
       , port   = test_port
-      , txtRec = new Buffer('\0')
+      , txtRec = Buffer.from('\0')
       , cb     = function() {}
       , ctx    = {anything: true}
       ;
@@ -717,7 +717,7 @@ exports['TXTRecordRef'] = function(t) {
   dns_sd.TXTRecordCreate(txtRecord, null);
 
   var txtRecord = new dns_sd.TXTRecordRef();
-  var buffer = new Buffer(256);
+  var buffer = Buffer.alloc(256);
   dns_sd.TXTRecordCreate(txtRecord, buffer);
   txtRecord.buffer = buffer;
 
@@ -729,7 +729,7 @@ exports['TXTRecordRef'] = function(t) {
   t.strictEqual(dns_sd.TXTRecordGetLength(txtRecord), 22,
       "length must be 22 bytes after adding 'foobar=foobar'");
 
-  dns_sd.TXTRecordSetValue(txtRecord, 'buffer', new Buffer('raw'));
+  dns_sd.TXTRecordSetValue(txtRecord, 'buffer', Buffer.from('raw'));
   t.strictEqual(dns_sd.TXTRecordGetLength(txtRecord), 33,
       "length must be 33 bytes after adding 'buffer=raw'");
 
@@ -740,11 +740,11 @@ exports['TXTRecordRef'] = function(t) {
   t.throws(function() { dns_sd.TXTRecordCreate(txtRecord) },
       'duplicate call to TXTRecordCreate() must throw');
   t.throws(function() {
-    var b = new Buffer(256);
+    var b = Buffer.alloc(256);
     dns_sd.TXTRecordCreate({not_a_txt_record: true}, b);
   }, 'txtRecord must be a TXTRecordRef object');
   t.throws(function() {
-    var b = new Buffer(256);
+    var b = Buffer.alloc(256);
     dns_sd.TXTRecordCreate(5, b);
   }, 'txtRecord must be a TXTRecordRef object');
   t.doesNotThrow(function() {

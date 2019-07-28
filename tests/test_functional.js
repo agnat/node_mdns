@@ -164,7 +164,7 @@ exports['simple browsing'] = function(t) {
 
   browser.start();
 
-  var txt_record = {type: 'bacon', chunky: true, strips: 5, buffer: new Buffer('raw')}
+  var txt_record = {type: 'bacon', chunky: true, strips: 5, buffer: Buffer.from('raw')}
     , ad = mdns.createAdvertisement(service_type, port,
         {txtRecord: txt_record}, function(err, service, flags) {
           if (err) throw err;
