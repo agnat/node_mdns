@@ -72,39 +72,39 @@ errorString(DNSServiceErrorType error) {
             return "double NAT";
         case kDNSServiceErr_BadTime:
             return "bad time";
-#ifdef kDNSServiceErr_BadSig
+#if defined(kDNSServiceErr_BadSig) || _DNS_SD_H >= 1610100
         case kDNSServiceErr_BadSig:
             return "bad sig";
 #endif
-#ifdef kDNSServiceErr_BadKey
+#if defined(kDNSServiceErr_BadKey) || _DNS_SD_H >= 1610100
         case kDNSServiceErr_BadKey:
             return "bad key";
 #endif
-#ifdef kDNSServiceErr_Transient
+#if defined(kDNSServiceErr_Transient) || _DNS_SD_H >= 1610100
         case kDNSServiceErr_Transient:
             return "transient";
 #endif
-#ifdef kDNSServiceErr_ServiceNotRunning
+#if defined(kDNSServiceErr_ServiceNotRunning) || _DNS_SD_H >= 1610100
         case kDNSServiceErr_ServiceNotRunning:
             return "service not running";
 #endif
-#ifdef kDNSServiceErr_NATPortMappingUnsupported
+#if defined(kDNSServiceErr_NATPortMappingUnsupported) || _DNS_SD_H >= 1610100
         case kDNSServiceErr_NATPortMappingUnsupported:
             return "NAT port mapping unsupported";
 #endif
-#ifdef kDNSServiceErr_NATPortMappingDisabled
+#if defined(kDNSServiceErr_NATPortMappingDisabled) || _DNS_SD_H >= 1610100
         case kDNSServiceErr_NATPortMappingDisabled:
             return "NAT port mapping disabled";
 #endif
-#ifdef kDNSServiceErr_NoRouter
+#if defined(kDNSServiceErr_NoRouter) || _DNS_SD_H >= 1710400
         case kDNSServiceErr_NoRouter:
             return "no router";
 #endif
-#ifdef kDNSServiceErr_PollingMode
+#if defined(kDNSServiceErr_PollingMode) || _DNS_SD_H >= 1710400
         case kDNSServiceErr_PollingMode:
             return "polling mode";
 #endif
-#ifdef kDNSServiceErr_Timeout
+#if defined(kDNSServiceErr_Timeout) || _DNS_SD_H >= 3200500
         case kDNSServiceErr_Timeout:
             return "timeout";
 #endif
