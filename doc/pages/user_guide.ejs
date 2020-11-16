@@ -294,12 +294,13 @@ h4. new mdns.Browser(serviceType, [options])
 
 Create a new browser to discover services that match the given @serviceType@. @options@ may contain the following properties:
 
-- resolverSequence := custom "resolver sequence":#resolver_sequence for this browser
-- interfaceIndex   := one-based index of the network interface the services should be discovered on. *Deprecated:* Use networkInterface instead.
-- networkInterface := the network interface to use. See "Network Interfaces":#network_interfaces for details.
-- domain           := see documentation of @DNSServiceBrowse(...)@
-- context          := see documentation of @DNSServiceBrowse(...)@
-- flags            := see documentation of @DNSServiceBrowse(...)@
+- resolverSequence     := custom "resolver sequence":#resolver_sequence for this browser
+- interfaceIndex       := one-based index of the network interface the services should be discovered on. *Deprecated:* Use networkInterface instead.
+- networkInterface     := the network interface to use. See "Network Interfaces":#network_interfaces for details.
+- lookupInterfaceNames := when false the interface name will not be resolved.
+- domain               := see documentation of @DNSServiceBrowse(...)@
+- context              := see documentation of @DNSServiceBrowse(...)@
+- flags                := see documentation of @DNSServiceBrowse(...)@
 
 h4. Event: 'serviceUp'
 
