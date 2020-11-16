@@ -70,6 +70,43 @@ module.exports["Browser"] = {
     callback();
   },
 
+  "Should not resolve interface name when disabled in options": function(test) {
+    var callback = null
+      , didCallIndexToName = false
+      , serviceName = "_foo._tcp.";
+
+    var mock_dns_sd = {
+      kDNSServiceErr_NoError: dns_sd.kDNSServiceErr_NoError,
+      kDNSServiceInterfaceIndexLocalOnly: dns_sd.kDNSServiceInterfaceIndexLocalOnly,
+      kDNSServiceFlagsAdd: dns_sd.kDNSServiceFlagsAdd,
+
+      // we stub the if_indextoname method
+      if_indextoname: function() {
+        didCallIndexToName = true;
+      },
+      // and stub DNSServiceBrowse to expose a reference to the passed callback
+      DNSServiceBrowse: function(sdRef, flags, ifaceIdx, serviceType, domain, on_service_changed, context) {
+        callback = function() {
+        // pass 1 as the interface index so we don't try to find the name for loopback
+          on_service_changed(sdRef, flags, 1, dns_sd.kDNSServiceErr_NoError, serviceName, serviceType, domain, context);
+        };
+      }
+    };
+
+    // create the browser with our mock of dns_sd
+    var browser = proxyquire('../lib/browser.js', { './dns_sd': mock_dns_sd }).Browser.create(serviceName, { lookupInterfaceNames: false });
+    browser.on("serviceDown", function(service) {
+      // should not have called index to name
+      test.ok( !didCallIndexToName );
+
+      // interface name should be undefined
+      test.equal(service.networkInterface, undefined);
+    });
+
+    // simulate MDNS events, this will trigger the serviceDown event we listen for above.
+    callback();
+  },
+
   "Should survive invalid MDNS advert": function(test) {
     var callback = null
       , serviceName = "_foo._tcp.";
