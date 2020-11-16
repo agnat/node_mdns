@@ -103,6 +103,8 @@ module.exports["Browser"] = {
 
       // interface name should be undefined
       test.equal(service.networkInterface, "foo");
+
+      test.done();
     });
 
     // simulate MDNS events, this will trigger the serviceDown event we listen for above.
@@ -142,6 +144,8 @@ module.exports["Browser"] = {
 
       // interface name should be undefined
       test.equal(service.networkInterface, undefined);
+
+      test.done();
     });
 
     // simulate MDNS events, this will trigger the serviceDown event we listen for above.
