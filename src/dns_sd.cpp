@@ -137,31 +137,31 @@ addConstants(Local<Object> target) {
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_NATTraversal);
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_DoubleNAT);
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_BadTime);
-#if defined(kDNSServiceErr_BadSig) || _DNS_SD_H >= 1610100
+#if defined(kDNSServiceErr_BadSig) || _DNS_SD_H+0 >= 1610100
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_BadSig);
 #endif
-#if defined(kDNSServiceErr_BadKey) || _DNS_SD_H >= 1610100
+#if defined(kDNSServiceErr_BadKey) || _DNS_SD_H+0 >= 1610100
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_BadKey);
 #endif
-#if defined(kDNSServiceErr_Transient) || _DNS_SD_H >= 1610100
+#if defined(kDNSServiceErr_Transient) || _DNS_SD_H+0 >= 1610100
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_Transient);
 #endif
-#if defined(kDNSServiceErr_ServiceNotRunning) || _DNS_SD_H >= 1610100
+#if defined(kDNSServiceErr_ServiceNotRunning) || _DNS_SD_H+0 >= 1610100
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_ServiceNotRunning);
 #endif
-#if defined(kDNSServiceErr_NATPortMappingUnsupported) || _DNS_SD_H >= 1610100
+#if defined(kDNSServiceErr_NATPortMappingUnsupported) || _DNS_SD_H+0 >= 1610100
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_NATPortMappingUnsupported);
 #endif
-#if defined(kDNSServiceErr_NATPortMappingDisabled) || _DNS_SD_H >= 1610100
+#if defined(kDNSServiceErr_NATPortMappingDisabled) || _DNS_SD_H+0 >= 1610100
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_NATPortMappingDisabled);
 #endif
-#if defined(kDNSServiceErr_NoRouter) || _DNS_SD_H >= 1710400
+#if defined(kDNSServiceErr_NoRouter) || _DNS_SD_H+0 >= 1710400
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_NoRouter);
 #endif
-#if defined(kDNSServiceErr_PollingMode) || _DNS_SD_H >= 1710400
+#if defined(kDNSServiceErr_PollingMode) || _DNS_SD_H+0 >= 1710400
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_PollingMode);
 #endif
-#if defined(kDNSServiceErr_Timeout) || _DNS_SD_H >= 3200500
+#if defined(kDNSServiceErr_Timeout) || _DNS_SD_H+0 >= 3200500
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_Timeout);
 #endif
 

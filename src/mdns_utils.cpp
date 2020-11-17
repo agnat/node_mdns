@@ -72,39 +72,39 @@ errorString(DNSServiceErrorType error) {
             return "double NAT";
         case kDNSServiceErr_BadTime:
             return "bad time";
-#if defined(kDNSServiceErr_BadSig) || _DNS_SD_H >= 1610100
+#if defined(kDNSServiceErr_BadSig) || _DNS_SD_H+0 >= 1610100
         case kDNSServiceErr_BadSig:
             return "bad sig";
 #endif
-#if defined(kDNSServiceErr_BadKey) || _DNS_SD_H >= 1610100
+#if defined(kDNSServiceErr_BadKey) || _DNS_SD_H+0 >= 1610100
         case kDNSServiceErr_BadKey:
             return "bad key";
 #endif
-#if defined(kDNSServiceErr_Transient) || _DNS_SD_H >= 1610100
+#if defined(kDNSServiceErr_Transient) || _DNS_SD_H+0 >= 1610100
         case kDNSServiceErr_Transient:
             return "transient";
 #endif
-#if defined(kDNSServiceErr_ServiceNotRunning) || _DNS_SD_H >= 1610100
+#if defined(kDNSServiceErr_ServiceNotRunning) || _DNS_SD_H+0 >= 1610100
         case kDNSServiceErr_ServiceNotRunning:
             return "service not running";
 #endif
-#if defined(kDNSServiceErr_NATPortMappingUnsupported) || _DNS_SD_H >= 1610100
+#if defined(kDNSServiceErr_NATPortMappingUnsupported) || _DNS_SD_H+0 >= 1610100
         case kDNSServiceErr_NATPortMappingUnsupported:
             return "NAT port mapping unsupported";
 #endif
-#if defined(kDNSServiceErr_NATPortMappingDisabled) || _DNS_SD_H >= 1610100
+#if defined(kDNSServiceErr_NATPortMappingDisabled) || _DNS_SD_H+0 >= 1610100
         case kDNSServiceErr_NATPortMappingDisabled:
             return "NAT port mapping disabled";
 #endif
-#if defined(kDNSServiceErr_NoRouter) || _DNS_SD_H >= 1710400
+#if defined(kDNSServiceErr_NoRouter) || _DNS_SD_H+0 >= 1710400
         case kDNSServiceErr_NoRouter:
             return "no router";
 #endif
-#if defined(kDNSServiceErr_PollingMode) || _DNS_SD_H >= 1710400
+#if defined(kDNSServiceErr_PollingMode) || _DNS_SD_H+0 >= 1710400
         case kDNSServiceErr_PollingMode:
             return "polling mode";
 #endif
-#if defined(kDNSServiceErr_Timeout) || _DNS_SD_H >= 3200500
+#if defined(kDNSServiceErr_Timeout) || _DNS_SD_H+0 >= 3200500
         case kDNSServiceErr_Timeout:
             return "timeout";
 #endif
