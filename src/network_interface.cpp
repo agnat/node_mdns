@@ -81,9 +81,18 @@ NAN_METHOD(if_indextoname) {
     }
 #ifdef WIN32
     NET_LUID luid;
-    if (ConvertInterfaceIndexToLuid(Nan::To<uint32_t>(info[0]).FromJust(), &luid) != NO_ERROR)
+    NET_IFINDEX index = Nan::To<uint32_t>(info[0]).FromJust();
+    if (ConvertInterfaceIndexToLuid(index, &luid) != NO_ERROR)
     {
-        return throwError("failed to convert interface index to luid");
+        // IPv6 interface indices are shifted by mDNSResponder - see comment
+        // near use of kIPv6IfIndexBase in mDNSResponder/mDNSWindows/mDNSWin32.c
+        // for explanation.
+        const uint32_t kIPv6IfIndexBase = 10000000L;
+        if (index <= kIPv6IfIndexBase
+            || ConvertInterfaceIndexToLuid(index - kIPv6IfIndexBase, &luid) != NO_ERROR)
+        {
+            return throwError("failed to convert interface index to luid");
+        }
     }
     enum { size = NDIS_IF_MAX_STRING_SIZE + 1 };
     wchar_t alias[size];
