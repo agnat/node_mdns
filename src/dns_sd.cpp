@@ -137,29 +137,32 @@ addConstants(Local<Object> target) {
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_NATTraversal);
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_DoubleNAT);
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_BadTime);
-#ifdef kDNSServiceErr_BadSig
+#if defined(kDNSServiceErr_BadSig) || _DNS_SD_H >= 1610100
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_BadSig);
 #endif
-#ifdef kDNSServiceErr_BadKey
+#if defined(kDNSServiceErr_BadKey) || _DNS_SD_H >= 1610100
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_BadKey);
 #endif
-#ifdef kDNSServiceErr_Transient
+#if defined(kDNSServiceErr_Transient) || _DNS_SD_H >= 1610100
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_Transient);
 #endif
-#ifdef kDNSServiceErr_ServiceNotRunning
+#if defined(kDNSServiceErr_ServiceNotRunning) || _DNS_SD_H >= 1610100
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_ServiceNotRunning);
 #endif
-#ifdef kDNSServiceErr_NATPortMappingUnsupported
+#if defined(kDNSServiceErr_NATPortMappingUnsupported) || _DNS_SD_H >= 1610100
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_NATPortMappingUnsupported);
 #endif
-#ifdef kDNSServiceErr_NATPortMappingDisabled
+#if defined(kDNSServiceErr_NATPortMappingDisabled) || _DNS_SD_H >= 1610100
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_NATPortMappingDisabled);
 #endif
-#ifdef kDNSServiceErr_NoRouter
+#if defined(kDNSServiceErr_NoRouter) || _DNS_SD_H >= 1710400
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_NoRouter);
 #endif
-#ifdef kDNSServiceErr_PollingMode
+#if defined(kDNSServiceErr_PollingMode) || _DNS_SD_H >= 1710400
     NODE_DEFINE_CONSTANT(target, kDNSServiceErr_PollingMode);
+#endif
+#if defined(kDNSServiceErr_Timeout) || _DNS_SD_H >= 3200500
+    NODE_DEFINE_CONSTANT(target, kDNSServiceErr_Timeout);
 #endif
 
     // Interface Index
