@@ -3,7 +3,7 @@
 * Package: mdns
 * Description: multicast DNS service discovery
 * Installation: `npm install mdns` (see below)
-* Documentation: [mdns user guide](http://agnat.github.com/node_mdns/user_guide.html)
+* Documentation: [mdns user guide](http://agnat.github.io/node_mdns/user_guide.html)
 * License: [MIT](http://github.com/agnat/node_mdns/blob/master/LICENSE)
 * Donations: [![Flattr this git repository](http://api.flattr.com/button/flattr-badge-large.png)](https://flattr.com/submit/auto?user_id=agnat&url=https://github.com/agnat/node_mdns&title=node_mdns&tags=github&category=software)
 
@@ -67,7 +67,7 @@ In case you want to run or even publish your package using the development versi
 
 ## Documentation
 
-See the [user guide](http://agnat.github.com/node_mdns/user_guide.html).
+See the [user guide](http://agnat.github.io/node_mdns/user_guide.html).
 
 ## Contributors
 

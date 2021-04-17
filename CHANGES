@@ -85,7 +85,7 @@ Version 0.0.3 to 0.0.4
      The strings have been replaced with a small ServiceType object. Also, older
      versions used TCP as the default protocol. The protocol is now mandatory.
      However, the new syntax is much more flexible. See user guide at
-     http://agnat.github.com/node_mdns/user_guide.html#service_types.
+     http://agnat.github.io/node_mdns/user_guide.html#service_types.
 
    - The 'info' object is now called 'service'
 
